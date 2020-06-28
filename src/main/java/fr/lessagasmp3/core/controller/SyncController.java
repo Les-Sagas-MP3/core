@@ -1,7 +1,7 @@
-package com.netophonix.core.controller;
+package fr.lessagasmp3.core.controller;
 
-import com.netophonix.core.exception.ForbiddenException;
-import com.netophonix.core.scrapper.SagaScrapper;
+import fr.lessagasmp3.core.exception.ForbiddenException;
+import fr.lessagasmp3.core.scrapper.SagaScrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.task.TaskExecutor;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class SyncController {
 
-    @Value("${com.netophonix.core.adminpassword}")
+    @Value("${fr.lessagasmp3.core.adminpassword}")
     private String adminPassword;
 
     @Autowired

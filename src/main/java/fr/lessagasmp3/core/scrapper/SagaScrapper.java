@@ -1,13 +1,13 @@
-package com.netophonix.core.scrapper;
+package fr.lessagasmp3.core.scrapper;
 
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.*;
-import com.netophonix.core.model.Author;
-import com.netophonix.core.model.Category;
-import com.netophonix.core.model.Saga;
-import com.netophonix.core.repository.AuthorRepository;
-import com.netophonix.core.repository.CategoryRepository;
-import com.netophonix.core.repository.SagaRepository;
+import fr.lessagasmp3.core.model.Author;
+import fr.lessagasmp3.core.model.Category;
+import fr.lessagasmp3.core.model.Saga;
+import fr.lessagasmp3.core.repository.AuthorRepository;
+import fr.lessagasmp3.core.repository.CategoryRepository;
+import fr.lessagasmp3.core.repository.SagaRepository;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.slf4j.Logger;

@@ -1,7 +1,7 @@
-package com.netophonix.core.controller;
+package fr.lessagasmp3.core.controller;
 
-import com.netophonix.core.model.Saga;
-import com.netophonix.core.repository.SagaRepository;
+import fr.lessagasmp3.core.model.Saga;
+import fr.lessagasmp3.core.repository.SagaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;

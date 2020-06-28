@@ -1,6 +1,6 @@
-package com.netophonix.core.repository;
+package fr.lessagasmp3.core.repository;
 
-import com.netophonix.core.model.Saga;
+import fr.lessagasmp3.core.model.Saga;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Set;

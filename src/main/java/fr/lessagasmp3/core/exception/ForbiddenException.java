@@ -1,4 +1,4 @@
-package com.netophonix.core.exception;
+package fr.lessagasmp3.core.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

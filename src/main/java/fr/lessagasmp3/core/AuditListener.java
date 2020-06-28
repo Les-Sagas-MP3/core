@@ -1,4 +1,4 @@
-package com.netophonix.core;
+package fr.lessagasmp3.core;
 
 import org.springframework.data.domain.AuditorAware;
 

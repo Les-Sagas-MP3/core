@@ -1,4 +1,4 @@
-package com.netophonix.core.model;
+package fr.lessagasmp3.core.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;

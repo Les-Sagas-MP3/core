@@ -1,6 +1,6 @@
-package com.netophonix.core.repository;
+package fr.lessagasmp3.core.repository;
 
-import com.netophonix.core.model.Category;
+import fr.lessagasmp3.core.model.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CategoryRepository extends JpaRepository<Category, Long> {
