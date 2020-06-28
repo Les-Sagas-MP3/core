@@ -1,0 +1,94 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+
+  verify-version:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.get_version.outputs.VERSION }}
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up JDK
+      uses: actions/setup-java@v1
+      with:
+        java-version: 13
+        server-id: github
+        settings-path: ${{ github.workspace }}
+    - name: Get the version
+      id: get_version
+      run: echo ::set-output name=VERSION::$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
+    - name: Test snapshot
+      run: if [[ "${{ steps.get_version.outputs.VERSION }}" == *"-SNAPSHOT" ]]; then exit 1; else exit 0; fi
+    - name: Get release
+      id: get_release
+      run: echo ::set-output name=RELEASE_HTTP_CODE::$(curl -s -o out.html -w '%{http_code}'  https://github.com/les-sagas-mp3/core/releases/tag/${{ steps.get_version.outputs.VERSION }};)
+    - name: Test release existence
+      run: if [[ "${{ steps.get_release.outputs.RELEASE_HTTP_CODE }}" -eq "200" ]]; then exit 1; else exit 0; fi
+
+  build:
+    needs: verify-version
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up JDK
+      uses: actions/setup-java@v1
+      with:
+        java-version: 13
+        server-id: github
+        settings-path: ${{ github.workspace }}
+    - name: Build with Maven
+      run: ./mvnw -B clean install --file pom.xml -P docker
+
+  release:
+    needs: [verify-version, build]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Config Git
+        run: git config user.email "${{ secrets.GIT_CONFIG_EMAIL }}" && git config user.name "${{ secrets.GIT_CONFIG_NAME }}"
+      - run: git tag ${{ needs.verify-version.outputs.version }}
+      - run: git push origin ${{ needs.verify-version.outputs.version }}
+      - name: Create Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ needs.verify-version.outputs.version }}
+          release_name: ${{ needs.verify-version.outputs.version }}
+          draft: false
+          prerelease: false
+
+  publish-docker:
+    needs: [verify-version, release]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        ref: '${{ needs.verify-version.outputs.version }}'
+    - name: Set up JDK
+      uses: actions/setup-java@v1
+      with:
+        java-version: 13
+        server-id: github
+        settings-path: ${{ github.workspace }}
+    - name: Build with Maven
+      run: ./mvnw -B clean install --file pom.xml -P docker
+    - name: Get the version
+      id: get_version
+      run: echo ::set-output name=VERSION::$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
+    - uses: sjdonado/heroku@0f16401029a67519b6547af7247983640996393a
+    - name: Tag the image as latest
+      run: docker tag core:latest docker.pkg.github.com/les-sagas-mp3/core/core:latest
+    - name: Tag the image with version
+      run: docker tag core:latest docker.pkg.github.com/les-sagas-mp3/core/core:${{ steps.get_version.outputs.VERSION }}
+    - name: Login to Registry
+      run: docker login docker.pkg.github.com -u thomah -p ${{secrets.GITHUB_TOKEN}}
+    - name: Publish latest to Registry
+      run: docker push docker.pkg.github.com/les-sagas-mp3/core/core:latest
+    - name: Publish version to Registry
+      run: docker push docker.pkg.github.com/les-sagas-mp3/core/core:${{ steps.get_version.outputs.VERSION }}
