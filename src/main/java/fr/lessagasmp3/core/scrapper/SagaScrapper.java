@@ -66,6 +66,7 @@ public class SagaScrapper {
         while (nbRows > 0) {
             searchUrl = "https://forum.netophonix.com/sagaslist.php?mode=titres&order=ASC&start=" + nbPage;
             try {
+                LOGGER.debug("Scrap url : {}", searchUrl);
                 page = client.getPage(searchUrl);
 
                 // Get HTML rows
