@@ -1,6 +1,9 @@
 package fr.lessagasmp3.core.controller;
 
 import fr.lessagasmp3.core.exception.ForbiddenException;
+import fr.lessagasmp3.core.rss.Feed;
+import fr.lessagasmp3.core.rss.FeedMessage;
+import fr.lessagasmp3.core.rss.FeedParser;
 import fr.lessagasmp3.core.scrapper.SagaScrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,6 +20,9 @@ public class SyncController {
     @Value("${fr.lessagasmp3.core.adminpassword}")
     private String adminPassword;
 
+    @Value("${fr.lessagasmp3.core.newsurl}")
+    private String newsUrl;
+
     @Autowired
     private SagaScrapper sagaScrapper;
 
@@ -31,5 +37,22 @@ public class SyncController {
             throw new ForbiddenException();
         }
     }
+
+    @RequestMapping(value = "/api/sync/news", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, params = {"password"})
+    public void syncNews(@RequestParam String password) {
+        if(adminPassword.equals(password)) {
+            taskExecutor.execute(() -> {
+                FeedParser parser = new FeedParser(newsUrl);
+                Feed feed = parser.readFeed();
+                System.out.println(feed);
+                for (FeedMessage message : feed.getEntries()) {
+                    System.out.println(message);
+                }
+            });
+        } else {
+            throw new ForbiddenException();
+        }
+    }
+
 
 }
