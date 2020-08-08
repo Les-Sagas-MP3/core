@@ -1,6 +1,7 @@
 package fr.lessagasmp3.core.rss;
 
-import fr.lessagasmp3.core.constant.StringConstant;
+import fr.lessagasmp3.core.constant.Strings;
+import fr.lessagasmp3.core.model.RssMessage;
 import fr.lessagasmp3.core.scrapper.SagaScrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 
 public class FeedParser {
 
@@ -45,23 +47,30 @@ public class FeedParser {
         Feed feed = null;
         try {
             boolean isFeedHeader = true;
-            String description = StringConstant.EMPTY;
-            String title = StringConstant.EMPTY;
-            String link = StringConstant.EMPTY;
-            String language = StringConstant.EMPTY;
-            String copyright = StringConstant.EMPTY;
-            String author = StringConstant.EMPTY;
-            String pubdate = StringConstant.EMPTY;
-            String guid = StringConstant.EMPTY;
+            String description = Strings.EMPTY;
+            String title = Strings.EMPTY;
+            String link = Strings.EMPTY;
+            String language = Strings.EMPTY;
+            String copyright = Strings.EMPTY;
+            String author = Strings.EMPTY;
+            String pubdate = Strings.EMPTY;
+            String guid = Strings.EMPTY;
 
             XMLInputFactory inputFactory = XMLInputFactory.newInstance();
-            InputStream in = read();
-            XMLEventReader eventReader = inputFactory.createXMLEventReader(in);
+            inputFactory.setProperty(XMLInputFactory.IS_COALESCING, true);
+            URLConnection openConnection;
+            InputStream in;
+            try {
+                openConnection = url.openConnection();
+                in = openConnection.getInputStream();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            XMLEventReader eventReader = inputFactory.createXMLEventReader(in, openConnection.getContentEncoding());
             while (eventReader.hasNext()) {
                 XMLEvent event = eventReader.nextEvent();
                 if (event.isStartElement()) {
-                    String localPart = event.asStartElement().getName()
-                            .getLocalPart();
+                    String localPart = event.asStartElement().getName().getLocalPart();
                     switch (localPart) {
                         case ITEM:
                             if (isFeedHeader) {
@@ -97,12 +106,13 @@ public class FeedParser {
                     }
                 } else if (event.isEndElement()) {
                     if (event.asEndElement().getName().getLocalPart().equals(ITEM)) {
-                        FeedMessage message = new FeedMessage();
+                        RssMessage message = new RssMessage();
                         message.setAuthor(author);
                         message.setDescription(description);
                         message.setGuid(guid);
                         message.setLink(link);
                         message.setTitle(title);
+                        message.setPubdate(pubdate);
                         feed.getEntries().add(message);
                         eventReader.nextEvent();
                     }
@@ -116,7 +126,7 @@ public class FeedParser {
 
     private String getCharacterData(XMLEvent event, XMLEventReader eventReader)
             throws XMLStreamException {
-        String result = StringConstant.EMPTY;
+        String result = Strings.EMPTY;
         event = eventReader.nextEvent();
         if (event instanceof Characters) {
             result = event.asCharacters().getData();
@@ -124,11 +134,4 @@ public class FeedParser {
         return result;
     }
 
-    private InputStream read() {
-        try {
-            return url.openStream();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
 }

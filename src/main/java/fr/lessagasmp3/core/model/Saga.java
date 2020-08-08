@@ -15,10 +15,6 @@ import java.util.Set;
 @ToString
 public class Saga extends Audit<String> {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-
     @NotNull
     private String title = "";
 

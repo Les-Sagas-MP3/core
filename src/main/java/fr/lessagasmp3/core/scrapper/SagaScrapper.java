@@ -2,6 +2,7 @@ package fr.lessagasmp3.core.scrapper;
 
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.*;
+import fr.lessagasmp3.core.constant.HttpProxy;
 import fr.lessagasmp3.core.model.Author;
 import fr.lessagasmp3.core.model.Category;
 import fr.lessagasmp3.core.model.Saga;
@@ -62,6 +63,9 @@ public class SagaScrapper {
         WebClient client = new WebClient();
         client.getOptions().setCssEnabled(false);
         client.getOptions().setJavaScriptEnabled(false);
+        if(HttpProxy.proxyConfig != null) {
+            client.getOptions().setProxyConfig(HttpProxy.proxyConfig);
+        }
 
         while (nbRows > 0) {
             searchUrl = "https://forum.netophonix.com/sagaslist.php?mode=titres&order=ASC&start=" + nbPage;

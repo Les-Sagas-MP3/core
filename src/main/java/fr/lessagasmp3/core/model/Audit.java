@@ -15,7 +15,7 @@ import java.util.Date;
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 @ToString
-class Audit<U> {
+class Audit<U> extends Identity {
 
     @CreatedDate
     @Column(name = "created_at", updatable = false, columnDefinition = "timestamp default now()")

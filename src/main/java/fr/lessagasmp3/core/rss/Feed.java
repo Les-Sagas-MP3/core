@@ -1,5 +1,6 @@
 package fr.lessagasmp3.core.rss;
 
+import fr.lessagasmp3.core.model.RssMessage;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,7 +19,7 @@ public class Feed {
     private final String copyright;
     private final String pubDate;
 
-    private final List<FeedMessage> entries = new ArrayList<>();
+    private final List<RssMessage> entries = new ArrayList<>();
 
     public Feed(String title, String link, String description, String language,
                 String copyright, String pubDate) {

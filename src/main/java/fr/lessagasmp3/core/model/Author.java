@@ -14,10 +14,6 @@ import java.util.Set;
 @ToString(exclude = {"sagas"})
 public class Author extends Audit<String> {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-
     @NotNull
     private String name = "";
 
