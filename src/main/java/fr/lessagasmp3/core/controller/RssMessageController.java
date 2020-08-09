@@ -19,7 +19,7 @@ public class RssMessageController {
 
     @RequestMapping(value = "/api/rss", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE, params = {"feedTitle"})
     public Set<RssMessage> getRssMessageByFeedTitle(@RequestParam String feedTitle) {
-        return rssMessageRepository.findAllByFeedTitle(feedTitle);
+        return rssMessageRepository.findAllByFeedTitleOrderByIdDesc(feedTitle);
     }
 
 }
