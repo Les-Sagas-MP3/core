@@ -12,6 +12,8 @@
 ## Getting Started
 
 1. Create a PostgreSQL database matching the configuration in `src/main/resources/application.properties`
+2. Create the environment variables :
+  - `GOOGLE_APPLICATION_CREDENTIALS` : path to the Firebase admin SDK private key 
 3. Run the following command :
 ```bash
 mvn clean install spring-boot:run
