@@ -3,6 +3,7 @@ package fr.lessagasmp3.core;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
+import fr.lessagasmp3.core.controller.FileController;
 import fr.lessagasmp3.core.repository.FileRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +25,9 @@ public class CoreApplication {
 	private static final Logger LOGGER = LoggerFactory.getLogger(CoreApplication.class);
 	private static final String GOOGLE_APPLICATION_CREDENTIALS = System.getenv("GOOGLE_APPLICATION_CREDENTIALS");
 	private static final String FIREBASE_URL = System.getenv("FIREBASE_URL");
+
+	@Autowired
+	private FileController fileController;
 
 	@Autowired
 	private FileRepository fileRepository;
@@ -64,6 +68,7 @@ public class CoreApplication {
 		if(file == null) {
 			LOGGER.error("No Firebase key stored in database");
 		} else {
+			fileController.prepareDirectories(file.getDirectory());
 			Path fileName = Path.of(file.getPath());
 			try {
 				Files.writeString(fileName, file.getContent());
@@ -74,7 +79,7 @@ public class CoreApplication {
 						.build();
 				FirebaseApp.initializeApp(options);
 			} catch (IOException e) {
-				LOGGER.error("Cannot write {}", fileName);
+				LOGGER.error("Cannot write {}", fileName, e);
 			}
 		}
 	}

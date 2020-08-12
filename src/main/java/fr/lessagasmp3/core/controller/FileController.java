@@ -49,25 +49,7 @@ public class FileController {
             finalFileName = name + extension;
             LOGGER.debug("saved filename: " + finalFileName);
 
-            File directory = new File("files");
-            if(!directory.exists()) {
-                LOGGER.info("Creating path {}", directory.getPath());
-                directory.mkdirs();
-            }
-            if(!directory.isDirectory()) {
-                LOGGER.error("The path {} is not a directory", directory.getPath());
-            }
-
-            if(directoryPath != null && !directoryPath.isEmpty()) {
-                directory = new File("files/" + directoryPath);
-                if(!directory.exists()) {
-                    LOGGER.info("Creating path {}", directory.getPath());
-                    directory.mkdirs();
-                }
-                if(!directory.isDirectory()) {
-                    LOGGER.error("The path {} is not a directory", directory.getPath());
-                }
-            }
+            prepareDirectories(directoryPath);
 
             File file = new File("files/" + directoryPath + "/" + finalFileName);
             try (OutputStream os = new FileOutputStream(file)) {
@@ -88,5 +70,26 @@ public class FileController {
         return new ResponseEntity<>(finalFileName, HttpStatus.OK);
     }
 
+    public void prepareDirectories(String directoryPath) {
+        File directory = new File("files");
+        if(!directory.exists()) {
+            LOGGER.info("Creating path {}", directory.getPath());
+            directory.mkdirs();
+        }
+        if(!directory.isDirectory()) {
+            LOGGER.error("The path {} is not a directory", directory.getPath());
+        }
+
+        if(directoryPath != null && !directoryPath.isEmpty()) {
+            directory = new File("files/" + directoryPath);
+            if(!directory.exists()) {
+                LOGGER.info("Creating path {}", directory.getPath());
+                directory.mkdirs();
+            }
+            if(!directory.isDirectory()) {
+                LOGGER.error("The path {} is not a directory", directory.getPath());
+            }
+        }
+    }
 
 }
