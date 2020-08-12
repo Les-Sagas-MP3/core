@@ -46,12 +46,12 @@ public class SyncController {
         }
     }
 
-    @Scheduled(cron = "0 0 0 * * *")
+    @Scheduled(cron = "0 0 */6 * * *")
     public void syncSagas() {
         syncSagas(adminPassword);
     }
 
-    @Scheduled(cron = "0 0 0 * * *")
+    @Scheduled(cron = "0 0 * * * *")
     public void syncNews() {
         syncNews(adminPassword);
     }
