@@ -1,13 +1,18 @@
 package fr.lessagasmp3.core.model;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.EntityListeners;
+import javax.persistence.MappedSuperclass;
 import java.util.Date;
 
 @Getter(AccessLevel.PUBLIC)
@@ -15,23 +20,23 @@ import java.util.Date;
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 @ToString
-class Audit<U> extends Identity {
+class AuditModel<U> extends IdentityModel {
 
     @CreatedDate
     @Column(name = "created_at", updatable = false, columnDefinition = "timestamp default now()")
-    private Date createdAt;
+    protected Date createdAt;
 
     @CreatedBy
     @Column(name = "created_by", updatable = false, columnDefinition = "varchar(255) default 'System'")
-    private U createdBy;
+    protected U createdBy;
 
     @LastModifiedDate
     @Column(name = "updated_at", columnDefinition = "timestamp default now()")
-    private Date updatedAt;
+    protected Date updatedAt;
 
     @LastModifiedBy
     @Column(name = "updated_by", columnDefinition = "varchar(255) default 'System'")
-    private U updatedBy;
+    protected U updatedBy;
 
 }
 

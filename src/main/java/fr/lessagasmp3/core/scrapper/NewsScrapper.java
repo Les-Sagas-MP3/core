@@ -4,7 +4,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.Notification;
-import fr.lessagasmp3.core.model.RssMessage;
+import fr.lessagasmp3.core.entity.RssMessage;
 import fr.lessagasmp3.core.repository.RssMessageRepository;
 import fr.lessagasmp3.core.rss.Feed;
 import fr.lessagasmp3.core.rss.FeedParser;

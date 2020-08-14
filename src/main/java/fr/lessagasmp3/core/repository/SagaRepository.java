@@ -1,6 +1,6 @@
 package fr.lessagasmp3.core.repository;
 
-import fr.lessagasmp3.core.model.Saga;
+import fr.lessagasmp3.core.entity.Saga;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Set;

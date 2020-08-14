@@ -56,7 +56,7 @@ public class FileController {
                 os.write(multipartFile.getBytes());
             }
 
-            fr.lessagasmp3.core.model.File entity = new fr.lessagasmp3.core.model.File();
+            fr.lessagasmp3.core.entity.File entity = new fr.lessagasmp3.core.entity.File();
             entity.setDirectory(directoryPath);
             entity.setName(name);
             entity.setPath(file.getAbsolutePath());

@@ -1,6 +1,6 @@
 package fr.lessagasmp3.core.rss;
 
-import fr.lessagasmp3.core.model.RssMessage;
+import fr.lessagasmp3.core.entity.RssMessage;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;

@@ -1,6 +1,6 @@
 package fr.lessagasmp3.core.repository;
 
-import fr.lessagasmp3.core.model.RssMessage;
+import fr.lessagasmp3.core.entity.RssMessage;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

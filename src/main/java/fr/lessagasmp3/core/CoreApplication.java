@@ -64,7 +64,7 @@ public class CoreApplication {
 
 	public void loadGoogleApplicationCredentialsFromDb() {
 		LOGGER.info("Loading Firebase key from database");
-		fr.lessagasmp3.core.model.File file = fileRepository.findByDirectoryAndName("config", "GOOGLE_APPLICATION_CREDENTIALS");
+		fr.lessagasmp3.core.entity.File file = fileRepository.findByDirectoryAndName("config", "GOOGLE_APPLICATION_CREDENTIALS");
 		if(file == null) {
 			LOGGER.error("No Firebase key stored in database");
 		} else {

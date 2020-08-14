@@ -1,6 +1,6 @@
 package fr.lessagasmp3.core.controller;
 
-import fr.lessagasmp3.core.model.RssMessage;
+import fr.lessagasmp3.core.entity.RssMessage;
 import fr.lessagasmp3.core.repository.RssMessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;

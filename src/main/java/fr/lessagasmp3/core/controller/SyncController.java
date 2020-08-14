@@ -51,7 +51,7 @@ public class SyncController {
         syncSagas(adminPassword);
     }
 
-    @Scheduled(cron = "0 0 * * * *")
+    @Scheduled(cron = "0 0 */6 * * *")
     public void syncNews() {
         syncNews(adminPassword);
     }
