@@ -1,6 +1,6 @@
 package fr.lessagasmp3.core.controller;
 
-import fr.lessagasmp3.core.model.Saga;
+import fr.lessagasmp3.core.entity.Saga;
 import fr.lessagasmp3.core.repository.SagaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
