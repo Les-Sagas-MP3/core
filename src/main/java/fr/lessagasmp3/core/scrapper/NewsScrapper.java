@@ -12,9 +12,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -32,10 +34,13 @@ public class NewsScrapper {
     private String rssUrl;
 
     @Autowired
+    private MessageSource messageSource;
+
+    @Autowired
     private RssMessageRepository rssMessageRepository;
 
     public void scrap() {
-        LOGGER.debug("Download RSS feed : {}", rssUrl);
+        LOGGER.info("Download RSS feed : {}", rssUrl);
         FeedParser parser = new FeedParser(rssUrl);
         Feed feed = parser.readFeed();
         LOGGER.debug("{} entries found", feed.getEntries().size());
@@ -70,8 +75,8 @@ public class NewsScrapper {
         if (newRssMessage) {
             Message firebaseNotification = Message.builder()
                     .setNotification(Notification.builder()
-                            .setTitle("Les Sagas MP3 - News")
-                            .setBody("A new content is available")
+                            .setTitle(messageSource.getMessage("notification.news.title", null, Locale.getDefault()))
+                            .setBody(messageSource.getMessage("notification.news.body", null, Locale.getDefault()))
                             .build())
                     .setTopic("news")
                     .build();
@@ -84,6 +89,7 @@ public class NewsScrapper {
             }
             LOGGER.info("Successfully sent notification to Firebase: " + response);
         }
+        LOGGER.info("Download RSS feed ended");
     }
 
 }
