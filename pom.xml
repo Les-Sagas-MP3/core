@@ -51,6 +51,11 @@
 			<version>1.24.1</version>
 		</dependency>
 		<dependency>
+			<groupId>commons-validator</groupId>
+			<artifactId>commons-validator</artifactId>
+			<version>1.7</version>
+		</dependency>
+		<dependency>
 			<groupId>io.fabric8</groupId>
 			<artifactId>docker-maven-plugin</artifactId>
 			<version>0.33.0</version>

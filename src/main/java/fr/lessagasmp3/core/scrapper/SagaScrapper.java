@@ -9,12 +9,16 @@ import fr.lessagasmp3.core.entity.Saga;
 import fr.lessagasmp3.core.repository.AuthorRepository;
 import fr.lessagasmp3.core.repository.CategoryRepository;
 import fr.lessagasmp3.core.repository.SagaRepository;
+import org.apache.commons.validator.routines.UrlValidator;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.net.URI;
@@ -27,6 +31,8 @@ import java.util.Set;
 public class SagaScrapper {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SagaScrapper.class);
+    private static final String[] SCHEMES = {"http","https"};
+    private static final UrlValidator URL_VALIDATOR = new UrlValidator(SCHEMES);
 
     private static final short COLUMN_TITLE_INDEX = 1;
     private static final short COLUMN_AUTHORS_INDEX = 2;
@@ -89,7 +95,22 @@ public class SagaScrapper {
                         if (elements.size() == 1) {
                             anchor = (HtmlAnchor) elements.get(0);
                             saga.setTitle(cleanString(anchor.getFirstChild().getTextContent()));
-                            saga.setUrl(anchor.getHrefAttribute());
+
+
+                            RestTemplate restTemplate = new RestTemplate();
+                            String result = null;
+                            try {
+                                LOGGER.debug("URL check : {}", anchor.getHrefAttribute());
+                                if(!URL_VALIDATOR.isValid(anchor.getHrefAttribute())) {
+                                    throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
+                                }
+                                result = restTemplate.getForObject(anchor.getHrefAttribute(), String.class);
+                            } catch(Exception e) {
+                                LOGGER.error("URL check failed : {}", anchor.getHrefAttribute());
+                            }
+                            if(result != null) {
+                                saga.setUrl(anchor.getHrefAttribute());
+                            }
                         }
                     } else {
                         saga.setTitle(cleanString(cell.getTextContent()));
