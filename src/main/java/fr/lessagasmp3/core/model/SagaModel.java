@@ -1,5 +1,6 @@
 package fr.lessagasmp3.core.model;
 
+import fr.lessagasmp3.core.constant.Strings;
 import fr.lessagasmp3.core.entity.Saga;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -17,12 +18,12 @@ import java.util.Set;
 public class SagaModel extends AuditModel<String> {
 
     @NotNull
-    protected String title = "";
+    protected String title = Strings.EMPTY;
 
-    protected String url = "";
+    protected String url = Strings.EMPTY;
 
     @NotNull
-    protected String urlWiki = "";
+    protected String urlWiki = Strings.EMPTY;
 
     @NotNull
     protected Integer levelArt = 100;
@@ -34,7 +35,7 @@ public class SagaModel extends AuditModel<String> {
     protected Integer nbReviews = 0;
 
     @NotNull
-    protected String urlReviews = "";
+    protected String urlReviews = Strings.EMPTY;
 
     @NotNull
     protected Integer nbBravos = 0;
@@ -63,5 +64,14 @@ public class SagaModel extends AuditModel<String> {
         entity.getAuthors().forEach(author -> model.getAuthorsRef().add(author.getId()));
         entity.getCategories().forEach(category -> model.getCategoriesRef().add(category.getId()));
         return model;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("SagaModel{");
+        sb.append("id=").append(id).append('\'');
+        sb.append(", title='").append(title);
+        sb.append('}');
+        return sb.toString();
     }
 }
