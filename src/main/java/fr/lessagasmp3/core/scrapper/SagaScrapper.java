@@ -45,6 +45,7 @@ public class SagaScrapper {
     private SagaRepository sagaRepository;
 
     public void scrap() {
+        LOGGER.info("Scrap sagas started");
         int nbRows = 50;
         short nbPage = 0;
 
@@ -175,6 +176,7 @@ public class SagaScrapper {
             //nbRows = 0;
             nbPage+= nbRows;
         }
+        LOGGER.info("Scrap sagas ended");
     }
 
     private String cleanString(String str) {
