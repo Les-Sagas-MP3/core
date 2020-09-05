@@ -4,10 +4,7 @@ import fr.lessagasmp3.core.entity.RssMessage;
 import fr.lessagasmp3.core.repository.RssMessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
 
@@ -18,8 +15,13 @@ public class RssMessageController {
     private RssMessageRepository rssMessageRepository;
 
     @RequestMapping(value = "/api/rss", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE, params = {"feedTitle"})
-    public Set<RssMessage> getRssMessageByFeedTitle(@RequestParam String feedTitle) {
-        return rssMessageRepository.findAllByFeedTitleOrderByIdDesc(feedTitle);
+    public Set<RssMessage> getByFeedTitle(@RequestParam String feedTitle) {
+        return rssMessageRepository.findAllByFeedTitleOrderByPubdateDesc(feedTitle);
+    }
+
+    @RequestMapping(value = "/api/rss/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public RssMessage getById(@PathVariable Long id) {
+        return rssMessageRepository.findById(id).orElse(null);
     }
 
 }

@@ -16,6 +16,11 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class FeedParser {
 
@@ -32,9 +37,12 @@ public class FeedParser {
     private static final String PUB_DATE = "pubDate";
     private static final String GUID = "guid";
 
+    private static final DateFormat DF = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss z", Locale.ENGLISH);
+
     private final URL url;
 
     public FeedParser(String feedUrl) {
+        LOGGER.debug(DF.format(new Date()));
         try {
             this.url = new URL(feedUrl);
         } catch (MalformedURLException e) {
@@ -112,13 +120,15 @@ public class FeedParser {
                         message.setGuid(guid);
                         message.setLink(link);
                         message.setTitle(title);
-                        message.setPubdate(pubdate);
+                        message.setPubdate(DF.parse(pubdate));
                         feed.getEntries().add(message);
                         eventReader.nextEvent();
                     }
                 }
             }
         } catch (XMLStreamException e) {
+            throw new RuntimeException(e);
+        } catch (ParseException e) {
             throw new RuntimeException(e);
         }
         return feed;
