@@ -1,5 +1,6 @@
 package fr.lessagasmp3.core.model;
 
+import fr.lessagasmp3.core.constant.Strings;
 import fr.lessagasmp3.core.entity.RssMessage;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -8,6 +9,7 @@ import lombok.Setter;
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 
 @Getter(AccessLevel.PUBLIC)
 @Setter(AccessLevel.PUBLIC)
@@ -15,26 +17,26 @@ import javax.validation.constraints.NotNull;
 public class RssMessageModel extends AuditModel<String> {
 
     @NotNull
-    protected String feedTitle;
+    protected String feedTitle = Strings.EMPTY;
 
     @NotNull
-    protected String title;
+    protected String title = Strings.EMPTY;
 
     @NotNull
-    protected String pubdate;
+    protected Date pubdate = new Date();
 
     @Column(columnDefinition = "TEXT")
     @NotNull
-    protected String description;
+    protected String description = Strings.EMPTY;
 
     @NotNull
-    protected String link;
+    protected String link = Strings.EMPTY;
 
     @NotNull
-    protected String author;
+    protected String author = Strings.EMPTY;
 
     @NotNull
-    protected String guid;
+    protected String guid = Strings.EMPTY;
 
     public static RssMessageModel fromEntity(RssMessage entity) {
         RssMessageModel model = new RssMessageModel();
