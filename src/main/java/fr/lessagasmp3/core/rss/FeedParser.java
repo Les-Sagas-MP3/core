@@ -2,7 +2,6 @@ package fr.lessagasmp3.core.rss;
 
 import fr.lessagasmp3.core.constant.Strings;
 import fr.lessagasmp3.core.entity.RssMessage;
-import fr.lessagasmp3.core.scrapper.SagaScrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,7 +23,7 @@ import java.util.Locale;
 
 public class FeedParser {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(SagaScrapper.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(FeedParser.class);
 
     private static final String TITLE = "title";
     private static final String DESCRIPTION = "description";

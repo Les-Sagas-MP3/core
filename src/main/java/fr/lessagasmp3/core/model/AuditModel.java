@@ -3,7 +3,6 @@ package fr.lessagasmp3.core.model;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -19,7 +18,6 @@ import java.util.Date;
 @Setter(AccessLevel.PUBLIC)
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-@ToString
 class AuditModel<U> extends IdentityModel {
 
     @CreatedDate
