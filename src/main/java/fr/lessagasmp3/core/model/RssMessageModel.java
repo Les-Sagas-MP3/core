@@ -5,6 +5,7 @@ import fr.lessagasmp3.core.entity.RssMessage;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
@@ -14,6 +15,7 @@ import java.util.Date;
 @Getter(AccessLevel.PUBLIC)
 @Setter(AccessLevel.PUBLIC)
 @MappedSuperclass
+@ToString
 public class RssMessageModel extends AuditModel<String> {
 
     @NotNull
