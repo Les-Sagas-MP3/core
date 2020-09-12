@@ -10,6 +10,7 @@ import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import java.util.LinkedHashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Getter(AccessLevel.PUBLIC)
@@ -46,7 +47,11 @@ public class SagaModel extends AuditModel<String> {
     @Transient
     private Set<Long> categoriesRef = new LinkedHashSet<>();
 
+    @Transient
+    private Set<Long> seasonsRef = new LinkedHashSet<>();
+
     public static SagaModel fromEntity(Saga entity) {
+        Objects.requireNonNull(entity);
         SagaModel model = new SagaModel();
         model.setCreatedAt(entity.getCreatedAt());
         model.setCreatedBy(entity.getCreatedBy());
@@ -63,6 +68,7 @@ public class SagaModel extends AuditModel<String> {
         model.setNbBravos(entity.getNbBravos());
         entity.getAuthors().forEach(author -> model.getAuthorsRef().add(author.getId()));
         entity.getCategories().forEach(category -> model.getCategoriesRef().add(category.getId()));
+        entity.getSeasons().forEach(season -> model.getSeasonsRef().add(season.getId()));
         return model;
     }
 

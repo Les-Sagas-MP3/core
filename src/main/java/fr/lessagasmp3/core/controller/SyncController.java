@@ -23,14 +23,14 @@ public class SyncController {
     @Autowired
     private TaskExecutor taskExecutor;
 
-    @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(value = "/api/sync/sagas", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('ADMIN')")
     public void syncSagas() {
         taskExecutor.execute(() -> sagaScrapper.scrap());
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(value = "/api/sync/news", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('ADMIN')")
     public void syncNews() {
         taskExecutor.execute(() -> newsScrapper.scrap());
     }
