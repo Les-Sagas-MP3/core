@@ -9,6 +9,7 @@ import lombok.ToString;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -21,11 +22,17 @@ import java.util.Set;
 public class Saga extends SagaModel {
 
     @ManyToMany
-    @JsonIgnoreProperties(value = {"sagas"})
+    @JsonIgnoreProperties(value = {"sagas", "user"})
     private Set<Author> authors = new LinkedHashSet<>();
 
     @ManyToMany
     @JsonIgnoreProperties(value = {"sagas"})
     private Set<Category> categories = new LinkedHashSet<>();
+
+    @OneToMany(
+            mappedBy = "saga",
+            orphanRemoval = true)
+    @JsonIgnoreProperties(value = {"saga", "episodes"})
+    private Set<Season> seasons = new LinkedHashSet<>();
 
 }

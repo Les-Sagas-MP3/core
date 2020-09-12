@@ -27,6 +27,10 @@ public class User extends UserModel {
     @JsonIgnoreProperties(value = {"createdAt", "createdBy", "updatedAt", "updatedBy", "users"})
     private Set<Authority> authorities = new LinkedHashSet<>();
 
+    @OneToOne(mappedBy = "user")
+    @JsonIgnoreProperties(value = {"sagas", "user"})
+    private Author author;
+
     public User() {
         super();
     }

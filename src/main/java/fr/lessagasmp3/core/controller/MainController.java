@@ -9,9 +9,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Locale;
@@ -28,8 +28,9 @@ public class MainController {
     @RequestMapping(value = "/health", method = RequestMethod.GET, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public void health() {}
 
-    @RequestMapping(value = "/test/notification", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, params = {"password"})
-    public void testNotification(@RequestParam String password) {
+    @RequestMapping(value = "/test/notification", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('ADMIN')")
+    public void testNotification() {
         Message firebaseNotification = Message.builder()
                 .setNotification(Notification.builder()
                         .setTitle(messageSource.getMessage("notification.news.title", null, Locale.getDefault()))

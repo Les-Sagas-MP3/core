@@ -1,14 +1,15 @@
 package fr.lessagasmp3.core.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import fr.lessagasmp3.core.model.CategoryModel;
+import fr.lessagasmp3.core.model.SeasonModel;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -17,11 +18,17 @@ import java.util.Set;
 @Table
 @Getter(AccessLevel.PUBLIC)
 @Setter(AccessLevel.PUBLIC)
-@ToString(exclude = {"sagas"})
-public class Category extends CategoryModel {
+@ToString
+public class Season extends SeasonModel {
 
-    @ManyToMany(mappedBy="categories")
+    @ManyToOne
     @JsonIgnoreProperties(value = {"authors", "categories", "seasons"})
-    private Set<Saga> sagas = new LinkedHashSet<>();
+    private Saga saga = new Saga();
+
+    @OneToMany(
+            mappedBy = "season",
+            orphanRemoval = true)
+    @JsonIgnoreProperties(value = {"season"})
+    private Set<Episode> episodes = new LinkedHashSet<>();
 
 }

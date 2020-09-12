@@ -50,4 +50,7 @@ public class UserModel extends AuditModel<String> {
         return model;
     }
 
+    public void hidePassword() {
+        this.password = "***";
+    }
 }
