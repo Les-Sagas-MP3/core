@@ -64,10 +64,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
                 .csrf().disable()
 
-                .authorizeRequests().antMatchers("/api/auth/login").permitAll()
-                // all other requests need to be authenticated
-                .anyRequest().authenticated().and()
-                // make sure we use stateless session; session won't be used to store user's state.
+                .authorizeRequests()
+                .anyRequest().permitAll()
+
+                .and()
                 .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
 
                 .and()
