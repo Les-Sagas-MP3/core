@@ -2,6 +2,7 @@ package fr.lessagasmp3.core.security;
 
 import fr.lessagasmp3.core.service.JwtUserDetailsService;
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -36,13 +37,15 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             jwtToken = requestTokenHeader.substring(7);
             try {
                 username = jwtTokenUtil.getUsernameFromToken(jwtToken);
+            } catch(MalformedJwtException e) {
+                logger.debug("Malformed JWT Token", e);
             } catch (IllegalArgumentException e) {
-                logger.debug("Unable to get JWT Token");
+                logger.debug("Unable to get JWT Token", e);
             } catch (ExpiredJwtException e) {
-                logger.debug("JWT Token has expired");
+                logger.debug("JWT Token has expired", e);
             }
         } else {
-            logger.warn("JWT Token does not begin with Bearer String");
+            logger.debug("JWT Token does not begin with Bearer String");
         }
 
         //Once we get the token validate it.
