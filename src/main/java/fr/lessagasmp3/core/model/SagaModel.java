@@ -21,6 +21,10 @@ public class SagaModel extends AuditModel<String> {
     @NotNull
     protected String title = Strings.EMPTY;
 
+    protected String backgroundUrl = Strings.EMPTY;
+
+    protected String coverUrl = Strings.EMPTY;
+
     protected String url = Strings.EMPTY;
 
     @NotNull
@@ -59,6 +63,8 @@ public class SagaModel extends AuditModel<String> {
         model.setUpdatedBy(entity.getUpdatedBy());
         model.setId(entity.getId());
         model.setTitle(entity.getTitle());
+        model.setBackgroundUrl(entity.getBackgroundUrl());
+        model.setCoverUrl(entity.getCoverUrl());
         model.setUrl(entity.getUrl());
         model.setUrlWiki(entity.getUrlWiki());
         model.setLevelArt(entity.getLevelArt());
