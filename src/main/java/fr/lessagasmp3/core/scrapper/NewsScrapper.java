@@ -4,7 +4,10 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.Notification;
+import fr.lessagasmp3.core.constant.EventLogName;
+import fr.lessagasmp3.core.entity.EventLog;
 import fr.lessagasmp3.core.entity.RssMessage;
+import fr.lessagasmp3.core.repository.EventLogRepository;
 import fr.lessagasmp3.core.repository.RssMessageRepository;
 import fr.lessagasmp3.core.rss.Feed;
 import fr.lessagasmp3.core.rss.FeedParser;
@@ -34,6 +37,9 @@ public class NewsScrapper {
     private String rssUrl;
 
     @Autowired
+    private EventLogRepository eventLogRepository;
+
+    @Autowired
     private MessageSource messageSource;
 
     @Autowired
@@ -41,6 +47,7 @@ public class NewsScrapper {
 
     public void scrap() {
         LOGGER.info("Download RSS feed : {}", rssUrl);
+        eventLogRepository.save(new EventLog(EventLogName.SYNC_NEWS_START));
         FeedParser parser = new FeedParser(rssUrl);
         Feed feed = parser.readFeed();
         LOGGER.debug("{} entries found", feed.getEntries().size());
@@ -89,6 +96,7 @@ public class NewsScrapper {
             }
             LOGGER.info("Successfully sent notification to Firebase: " + response);
         }
+        eventLogRepository.save(new EventLog(EventLogName.SYNC_NEWS_STOP));
         LOGGER.info("Download RSS feed ended");
     }
 

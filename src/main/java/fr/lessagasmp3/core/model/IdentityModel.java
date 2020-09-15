@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Getter(AccessLevel.PUBLIC)
 @Setter(AccessLevel.PUBLIC)
 @MappedSuperclass
-class IdentityModel {
+public class IdentityModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
