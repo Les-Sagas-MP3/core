@@ -2,12 +2,15 @@ package fr.lessagasmp3.core.scrapper;
 
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.*;
+import fr.lessagasmp3.core.constant.EventLogName;
 import fr.lessagasmp3.core.constant.HttpProxy;
 import fr.lessagasmp3.core.entity.Author;
 import fr.lessagasmp3.core.entity.Category;
+import fr.lessagasmp3.core.entity.EventLog;
 import fr.lessagasmp3.core.entity.Saga;
 import fr.lessagasmp3.core.repository.AuthorRepository;
 import fr.lessagasmp3.core.repository.CategoryRepository;
+import fr.lessagasmp3.core.repository.EventLogRepository;
 import fr.lessagasmp3.core.repository.SagaRepository;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.apache.http.NameValuePair;
@@ -48,10 +51,14 @@ public class SagaScrapper {
     private CategoryRepository categoryRepository;
 
     @Autowired
+    private EventLogRepository eventLogRepository;
+
+    @Autowired
     private SagaRepository sagaRepository;
 
     public void scrap() {
         LOGGER.info("Scrap sagas started");
+        eventLogRepository.save(new EventLog(EventLogName.SYNC_SAGAS_START));
         int nbRows = 50;
         short nbPage = 0;
 
@@ -198,6 +205,7 @@ public class SagaScrapper {
             nbPage+= nbRows;
         }
         LOGGER.info("Scrap sagas ended");
+        eventLogRepository.save(new EventLog(EventLogName.SYNC_SAGAS_STOP));
     }
 
     private String cleanString(String str) {

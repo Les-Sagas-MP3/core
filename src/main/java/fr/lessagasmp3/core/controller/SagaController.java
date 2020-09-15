@@ -1,9 +1,17 @@
 package fr.lessagasmp3.core.controller;
 
 import fr.lessagasmp3.core.entity.Saga;
+import fr.lessagasmp3.core.exception.BadRequestException;
 import fr.lessagasmp3.core.model.SagaModel;
+import fr.lessagasmp3.core.pagination.DataPage;
 import fr.lessagasmp3.core.repository.SagaRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,6 +21,8 @@ import java.util.Set;
 @RestController
 @RequestMapping("/api")
 public class SagaController {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(SagaController.class);
 
     @Autowired
     private SagaRepository sagaRepository;
@@ -28,6 +38,23 @@ public class SagaController {
     @RequestMapping(value = "/saga/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public SagaModel getById(@PathVariable Long id) {
         return SagaModel.fromEntity(sagaRepository.findById(id).orElse(null));
+    }
+
+    @RequestMapping(value = "/saga", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE, params = {"offset", "limit"})
+    public DataPage<SagaModel> getPaginated(@RequestParam("offset") int offset, @RequestParam("limit") int limit) {
+
+        // Verify that params are correct
+        if(offset < 0 || limit <= 0) {
+            LOGGER.error("Cannot get paginated sagas : offset or limit is incorrect");
+            throw new BadRequestException();
+        }
+
+        // Get and transform contents
+        Pageable pageable = PageRequest.of(offset, limit, Sort.by("title").ascending());
+        Page<Saga> entities = sagaRepository.findAll(pageable);
+        DataPage<SagaModel> models = new DataPage<>(entities);
+        entities.getContent().forEach(entity -> models.getContent().add(SagaModel.fromEntity(entity)));
+        return models;
     }
 
     @RequestMapping(value = "/saga", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE, params = {"search"})
