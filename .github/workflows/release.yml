@@ -63,7 +63,7 @@ jobs:
           draft: false
           prerelease: false
 
-  publish:
+  publish-maven:
     needs: [verify-version, release]
     runs-on: ubuntu-latest
     steps:
@@ -73,8 +73,6 @@ jobs:
       - uses: actions/setup-java@v1
         with:
           java-version: 13
-          server-id: github
-          settings-path: ${{ github.workspace }}
       - name: Publish package
         run: mvn -B deploy
         env:
