@@ -102,6 +102,9 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<classifier>exec</classifier>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -135,7 +138,7 @@
 											<exec>
 												<args>java</args>
 												<args>-jar</args>
-												<args>/maven/${project.artifactId}-${project.version}.jar</args>
+												<args>/maven/${project.artifactId}-${project.version}-exec.jar</args>
 												<args>-XshowSettings:vm</args>
 											</exec>
 										</entryPoint>
