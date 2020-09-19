@@ -1,39 +1,32 @@
 package fr.lessagasmp3.core.model;
 
-import fr.lessagasmp3.core.entity.Episode;
+import fr.lessagasmp3.core.constant.Strings;
+import fr.lessagasmp3.core.entity.Anecdote;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
-import javax.validation.constraints.NotNull;
 
 @Getter(AccessLevel.PUBLIC)
 @Setter(AccessLevel.PUBLIC)
 @MappedSuperclass
 @ToString
-public class EpisodeModel extends AuditModel<String> {
+public class AnecdoteModel extends AuditModel<String> {
 
-    @NotNull
-    protected Integer number;
+    @Column(columnDefinition = "TEXT")
+    protected String anecdote = Strings.EMPTY;
 
-    @NotNull
-    protected String title;
-
-    @NotNull
-    protected String infos;
-
-    public static EpisodeModel fromEntity(Episode entity) {
-        EpisodeModel model = new EpisodeModel();
+    public static AnecdoteModel fromEntity(Anecdote entity) {
+        AnecdoteModel model = new AnecdoteModel();
         model.setCreatedAt(entity.getCreatedAt());
         model.setCreatedBy(entity.getCreatedBy());
         model.setUpdatedAt(entity.getUpdatedAt());
         model.setUpdatedBy(entity.getUpdatedBy());
         model.setId(entity.getId());
-        model.setNumber(entity.getNumber());
-        model.setTitle(entity.getTitle());
-        model.setInfos(entity.getInfos());
+        model.setAnecdote(entity.getAnecdote());
         return model;
     }
 

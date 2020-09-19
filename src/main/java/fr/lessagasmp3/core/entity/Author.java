@@ -19,7 +19,7 @@ import java.util.Set;
 public class Author extends AuthorModel {
 
     @ManyToMany(mappedBy="authors")
-    @JsonIgnoreProperties(value = {"authors", "categories", "seasons"})
+    @JsonIgnoreProperties(value = {"authors", "composers", "categories", "seasons", "distributionEntries", "anecdotes"})
     private Set<Saga> sagas = new LinkedHashSet<>();
 
     @OneToOne

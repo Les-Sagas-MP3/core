@@ -1,6 +1,5 @@
 package fr.lessagasmp3.core.model;
 
-import com.google.firebase.database.annotations.NotNull;
 import fr.lessagasmp3.core.constant.AuthorityName;
 import fr.lessagasmp3.core.entity.Authority;
 import lombok.AccessLevel;
@@ -10,6 +9,7 @@ import lombok.ToString;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Getter(AccessLevel.PUBLIC)
 @Setter(AccessLevel.PUBLIC)
