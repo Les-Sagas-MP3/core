@@ -63,6 +63,23 @@ jobs:
           draft: false
           prerelease: false
 
+  publish:
+    needs: [verify-version, release]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: '${{ needs.verify-version.outputs.version }}'
+      - uses: actions/setup-java@v1
+        with:
+          java-version: 13
+          server-id: github
+          settings-path: ${{ github.workspace }}
+      - name: Publish package
+        run: mvn -B deploy
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   publish-docker:
     needs: [verify-version, release]
     runs-on: ubuntu-latest

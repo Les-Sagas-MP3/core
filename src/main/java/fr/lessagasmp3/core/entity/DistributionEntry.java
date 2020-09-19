@@ -1,27 +1,27 @@
 package fr.lessagasmp3.core.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import fr.lessagasmp3.core.model.CategoryModel;
+import fr.lessagasmp3.core.model.DistributionEntryModel;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import javax.persistence.*;
 
 @Entity
 @Table
 @Getter(AccessLevel.PUBLIC)
 @Setter(AccessLevel.PUBLIC)
-@ToString(exclude = {"sagas"})
-public class Category extends CategoryModel {
+@ToString
+public class DistributionEntry extends DistributionEntryModel {
 
-    @ManyToMany(mappedBy="categories")
+    @ManyToOne
     @JsonIgnoreProperties(value = {"authors", "composers", "categories", "seasons", "distributionEntries", "anecdotes"})
-    private Set<Saga> sagas = new LinkedHashSet<>();
+    private Saga saga = new Saga();
+
+    @ManyToOne
+    @JsonIgnoreProperties(value = {"sagas", "user", "distributionEntries"})
+    private Author actor = new Author();
 
 }

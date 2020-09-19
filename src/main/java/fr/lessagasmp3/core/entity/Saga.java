@@ -26,6 +26,10 @@ public class Saga extends SagaModel {
     private Set<Author> authors = new LinkedHashSet<>();
 
     @ManyToMany
+    @JsonIgnoreProperties(value = {"sagas", "user"})
+    private Set<Author> composers = new LinkedHashSet<>();
+
+    @ManyToMany
     @JsonIgnoreProperties(value = {"sagas"})
     private Set<Category> categories = new LinkedHashSet<>();
 
@@ -35,4 +39,15 @@ public class Saga extends SagaModel {
     @JsonIgnoreProperties(value = {"saga", "episodes"})
     private Set<Season> seasons = new LinkedHashSet<>();
 
+    @OneToMany(
+            mappedBy = "saga",
+            orphanRemoval = true)
+    @JsonIgnoreProperties(value = {"saga", "actors"})
+    private Set<DistributionEntry> distributionEntries = new LinkedHashSet<>();
+
+    @OneToMany(
+            mappedBy = "saga",
+            orphanRemoval = true)
+    @JsonIgnoreProperties(value = {"saga"})
+    private Set<Anecdote> anecdotes = new LinkedHashSet<>();
 }

@@ -22,7 +22,7 @@ import java.util.Set;
 public class Season extends SeasonModel {
 
     @ManyToOne
-    @JsonIgnoreProperties(value = {"authors", "categories", "seasons"})
+    @JsonIgnoreProperties(value = {"authors", "composers", "categories", "seasons", "distributionEntries", "anecdotes"})
     private Saga saga = new Saga();
 
     @OneToMany(
