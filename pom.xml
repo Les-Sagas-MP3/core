@@ -143,7 +143,15 @@
 											</exec>
 										</entryPoint>
 										<assembly>
-											<descriptorRef>artifact</descriptorRef>
+											<inline>
+												<fileSet>
+													<directory>${project.build.directory}</directory>
+													<outputDirectory>.</outputDirectory>
+													<includes>
+														<include>*-exec.jar</include>
+													</includes>
+												</fileSet>
+											</inline>
 										</assembly>
 									</build>
 								</image>
