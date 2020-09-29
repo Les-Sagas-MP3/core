@@ -22,15 +22,19 @@ public class AuthorModel extends AuditModel<String> {
     protected Integer nbSagas = 0;
 
     public static AuthorModel fromEntity(Author entity) {
-        AuthorModel model = new AuthorModel();
-        model.setCreatedAt(entity.getCreatedAt());
-        model.setCreatedBy(entity.getCreatedBy());
-        model.setUpdatedAt(entity.getUpdatedAt());
-        model.setUpdatedBy(entity.getUpdatedBy());
-        model.setId(entity.getId());
-        model.setName(entity.getName());
-        model.setNbSagas(entity.getNbSagas());
-        return model;
+        if(entity != null) {
+            AuthorModel model = new AuthorModel();
+            model.setCreatedAt(entity.getCreatedAt());
+            model.setCreatedBy(entity.getCreatedBy());
+            model.setUpdatedAt(entity.getUpdatedAt());
+            model.setUpdatedBy(entity.getUpdatedBy());
+            model.setId(entity.getId());
+            model.setName(entity.getName());
+            model.setNbSagas(entity.getNbSagas());
+            return model;
+        } else {
+            return null;
+        }
     }
 
 }
