@@ -12,7 +12,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -66,7 +65,7 @@ public class AuthorController {
 
     @PreAuthorize("hasRole('USER')")
     @RequestMapping(value = "/authors", method = RequestMethod.PUT, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    public void update(Principal principal, @RequestBody AuthorModel authorModel) {
+    public void update(@RequestBody AuthorModel authorModel) {
 
         // Verify that body is complete
         if(authorModel == null ||

@@ -10,6 +10,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Getter(AccessLevel.PUBLIC)
 @Setter(AccessLevel.PUBLIC)
@@ -35,6 +37,12 @@ public class UserModel extends AuditModel<String> {
     @NotNull
     protected Date lastPasswordResetDate = new Date();
 
+    @Transient
+    protected Long creatorRef = 0L;
+
+    @Transient
+    private Set<Long> authoritiesRef = new LinkedHashSet<>();
+
     public static UserModel fromEntity(User entity) {
         UserModel model = new UserModel();
         model.setCreatedAt(entity.getCreatedAt());
@@ -47,6 +55,8 @@ public class UserModel extends AuditModel<String> {
         model.setEmail(entity.getEmail());
         model.setEnabled(entity.getEnabled());
         model.setLastPasswordResetDate(entity.getLastPasswordResetDate());
+        model.setCreatorRef(entity.getAuthor().getId());
+        entity.getAuthorities().forEach(authority -> model.getAuthoritiesRef().add(authority.getId()));
         return model;
     }
 

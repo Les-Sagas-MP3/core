@@ -6,7 +6,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.MappedSuperclass;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Getter(AccessLevel.PUBLIC)
 @Setter(AccessLevel.PUBLIC)
@@ -19,6 +22,9 @@ public class CategoryModel extends AuditModel<String> {
     @NotNull
     protected Integer nbSagas = 0;
 
+    @Transient
+    private Set<Long> sagasRef = new LinkedHashSet<>();
+
     public static CategoryModel fromEntity(Category entity) {
         CategoryModel model = new CategoryModel();
         model.setCreatedAt(entity.getCreatedAt());
@@ -28,6 +34,7 @@ public class CategoryModel extends AuditModel<String> {
         model.setId(entity.getId());
         model.setName(entity.getName());
         model.setNbSagas(entity.getNbSagas());
+        entity.getSagas().forEach(saga -> model.getSagasRef().add(saga.getId()));
         return model;
     }
 
