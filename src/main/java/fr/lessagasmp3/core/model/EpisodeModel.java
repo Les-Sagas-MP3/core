@@ -7,6 +7,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.MappedSuperclass;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 @Getter(AccessLevel.PUBLIC)
@@ -24,6 +25,9 @@ public class EpisodeModel extends AuditModel<String> {
     @NotNull
     protected String infos;
 
+    @Transient
+    protected Long seasonRef = 0L;
+
     public static EpisodeModel fromEntity(Episode entity) {
         EpisodeModel model = new EpisodeModel();
         model.setCreatedAt(entity.getCreatedAt());
@@ -34,6 +38,7 @@ public class EpisodeModel extends AuditModel<String> {
         model.setNumber(entity.getNumber());
         model.setTitle(entity.getTitle());
         model.setInfos(entity.getInfos());
+        model.setSeasonRef(entity.getSeason().getId());
         return model;
     }
 
