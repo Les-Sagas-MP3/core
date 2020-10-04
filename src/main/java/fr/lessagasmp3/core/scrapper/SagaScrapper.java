@@ -4,7 +4,7 @@ import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.*;
 import fr.lessagasmp3.core.constant.EventLogName;
 import fr.lessagasmp3.core.constant.HttpProxy;
-import fr.lessagasmp3.core.entity.Author;
+import fr.lessagasmp3.core.entity.Creator;
 import fr.lessagasmp3.core.entity.Category;
 import fr.lessagasmp3.core.entity.EventLog;
 import fr.lessagasmp3.core.entity.Saga;
@@ -71,7 +71,7 @@ public class SagaScrapper {
         HtmlSpan span;
         HtmlImage image;
         Saga saga;
-        Author author;
+        Creator creator;
         Category category;
 
         WebClient client = new WebClient();
@@ -133,14 +133,14 @@ public class SagaScrapper {
                     String authorsString = cell.getFirstChild().getTextContent();
                     String[] authorsTab = authorsString.split("(,\\s*)|(\\set\\s)|(\\s&\\s)");
                     for (String s : authorsTab) {
-                        author = authorRepository.findByName(s);
-                        if (author == null) {
-                            author = new Author();
-                            author.setName(s);
+                        creator = authorRepository.findByName(s);
+                        if (creator == null) {
+                            creator = new Creator();
+                            creator.setName(s);
                         }
-                        author.setNbSagas(author.getNbSagas() + 1);
-                        author = authorRepository.save(author);
-                        saga.getAuthors().add(author);
+                        creator.setNbSagas(creator.getNbSagas() + 1);
+                        creator = authorRepository.save(creator);
+                        saga.getAuthors().add(creator);
                     }
 
                     // Third column

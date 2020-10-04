@@ -20,12 +20,12 @@ import java.util.Set;
 public class Saga extends SagaModel {
 
     @ManyToMany
-    @JsonIgnoreProperties(value = {"sagas", "user"})
-    private Set<Author> authors = new LinkedHashSet<>();
+    @JsonIgnoreProperties(value = {"sagasWritten", "sagasComposed", "user"})
+    private Set<Creator> authors = new LinkedHashSet<>();
 
     @ManyToMany
-    @JsonIgnoreProperties(value = {"sagas", "user"})
-    private Set<Author> composers = new LinkedHashSet<>();
+    @JsonIgnoreProperties(value = {"sagasWritten", "sagasComposed", "user"})
+    private Set<Creator> composers = new LinkedHashSet<>();
 
     @ManyToMany
     @JsonIgnoreProperties(value = {"sagas"})

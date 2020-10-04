@@ -20,7 +20,7 @@ public class DistributionEntryModel extends AuditModel<String> {
     protected String roles = Strings.EMPTY;
 
     @Transient
-    protected Long creatorRef = 0L;
+    protected Long actorRef = 0L;
 
     @Transient
     protected Long sagaRef = 0L;
@@ -35,7 +35,7 @@ public class DistributionEntryModel extends AuditModel<String> {
         model.setId(entity.getId());
         model.setRoles(entity.getRoles());
         if(entity.getActor() != null) {
-            model.setCreatorRef(entity.getActor().getId());
+            model.setActorRef(entity.getActor().getId());
         }
         if (entity.getSaga() != null) {
             model.setSagaRef(entity.getSaga().getId());

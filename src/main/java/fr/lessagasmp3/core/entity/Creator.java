@@ -1,7 +1,7 @@
 package fr.lessagasmp3.core.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import fr.lessagasmp3.core.model.AuthorModel;
+import fr.lessagasmp3.core.model.CreatorModel;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,19 +14,29 @@ import java.util.Set;
 @Table
 @Getter(AccessLevel.PUBLIC)
 @Setter(AccessLevel.PUBLIC)
-public class Author extends AuthorModel {
+public class Creator extends CreatorModel {
 
     @ManyToMany(mappedBy="authors")
     @JsonIgnoreProperties(value = {"authors", "composers", "categories", "seasons", "distributionEntries", "anecdotes"})
-    private Set<Saga> sagas = new LinkedHashSet<>();
+    private Set<Saga> sagasWritten = new LinkedHashSet<>();
+
+    @ManyToMany(mappedBy="composers")
+    @JsonIgnoreProperties(value = {"authors", "composers", "categories", "seasons", "distributionEntries", "anecdotes"})
+    private Set<Saga> sagasComposed = new LinkedHashSet<>();
+
+    @OneToMany(
+            mappedBy = "actor",
+            orphanRemoval = true)
+    @JsonIgnoreProperties(value = {"saga", "actors"})
+    private Set<DistributionEntry> distributionEntries = new LinkedHashSet<>();
 
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     @JsonIgnoreProperties(value = {"username", "password", "email", "enabled", "lastPasswordResetDate", "authorities"})
-    private User user = new User();
+    private User user = null;
 
-    public static Author fromModel(AuthorModel model) {
-        Author entity = new Author();
+    public static Creator fromModel(CreatorModel model) {
+        Creator entity = new Creator();
         entity.setCreatedAt(model.getCreatedAt());
         entity.setCreatedBy(model.getCreatedBy());
         entity.setUpdatedAt(model.getUpdatedAt());
@@ -34,8 +44,10 @@ public class Author extends AuthorModel {
         entity.setId(model.getId());
         entity.setName(model.getName());
         entity.setNbSagas(model.getNbSagas());
-        entity.setSagasRef(model.getSagasRef());
         entity.setUserRef(model.getUserRef());
+        entity.setSagasWrittenRef(model.getSagasWrittenRef());
+        entity.setSagasComposedRef(model.getSagasComposedRef());
+        entity.setDistributionEntriesRef(model.getDistributionEntriesRef());
         return entity;
     }
 }

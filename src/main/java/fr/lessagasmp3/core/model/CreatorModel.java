@@ -1,6 +1,6 @@
 package fr.lessagasmp3.core.model;
 
-import fr.lessagasmp3.core.entity.Author;
+import fr.lessagasmp3.core.entity.Creator;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,7 +15,7 @@ import java.util.Set;
 @MappedSuperclass
 @Getter(AccessLevel.PUBLIC)
 @Setter(AccessLevel.PUBLIC)
-public class AuthorModel extends AuditModel<String> {
+public class CreatorModel extends AuditModel<String> {
 
     @NotNull
     protected String name = "";
@@ -24,14 +24,20 @@ public class AuthorModel extends AuditModel<String> {
     protected Integer nbSagas = 0;
 
     @Transient
-    private Set<Long> sagasRef = new LinkedHashSet<>();
-
-    @Transient
     private Long userRef = 0L;
 
-    public static AuthorModel fromEntity(Author entity) {
+    @Transient
+    private Set<Long> sagasWrittenRef = new LinkedHashSet<>();
+
+    @Transient
+    private Set<Long> sagasComposedRef = new LinkedHashSet<>();
+
+    @Transient
+    private Set<Long> distributionEntriesRef = new LinkedHashSet<>();
+
+    public static CreatorModel fromEntity(Creator entity) {
         Objects.requireNonNull(entity);
-        AuthorModel model = new AuthorModel();
+        CreatorModel model = new CreatorModel();
         model.setCreatedAt(entity.getCreatedAt());
         model.setCreatedBy(entity.getCreatedBy());
         model.setUpdatedAt(entity.getUpdatedAt());
@@ -42,8 +48,11 @@ public class AuthorModel extends AuditModel<String> {
         if (entity.getUser() != null) {
             model.setUserRef(entity.getUser().getId());
         }
-        entity.getSagas().forEach(saga -> model.getSagasRef().add(saga.getId()));
+        entity.getSagasWritten().forEach(saga -> model.getSagasWrittenRef().add(saga.getId()));
+        entity.getSagasComposed().forEach(saga -> model.getSagasComposedRef().add(saga.getId()));
+        entity.getDistributionEntries().forEach(distributionEntry -> model.getDistributionEntriesRef().add(distributionEntry.getId()));
         return model;
     }
 
 }
+
