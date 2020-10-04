@@ -5,7 +5,6 @@ import fr.lessagasmp3.core.model.AnecdoteModel;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
@@ -15,7 +14,6 @@ import javax.persistence.Table;
 @Table
 @Getter(AccessLevel.PUBLIC)
 @Setter(AccessLevel.PUBLIC)
-@ToString
 public class Anecdote extends AnecdoteModel {
 
     @ManyToOne

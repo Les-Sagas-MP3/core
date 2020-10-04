@@ -3,12 +3,14 @@ package fr.lessagasmp3.core.model;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 
+@MappedSuperclass
 @Getter(AccessLevel.PUBLIC)
 @Setter(AccessLevel.PUBLIC)
-@MappedSuperclass
+@ToString
 public class IdentityModel {
 
     @Id

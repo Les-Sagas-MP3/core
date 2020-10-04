@@ -5,7 +5,6 @@ import fr.lessagasmp3.core.model.CategoryModel;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
@@ -17,7 +16,6 @@ import java.util.Set;
 @Table
 @Getter(AccessLevel.PUBLIC)
 @Setter(AccessLevel.PUBLIC)
-@ToString(exclude = {"sagas"})
 public class Category extends CategoryModel {
 
     @ManyToMany(mappedBy="categories")

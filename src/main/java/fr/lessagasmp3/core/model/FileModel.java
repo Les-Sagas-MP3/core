@@ -8,10 +8,11 @@ import lombok.Setter;
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 import javax.validation.constraints.NotNull;
+import java.util.Objects;
 
+@MappedSuperclass
 @Getter(AccessLevel.PUBLIC)
 @Setter(AccessLevel.PUBLIC)
-@MappedSuperclass
 public class FileModel extends AuditModel<String> {
 
     @NotNull
@@ -28,6 +29,7 @@ public class FileModel extends AuditModel<String> {
     protected String content;
 
     public static FileModel fromEntity(File entity) {
+        Objects.requireNonNull(entity);
         FileModel model = new FileModel();
         model.setCreatedAt(entity.getCreatedAt());
         model.setCreatedBy(entity.getCreatedBy());

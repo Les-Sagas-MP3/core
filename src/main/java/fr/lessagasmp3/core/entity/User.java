@@ -5,7 +5,6 @@ import fr.lessagasmp3.core.model.UserModel;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import javax.persistence.*;
@@ -16,7 +15,6 @@ import java.util.Set;
 @Table
 @Getter(AccessLevel.PUBLIC)
 @Setter(AccessLevel.PUBLIC)
-@ToString(exclude = {"authorities"})
 public class User extends UserModel {
 
     @ManyToMany

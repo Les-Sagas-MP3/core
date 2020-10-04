@@ -9,11 +9,12 @@ import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import java.util.LinkedHashSet;
+import java.util.Objects;
 import java.util.Set;
 
+@MappedSuperclass
 @Getter(AccessLevel.PUBLIC)
 @Setter(AccessLevel.PUBLIC)
-@MappedSuperclass
 public class CategoryModel extends AuditModel<String> {
 
     @NotNull
@@ -26,6 +27,7 @@ public class CategoryModel extends AuditModel<String> {
     private Set<Long> sagasRef = new LinkedHashSet<>();
 
     public static CategoryModel fromEntity(Category entity) {
+        Objects.requireNonNull(entity);
         CategoryModel model = new CategoryModel();
         model.setCreatedAt(entity.getCreatedAt());
         model.setCreatedBy(entity.getCreatedBy());

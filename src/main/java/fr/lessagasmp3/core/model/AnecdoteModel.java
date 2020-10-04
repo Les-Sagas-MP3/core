@@ -5,16 +5,15 @@ import fr.lessagasmp3.core.entity.Anecdote;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
+import java.util.Objects;
 
+@MappedSuperclass
 @Getter(AccessLevel.PUBLIC)
 @Setter(AccessLevel.PUBLIC)
-@MappedSuperclass
-@ToString
 public class AnecdoteModel extends AuditModel<String> {
 
     @Column(columnDefinition = "TEXT")
@@ -24,6 +23,7 @@ public class AnecdoteModel extends AuditModel<String> {
     protected Long sagaRef = 0L;
 
     public static AnecdoteModel fromEntity(Anecdote entity) {
+        Objects.requireNonNull(entity);
         AnecdoteModel model = new AnecdoteModel();
         model.setCreatedAt(entity.getCreatedAt());
         model.setCreatedBy(entity.getCreatedBy());
@@ -31,7 +31,9 @@ public class AnecdoteModel extends AuditModel<String> {
         model.setUpdatedBy(entity.getUpdatedBy());
         model.setId(entity.getId());
         model.setAnecdote(entity.getAnecdote());
-        model.setSagaRef(entity.getSaga().getId());
+        if(entity.getSaga() != null) {
+            model.setSagaRef(entity.getSaga().getId());
+        }
         return model;
     }
 

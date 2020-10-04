@@ -5,7 +5,6 @@ import fr.lessagasmp3.core.model.SeasonModel;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
@@ -18,7 +17,6 @@ import java.util.Set;
 @Table
 @Getter(AccessLevel.PUBLIC)
 @Setter(AccessLevel.PUBLIC)
-@ToString
 public class Season extends SeasonModel {
 
     @ManyToOne

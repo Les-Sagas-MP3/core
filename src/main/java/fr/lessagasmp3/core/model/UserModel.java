@@ -11,6 +11,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.LinkedHashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Getter(AccessLevel.PUBLIC)
@@ -44,6 +45,7 @@ public class UserModel extends AuditModel<String> {
     private Set<Long> authoritiesRef = new LinkedHashSet<>();
 
     public static UserModel fromEntity(User entity) {
+        Objects.requireNonNull(entity);
         UserModel model = new UserModel();
         model.setCreatedAt(entity.getCreatedAt());
         model.setCreatedBy(entity.getCreatedBy());
@@ -51,16 +53,15 @@ public class UserModel extends AuditModel<String> {
         model.setUpdatedBy(entity.getUpdatedBy());
         model.setId(entity.getId());
         model.setUsername(entity.getUsername());
-        model.setPassword(entity.getPassword());
+        model.setPassword("***");
         model.setEmail(entity.getEmail());
         model.setEnabled(entity.getEnabled());
         model.setLastPasswordResetDate(entity.getLastPasswordResetDate());
-        model.setCreatorRef(entity.getAuthor().getId());
+        if(entity.getAuthor() != null) {
+            model.setCreatorRef(entity.getAuthor().getId());
+        }
         entity.getAuthorities().forEach(authority -> model.getAuthoritiesRef().add(authority.getId()));
         return model;
     }
 
-    public void hidePassword() {
-        this.password = "***";
-    }
 }
