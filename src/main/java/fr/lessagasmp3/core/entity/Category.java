@@ -24,4 +24,16 @@ public class Category extends CategoryModel {
     @JsonIgnoreProperties(value = {"authors", "composers", "categories", "seasons", "distributionEntries", "anecdotes"})
     private Set<Saga> sagas = new LinkedHashSet<>();
 
+    public static Category fromModel(CategoryModel model) {
+        Category entity = new Category();
+        entity.setCreatedAt(model.getCreatedAt());
+        entity.setCreatedBy(model.getCreatedBy());
+        entity.setUpdatedAt(model.getUpdatedAt());
+        entity.setUpdatedBy(model.getUpdatedBy());
+        entity.setId(model.getId());
+        entity.setName(model.getName());
+        entity.setNbSagas(model.getNbSagas());
+        entity.setSagasRef(model.getSagasRef());
+        return entity;
+    }
 }

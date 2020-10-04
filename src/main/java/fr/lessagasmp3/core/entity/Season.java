@@ -31,4 +31,16 @@ public class Season extends SeasonModel {
     @JsonIgnoreProperties(value = {"season"})
     private Set<Episode> episodes = new LinkedHashSet<>();
 
+    public static Season fromModel(SeasonModel model) {
+        Season entity = new Season();
+        entity.setCreatedAt(model.getCreatedAt());
+        entity.setCreatedBy(model.getCreatedBy());
+        entity.setUpdatedAt(model.getUpdatedAt());
+        entity.setUpdatedBy(model.getUpdatedBy());
+        entity.setId(model.getId());
+        entity.setNumber(model.getNumber());
+        entity.setSagaRef(model.getSagaRef());
+        entity.setEpisodesRef(model.getEpisodesRef());
+        return entity;
+    }
 }
