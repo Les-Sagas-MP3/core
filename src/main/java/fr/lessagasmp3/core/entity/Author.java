@@ -5,7 +5,6 @@ import fr.lessagasmp3.core.model.AuthorModel;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.LinkedHashSet;
@@ -15,7 +14,6 @@ import java.util.Set;
 @Table
 @Getter(AccessLevel.PUBLIC)
 @Setter(AccessLevel.PUBLIC)
-@ToString(exclude = {"sagas"})
 public class Author extends AuthorModel {
 
     @ManyToMany(mappedBy="authors")

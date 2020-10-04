@@ -5,7 +5,6 @@ import fr.lessagasmp3.core.model.SagaModel;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
@@ -18,7 +17,6 @@ import java.util.Set;
 @Table
 @Getter(AccessLevel.PUBLIC)
 @Setter(AccessLevel.PUBLIC)
-@ToString
 public class Saga extends SagaModel {
 
     @ManyToMany

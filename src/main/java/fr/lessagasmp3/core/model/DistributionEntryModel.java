@@ -5,16 +5,15 @@ import fr.lessagasmp3.core.entity.DistributionEntry;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
+import java.util.Objects;
 
+@MappedSuperclass
 @Getter(AccessLevel.PUBLIC)
 @Setter(AccessLevel.PUBLIC)
-@MappedSuperclass
-@ToString
 public class DistributionEntryModel extends AuditModel<String> {
 
     @NotNull
@@ -27,6 +26,7 @@ public class DistributionEntryModel extends AuditModel<String> {
     protected Long sagaRef = 0L;
 
     public static DistributionEntryModel fromEntity(DistributionEntry entity) {
+        Objects.requireNonNull(entity);
         DistributionEntryModel model = new DistributionEntryModel();
         model.setCreatedAt(entity.getCreatedAt());
         model.setCreatedBy(entity.getCreatedBy());
@@ -34,8 +34,12 @@ public class DistributionEntryModel extends AuditModel<String> {
         model.setUpdatedBy(entity.getUpdatedBy());
         model.setId(entity.getId());
         model.setRoles(entity.getRoles());
-        model.setCreatorRef(entity.getActor().getId());
-        model.setSagaRef(entity.getSaga().getId());
+        if(entity.getActor() != null) {
+            model.setCreatorRef(entity.getActor().getId());
+        }
+        if (entity.getSaga() != null) {
+            model.setSagaRef(entity.getSaga().getId());
+        }
         return model;
     }
 

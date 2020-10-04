@@ -5,17 +5,17 @@ import fr.lessagasmp3.core.entity.Authority;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.MappedSuperclass;
 import javax.validation.constraints.NotNull;
+import java.util.Objects;
 
+@MappedSuperclass
 @Getter(AccessLevel.PUBLIC)
 @Setter(AccessLevel.PUBLIC)
-@MappedSuperclass
-@EntityListeners(AuditingEntityListener.class)
-@ToString
 public class AuthorityModel extends AuditModel<String> {
 
     @Column(length = 50)
@@ -24,6 +24,7 @@ public class AuthorityModel extends AuditModel<String> {
     protected AuthorityName name;
 
     public static AuthorityModel fromEntity(Authority entity) {
+        Objects.requireNonNull(entity);
         AuthorityModel model = new AuthorityModel();
         model.setCreatedAt(entity.getCreatedAt());
         model.setCreatedBy(entity.getCreatedBy());

@@ -41,12 +41,15 @@ public class AuthorController {
     @RequestMapping(value = "/authors", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE, params = {"name"})
     public AuthorModel getByName(@RequestParam("name") String name) {
         Author entity = authorRepository.findByName(name);
-        return AuthorModel.fromEntity(entity);
+        if(entity != null) {
+            return AuthorModel.fromEntity(entity);
+        }
+        return null;
     }
 
     @PreAuthorize("hasRole('USER')")
-    @RequestMapping(value = "/authors", method = RequestMethod.POST, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    public void create(@RequestBody AuthorModel authorModel) {
+    @RequestMapping(value = "/authors", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public AuthorModel create(@RequestBody AuthorModel authorModel) {
 
         // Verify that body is complete
         if(authorModel == null ||
@@ -60,7 +63,7 @@ public class AuthorController {
         Author author = new Author();
         author.setName(authorModel.getName());
         author.setNbSagas(authorModel.getNbSagas());
-        authorRepository.save(author);
+        return AuthorModel.fromEntity(authorRepository.save(author));
     }
 
     @PreAuthorize("hasRole('USER')")

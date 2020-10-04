@@ -51,12 +51,15 @@ public class CategoryController {
     @RequestMapping(value = "/categories", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE, params = {"name"})
     public CategoryModel getByName(@RequestParam("name") String name) {
         Category entity = categoryRepository.findByName(name);
-        return CategoryModel.fromEntity(entity);
+        if(entity != null) {
+            return CategoryModel.fromEntity(entity);
+        }
+        return null;
     }
 
     @PreAuthorize("hasRole('USER')")
-    @RequestMapping(value = "/categories", method = RequestMethod.POST, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    public void create(@RequestBody CategoryModel categoryModel) {
+    @RequestMapping(value = "/categories", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public CategoryModel create(@RequestBody CategoryModel categoryModel) {
 
         // Verify that body is complete
         if(categoryModel == null ||
@@ -70,7 +73,7 @@ public class CategoryController {
         Category category = new Category();
         category.setName(categoryModel.getName());
         category.setNbSagas(categoryModel.getNbSagas());
-        categoryRepository.save(category);
+        return CategoryModel.fromEntity(categoryRepository.save(category));
     }
 
     @PreAuthorize("hasRole('USER')")

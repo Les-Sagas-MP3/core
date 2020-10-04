@@ -11,10 +11,11 @@ import javax.persistence.Column;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.MappedSuperclass;
+import java.util.Objects;
 
+@MappedSuperclass
 @Getter(AccessLevel.PUBLIC)
 @Setter(AccessLevel.PUBLIC)
-@MappedSuperclass
 public class EventLogModel extends AuditModel<String> {
 
     @Column(length = 50)
@@ -23,6 +24,7 @@ public class EventLogModel extends AuditModel<String> {
     protected EventLogName name;
 
     public static EventLogModel fromEntity(EventLog entity) {
+        Objects.requireNonNull(entity);
         EventLogModel model = new EventLogModel();
         model.setCreatedAt(entity.getCreatedAt());
         model.setCreatedBy(entity.getCreatedBy());

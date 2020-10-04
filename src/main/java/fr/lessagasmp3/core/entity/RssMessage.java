@@ -4,7 +4,6 @@ import fr.lessagasmp3.core.model.RssMessageModel;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -13,7 +12,6 @@ import javax.persistence.Table;
 @Table
 @Getter(AccessLevel.PUBLIC)
 @Setter(AccessLevel.PUBLIC)
-@ToString
 public class RssMessage extends RssMessageModel {
 
     public static RssMessage fromModel(RssMessageModel model) {

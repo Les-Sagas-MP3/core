@@ -67,13 +67,11 @@ public class UserController {
         }
 
         // Transform and return organization
-        UserModel model = UserModel.fromEntity(entity);
-        model.hidePassword();
-        return model;
+        return UserModel.fromEntity(entity);
     }
 
     @RequestMapping(value = "/user", method = RequestMethod.POST, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    public void create(@RequestBody UserModel userModel) {
+    public UserModel create(@RequestBody UserModel userModel) {
 
         // Verify that body is complete
         if(userModel == null ||
@@ -91,7 +89,7 @@ public class UserController {
         user.setUsername(userModel.getUsername());
         user.addAuthority(userAuthority);
         user.setEnabled(true);
-        userRepository.save(user);
+        return UserModel.fromEntity(userRepository.save(user));
     }
 
     @PreAuthorize("hasRole('USER')")
