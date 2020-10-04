@@ -63,7 +63,6 @@ public class CategoryController {
 
         // Verify that body is complete
         if(categoryModel == null ||
-                categoryModel.getId() <= 0 ||
                 categoryModel.getName() == null || categoryModel.getName().isEmpty()) {
             LOGGER.error("Impossible to create category : body is incomplete");
             throw new BadRequestException();

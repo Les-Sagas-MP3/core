@@ -22,7 +22,7 @@ public class DistributionEntry extends DistributionEntryModel {
 
     @ManyToOne
     @JsonIgnoreProperties(value = {"sagas", "user", "distributionEntries"})
-    private Author actor = new Author();
+    private Creator actor = new Creator();
 
     public static DistributionEntry fromModel(DistributionEntryModel model) {
         DistributionEntry entity = new DistributionEntry();
@@ -32,7 +32,7 @@ public class DistributionEntry extends DistributionEntryModel {
         entity.setUpdatedBy(model.getUpdatedBy());
         entity.setId(model.getId());
         entity.setRoles(model.getRoles());
-        entity.setCreatorRef(model.getCreatorRef());
+        entity.setActorRef(model.getActorRef());
         entity.setSagaRef(model.getSagaRef());
         return entity;
     }

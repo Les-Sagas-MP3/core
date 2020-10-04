@@ -14,7 +14,7 @@ jobs:
     - name: Set up JDK
       uses: actions/setup-java@v1
       with:
-        java-version: 13
+        java-version: 14
         server-id: github
         settings-path: ${{ github.workspace }}
     - name: Get the version
@@ -33,7 +33,7 @@ jobs:
     - name: Set up JDK
       uses: actions/setup-java@v1
       with:
-        java-version: 13
+        java-version: 14
         server-id: github
         settings-path: ${{ github.workspace }}
     - name: Build with Maven
@@ -47,7 +47,7 @@ jobs:
     - name: Set up JDK
       uses: actions/setup-java@v1
       with:
-        java-version: 13
+        java-version: 14
         server-id: github
         settings-path: ${{ github.workspace }}
     - name: Build with Maven

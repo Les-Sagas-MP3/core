@@ -57,8 +57,8 @@ public class UserModel extends AuditModel<String> {
         model.setEmail(entity.getEmail());
         model.setEnabled(entity.getEnabled());
         model.setLastPasswordResetDate(entity.getLastPasswordResetDate());
-        if(entity.getAuthor() != null) {
-            model.setCreatorRef(entity.getAuthor().getId());
+        if(entity.getCreator() != null) {
+            model.setCreatorRef(entity.getCreator().getId());
         }
         entity.getAuthorities().forEach(authority -> model.getAuthoritiesRef().add(authority.getId()));
         return model;

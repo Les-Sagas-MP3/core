@@ -1,7 +1,7 @@
 package fr.lessagasmp3.core.controller;
 
 import fr.lessagasmp3.core.constant.AuthorityName;
-import fr.lessagasmp3.core.entity.Author;
+import fr.lessagasmp3.core.entity.Creator;
 import fr.lessagasmp3.core.entity.Authority;
 import fr.lessagasmp3.core.entity.User;
 import fr.lessagasmp3.core.exception.BadRequestException;
@@ -156,9 +156,9 @@ public class UserController {
         }
 
         // Unlink data to user
-        Set<Author> authors = authorRepository.findAllByUserId(id);
-        authors.forEach(author -> author.setUser(null));
-        authorRepository.saveAll(authors);
+        Set<Creator> creators = authorRepository.findAllByUserId(id);
+        creators.forEach(author -> author.setUser(null));
+        authorRepository.saveAll(creators);
 
         // Delete user
         userRepository.deleteById(id);

@@ -1,9 +1,9 @@
 package fr.lessagasmp3.core.controller;
 
-import fr.lessagasmp3.core.entity.Author;
+import fr.lessagasmp3.core.entity.Creator;
 import fr.lessagasmp3.core.exception.BadRequestException;
 import fr.lessagasmp3.core.exception.NotFoundException;
-import fr.lessagasmp3.core.model.AuthorModel;
+import fr.lessagasmp3.core.model.CreatorModel;
 import fr.lessagasmp3.core.repository.AuthorRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,69 +25,68 @@ public class AuthorController {
     private AuthorRepository authorRepository;
 
     @RequestMapping(value = "/authors", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE, params = {"ids"})
-    public Set<AuthorModel> getAllByIds(@RequestParam("ids") Set<Long> ids) {
-        Set<AuthorModel> models = new LinkedHashSet<>();
+    public Set<CreatorModel> getAllByIds(@RequestParam("ids") Set<Long> ids) {
+        Set<CreatorModel> models = new LinkedHashSet<>();
         for(Long id : ids) {
-            Author entity = authorRepository.findById(id).orElse(null);
+            Creator entity = authorRepository.findById(id).orElse(null);
             if(entity == null) {
                 LOGGER.error("Impossible to get author {} : it doesn't exist", id);
                 continue;
             }
-            models.add(AuthorModel.fromEntity(entity));
+            models.add(CreatorModel.fromEntity(entity));
         }
         return models;
     }
 
     @RequestMapping(value = "/authors", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE, params = {"name"})
-    public AuthorModel getByName(@RequestParam("name") String name) {
-        Author entity = authorRepository.findByName(name);
+    public CreatorModel getByName(@RequestParam("name") String name) {
+        Creator entity = authorRepository.findByName(name);
         if(entity != null) {
-            return AuthorModel.fromEntity(entity);
+            return CreatorModel.fromEntity(entity);
         }
         return null;
     }
 
     @PreAuthorize("hasRole('USER')")
     @RequestMapping(value = "/authors", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public AuthorModel create(@RequestBody AuthorModel authorModel) {
+    public CreatorModel create(@RequestBody CreatorModel creatorModel) {
 
         // Verify that body is complete
-        if(authorModel == null ||
-                authorModel.getId() <= 0 ||
-                authorModel.getName() == null || authorModel.getName().isEmpty()) {
+        if(creatorModel == null ||
+                creatorModel.getName() == null || creatorModel.getName().isEmpty()) {
             LOGGER.error("Impossible to create author : body is incomplete");
             throw new BadRequestException();
         }
 
         // Create author
-        Author author = new Author();
-        author.setName(authorModel.getName());
-        author.setNbSagas(authorModel.getNbSagas());
-        return AuthorModel.fromEntity(authorRepository.save(author));
+        Creator creator = new Creator();
+        creator.setName(creatorModel.getName());
+        creator.setNbSagas(creatorModel.getNbSagas());
+        return CreatorModel.fromEntity(authorRepository.save(creator));
     }
 
     @PreAuthorize("hasRole('USER')")
     @RequestMapping(value = "/authors", method = RequestMethod.PUT, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    public void update(@RequestBody AuthorModel authorModel) {
+    public void update(@RequestBody CreatorModel creatorModel) {
 
         // Verify that body is complete
-        if(authorModel == null ||
-                authorModel.getId() <= 0 ||
-                authorModel.getName() == null || authorModel.getName().isEmpty()) {
+        if(creatorModel == null ||
+                creatorModel.getId() <= 0 ||
+                creatorModel.getName() == null || creatorModel.getName().isEmpty()) {
             LOGGER.error("Impossible to create author : body is incomplete");
             throw new BadRequestException();
         }
 
         // Verify that author exists
-        Author author = authorRepository.findById(authorModel.getId()).orElse(null);
-        if(author == null) {
-            LOGGER.error("Impossible to update author : author {} not found", authorModel.getId());
+        Creator creator = authorRepository.findById(creatorModel.getId()).orElse(null);
+        if(creator == null) {
+            LOGGER.error("Impossible to update author : author {} not found", creatorModel.getId());
             throw new NotFoundException();
         }
 
         // Update and save author
-        author.setName(authorModel.getName());
-        author.setNbSagas(authorModel.getNbSagas());
-        authorRepository.save(author);
+        creator.setName(creatorModel.getName());
+        creator.setNbSagas(creatorModel.getNbSagas());
+        authorRepository.save(creator);
     }
 }
