@@ -27,4 +27,17 @@ public class Author extends AuthorModel {
     @JsonIgnoreProperties(value = {"username", "password", "email", "enabled", "lastPasswordResetDate", "authorities"})
     private User user = new User();
 
+    public static Author fromModel(AuthorModel model) {
+        Author entity = new Author();
+        entity.setCreatedAt(model.getCreatedAt());
+        entity.setCreatedBy(model.getCreatedBy());
+        entity.setUpdatedAt(model.getUpdatedAt());
+        entity.setUpdatedBy(model.getUpdatedBy());
+        entity.setId(model.getId());
+        entity.setName(model.getName());
+        entity.setNbSagas(model.getNbSagas());
+        entity.setSagasRef(model.getSagasRef());
+        entity.setUserRef(model.getUserRef());
+        return entity;
+    }
 }

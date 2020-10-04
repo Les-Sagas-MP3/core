@@ -36,4 +36,15 @@ public class Authority extends AuthorityModel implements GrantedAuthority {
     public String getAuthority() {
         return getName().name();
     }
+
+    public static Authority fromModel(AuthorityModel model) {
+        Authority entity = new Authority();
+        entity.setCreatedAt(model.getCreatedAt());
+        entity.setCreatedBy(model.getCreatedBy());
+        entity.setUpdatedAt(model.getUpdatedAt());
+        entity.setUpdatedBy(model.getUpdatedBy());
+        entity.setId(model.getId());
+        entity.setName(model.getName());
+        return entity;
+    }
 }

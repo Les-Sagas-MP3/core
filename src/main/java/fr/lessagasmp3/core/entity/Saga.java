@@ -50,4 +50,35 @@ public class Saga extends SagaModel {
             orphanRemoval = true)
     @JsonIgnoreProperties(value = {"saga"})
     private Set<Anecdote> anecdotes = new LinkedHashSet<>();
+
+    public static Saga fromModel(SagaModel model) {
+        Saga entity = new Saga();
+        entity.setCreatedAt(model.getCreatedAt());
+        entity.setCreatedBy(model.getCreatedBy());
+        entity.setUpdatedAt(model.getUpdatedAt());
+        entity.setUpdatedBy(model.getUpdatedBy());
+        entity.setId(model.getId());
+        entity.setTitle(model.getTitle());
+        entity.setStatus(model.getStatus());
+        entity.setStartDate(model.getStartDate());
+        entity.setDuration(model.getDuration());
+        entity.setSynopsis(model.getSynopsis());
+        entity.setOrigin(model.getOrigin());
+        entity.setBackgroundUrl(model.getBackgroundUrl());
+        entity.setCoverUrl(model.getCoverUrl());
+        entity.setUrl(model.getUrl());
+        entity.setUrlWiki(model.getUrlWiki());
+        entity.setLevelArt(model.getLevelArt());
+        entity.setLevelTech(model.getLevelTech());
+        entity.setNbReviews(model.getNbReviews());
+        entity.setUrlReviews(model.getUrlReviews());
+        entity.setNbBravos(model.getNbBravos());
+        entity.setAuthorsRef(model.getAuthorsRef());
+        entity.setComposersRef(model.getComposersRef());
+        entity.setCategoriesRef(model.getCategoriesRef());
+        entity.setSeasonsRef(model.getSeasonsRef());
+        entity.setDistributionEntriesRef(model.getDistributionEntriesRef());
+        entity.setAnecdotesRef(model.getAnecdotesRef());
+        return entity;
+    }
 }

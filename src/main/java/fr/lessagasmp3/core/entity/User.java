@@ -49,4 +49,21 @@ public class User extends UserModel {
                         authority -> {},
                         () -> this.authorities.add(newAuthority));
     }
+
+    public static User fromModel(UserModel model) {
+        User entity = new User();
+        entity.setCreatedAt(model.getCreatedAt());
+        entity.setCreatedBy(model.getCreatedBy());
+        entity.setUpdatedAt(model.getUpdatedAt());
+        entity.setUpdatedBy(model.getUpdatedBy());
+        entity.setId(model.getId());
+        entity.setUsername(model.getUsername());
+        entity.setPassword(model.getPassword());
+        entity.setEmail(model.getEmail());
+        entity.setEnabled(model.getEnabled());
+        entity.setLastPasswordResetDate(model.getLastPasswordResetDate());
+        entity.setCreatorRef(model.getCreatorRef());
+        entity.setAuthoritiesRef(model.getAuthoritiesRef());
+        return entity;
+    }
 }

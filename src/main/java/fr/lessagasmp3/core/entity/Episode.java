@@ -22,4 +22,17 @@ public class Episode extends EpisodeModel {
     @JsonIgnoreProperties(value = {"sagas", "episodes"})
     private Season season = new Season();
 
+    public static Episode fromModel(EpisodeModel model) {
+        Episode entity = new Episode();
+        entity.setCreatedAt(model.getCreatedAt());
+        entity.setCreatedBy(model.getCreatedBy());
+        entity.setUpdatedAt(model.getUpdatedAt());
+        entity.setUpdatedBy(model.getUpdatedBy());
+        entity.setId(model.getId());
+        entity.setNumber(model.getNumber());
+        entity.setTitle(model.getTitle());
+        entity.setInfos(model.getInfos());
+        entity.setSeasonRef(model.getSeasonRef());
+        return entity;
+    }
 }

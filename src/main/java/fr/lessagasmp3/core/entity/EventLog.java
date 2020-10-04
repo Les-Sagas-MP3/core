@@ -23,4 +23,15 @@ public class EventLog extends EventLogModel {
         super();
         this.name = name;
     }
+
+    public static EventLog fromModel(EventLogModel model) {
+        EventLog entity = new EventLog();
+        entity.setCreatedAt(model.getCreatedAt());
+        entity.setCreatedBy(model.getCreatedBy());
+        entity.setUpdatedAt(model.getUpdatedAt());
+        entity.setUpdatedBy(model.getUpdatedBy());
+        entity.setId(model.getId());
+        entity.setName(model.getName());
+        return entity;
+    }
 }
