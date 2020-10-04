@@ -118,12 +118,4 @@ public class SagaModel extends AuditModel<String> {
         return model;
     }
 
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("SagaModel{");
-        sb.append("id=").append(id).append('\'');
-        sb.append(", title='").append(title);
-        sb.append('}');
-        return sb.toString();
-    }
 }
