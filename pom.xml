@@ -52,7 +52,7 @@
 		<dependency>
 			<groupId>com.google.firebase</groupId>
 			<artifactId>firebase-admin</artifactId>
-			<version>7.0.0</version>
+			<version>7.0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.tika</groupId>
@@ -67,7 +67,7 @@
 		<dependency>
 			<groupId>io.fabric8</groupId>
 			<artifactId>docker-maven-plugin</artifactId>
-			<version>0.33.0</version>
+			<version>0.34.1</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.validation</groupId>
