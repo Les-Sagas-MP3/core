@@ -37,7 +37,7 @@ public class DistributionController {
 
     @RequestMapping(value = "/distribution", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE, params = {"actorId", "sagaId", "roles"})
     public DistributionEntryModel getByCreatorIdAndSagaIdAndRoles(@RequestParam("actorId") Long actorId, @RequestParam("sagaId") Long sagaId, @RequestParam("roles") String roles) {
-        DistributionEntry entity = distributionEntryRepository.findByActorIdSagaIdAndRoles(actorId, sagaId, roles);
+        DistributionEntry entity = distributionEntryRepository.findByActorIdAndSagaIdAndRoles(actorId, sagaId, roles);
         if(entity != null) {
             return DistributionEntryModel.fromEntity(entity);
         }
