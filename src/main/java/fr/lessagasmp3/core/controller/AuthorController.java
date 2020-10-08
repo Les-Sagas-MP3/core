@@ -1,10 +1,11 @@
 package fr.lessagasmp3.core.controller;
 
+import com.google.gson.Gson;
 import fr.lessagasmp3.core.entity.Creator;
 import fr.lessagasmp3.core.exception.BadRequestException;
 import fr.lessagasmp3.core.exception.NotFoundException;
 import fr.lessagasmp3.core.model.CreatorModel;
-import fr.lessagasmp3.core.repository.AuthorRepository;
+import fr.lessagasmp3.core.repository.CreatorRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,13 +23,16 @@ public class AuthorController {
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthorController.class);
 
     @Autowired
-    private AuthorRepository authorRepository;
+    private CreatorRepository creatorRepository;
+
+    @Autowired
+    private Gson gson;
 
     @RequestMapping(value = "/authors", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE, params = {"ids"})
     public Set<CreatorModel> getAllByIds(@RequestParam("ids") Set<Long> ids) {
         Set<CreatorModel> models = new LinkedHashSet<>();
         for(Long id : ids) {
-            Creator entity = authorRepository.findById(id).orElse(null);
+            Creator entity = creatorRepository.findById(id).orElse(null);
             if(entity == null) {
                 LOGGER.error("Impossible to get author {} : it doesn't exist", id);
                 continue;
@@ -40,7 +44,7 @@ public class AuthorController {
 
     @RequestMapping(value = "/authors", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE, params = {"name"})
     public CreatorModel getByName(@RequestParam("name") String name) {
-        Creator entity = authorRepository.findByName(name);
+        Creator entity = creatorRepository.findByName(name);
         if(entity != null) {
             return CreatorModel.fromEntity(entity);
         }
@@ -49,7 +53,9 @@ public class AuthorController {
 
     @PreAuthorize("hasRole('USER')")
     @RequestMapping(value = "/authors", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public CreatorModel create(@RequestBody CreatorModel creatorModel) {
+    public CreatorModel create(@RequestBody String creatorModelStr) {
+
+        CreatorModel creatorModel = gson.fromJson(creatorModelStr, CreatorModel.class);
 
         // Verify that body is complete
         if(creatorModel == null ||
@@ -62,7 +68,7 @@ public class AuthorController {
         Creator creator = new Creator();
         creator.setName(creatorModel.getName());
         creator.setNbSagas(creatorModel.getNbSagas());
-        return CreatorModel.fromEntity(authorRepository.save(creator));
+        return CreatorModel.fromEntity(creatorRepository.save(creator));
     }
 
     @PreAuthorize("hasRole('USER')")
@@ -78,7 +84,7 @@ public class AuthorController {
         }
 
         // Verify that author exists
-        Creator creator = authorRepository.findById(creatorModel.getId()).orElse(null);
+        Creator creator = creatorRepository.findById(creatorModel.getId()).orElse(null);
         if(creator == null) {
             LOGGER.error("Impossible to update author : author {} not found", creatorModel.getId());
             throw new NotFoundException();
@@ -87,6 +93,6 @@ public class AuthorController {
         // Update and save author
         creator.setName(creatorModel.getName());
         creator.setNbSagas(creatorModel.getNbSagas());
-        authorRepository.save(creator);
+        creatorRepository.save(creator);
     }
 }
