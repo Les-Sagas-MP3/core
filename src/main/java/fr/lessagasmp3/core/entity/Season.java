@@ -37,6 +37,7 @@ public class Season extends SeasonModel {
         entity.setUpdatedBy(model.getUpdatedBy());
         entity.setId(model.getId());
         entity.setNumber(model.getNumber());
+        entity.setName(model.getName());
         entity.setSagaRef(model.getSagaRef());
         entity.setEpisodesRef(model.getEpisodesRef());
         return entity;

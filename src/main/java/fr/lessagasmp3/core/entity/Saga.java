@@ -62,6 +62,7 @@ public class Saga extends SagaModel {
         entity.setDuration(model.getDuration());
         entity.setSynopsis(model.getSynopsis());
         entity.setOrigin(model.getOrigin());
+        entity.setGenese(model.getGenese());
         entity.setBackgroundUrl(model.getBackgroundUrl());
         entity.setCoverUrl(model.getCoverUrl());
         entity.setUrl(model.getUrl());
