@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Set;
 
 @Repository
-public interface AuthorRepository extends JpaRepository<Creator, Long> {
+public interface CreatorRepository extends JpaRepository<Creator, Long> {
     Creator findByName(String name);
 
     Set<Creator> findAllByUserId(Long userId);

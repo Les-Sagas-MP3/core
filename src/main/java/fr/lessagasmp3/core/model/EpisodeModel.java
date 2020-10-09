@@ -19,6 +19,9 @@ public class EpisodeModel extends AuditModel<String> {
     protected Integer number;
 
     @NotNull
+    protected String displayedNumber;
+
+    @NotNull
     protected String title;
 
     @NotNull
@@ -36,6 +39,7 @@ public class EpisodeModel extends AuditModel<String> {
         model.setUpdatedBy(entity.getUpdatedBy());
         model.setId(entity.getId());
         model.setNumber(entity.getNumber());
+        model.setDisplayedNumber(entity.getDisplayedNumber());
         model.setTitle(entity.getTitle());
         model.setInfos(entity.getInfos());
         if(entity.getSeason() != null) {

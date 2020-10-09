@@ -41,6 +41,10 @@ public class SagaModel extends AuditModel<String> {
     @NotNull
     protected String origin = Strings.EMPTY;
 
+    @Column(columnDefinition = "TEXT")
+    @NotNull
+    protected String genese = Strings.EMPTY;
+
     @NotNull
     protected String backgroundUrl = Strings.EMPTY;
 
@@ -100,6 +104,7 @@ public class SagaModel extends AuditModel<String> {
         model.setDuration(entity.getDuration());
         model.setSynopsis(entity.getSynopsis());
         model.setOrigin(entity.getOrigin());
+        model.setGenese(entity.getGenese());
         model.setBackgroundUrl(entity.getBackgroundUrl());
         model.setCoverUrl(entity.getCoverUrl());
         model.setUrl(entity.getUrl());
@@ -118,12 +123,4 @@ public class SagaModel extends AuditModel<String> {
         return model;
     }
 
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("SagaModel{");
-        sb.append("id=").append(id).append('\'');
-        sb.append(", title='").append(title);
-        sb.append('}');
-        return sb.toString();
-    }
 }

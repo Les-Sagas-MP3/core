@@ -8,7 +8,7 @@ import fr.lessagasmp3.core.entity.Creator;
 import fr.lessagasmp3.core.entity.Category;
 import fr.lessagasmp3.core.entity.EventLog;
 import fr.lessagasmp3.core.entity.Saga;
-import fr.lessagasmp3.core.repository.AuthorRepository;
+import fr.lessagasmp3.core.repository.CreatorRepository;
 import fr.lessagasmp3.core.repository.CategoryRepository;
 import fr.lessagasmp3.core.repository.EventLogRepository;
 import fr.lessagasmp3.core.repository.SagaRepository;
@@ -45,7 +45,7 @@ public class SagaScrapper {
     private static final short COLUMN_BRAVOS_INDEX = 6;
 
     @Autowired
-    private AuthorRepository authorRepository;
+    private CreatorRepository creatorRepository;
 
     @Autowired
     private CategoryRepository categoryRepository;
@@ -133,13 +133,13 @@ public class SagaScrapper {
                     String authorsString = cell.getFirstChild().getTextContent();
                     String[] authorsTab = authorsString.split("(,\\s*)|(\\set\\s)|(\\s&\\s)");
                     for (String s : authorsTab) {
-                        creator = authorRepository.findByName(s);
+                        creator = creatorRepository.findByName(s);
                         if (creator == null) {
                             creator = new Creator();
                             creator.setName(s);
                         }
                         creator.setNbSagas(creator.getNbSagas() + 1);
-                        creator = authorRepository.save(creator);
+                        creator = creatorRepository.save(creator);
                         saga.getAuthors().add(creator);
                     }
 

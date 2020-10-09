@@ -28,6 +28,7 @@ public class Episode extends EpisodeModel {
         entity.setUpdatedBy(model.getUpdatedBy());
         entity.setId(model.getId());
         entity.setNumber(model.getNumber());
+        entity.setDisplayedNumber(model.getDisplayedNumber());
         entity.setTitle(model.getTitle());
         entity.setInfos(model.getInfos());
         entity.setSeasonRef(model.getSeasonRef());

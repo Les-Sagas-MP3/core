@@ -8,7 +8,7 @@ import fr.lessagasmp3.core.exception.BadRequestException;
 import fr.lessagasmp3.core.exception.ForbiddenException;
 import fr.lessagasmp3.core.exception.NotFoundException;
 import fr.lessagasmp3.core.model.UserModel;
-import fr.lessagasmp3.core.repository.AuthorRepository;
+import fr.lessagasmp3.core.repository.CreatorRepository;
 import fr.lessagasmp3.core.repository.AuthorityRepository;
 import fr.lessagasmp3.core.repository.UserRepository;
 import fr.lessagasmp3.core.service.UserService;
@@ -34,7 +34,7 @@ public class UserController {
     private UserService userService;
 
     @Autowired
-    private AuthorRepository authorRepository;
+    private CreatorRepository creatorRepository;
 
     @Autowired
     private AuthorityRepository authorityRepository;
@@ -156,9 +156,9 @@ public class UserController {
         }
 
         // Unlink data to user
-        Set<Creator> creators = authorRepository.findAllByUserId(id);
+        Set<Creator> creators = creatorRepository.findAllByUserId(id);
         creators.forEach(author -> author.setUser(null));
-        authorRepository.saveAll(creators);
+        creatorRepository.saveAll(creators);
 
         // Delete user
         userRepository.deleteById(id);

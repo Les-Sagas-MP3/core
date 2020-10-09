@@ -20,6 +20,9 @@ public class SeasonModel extends AuditModel<String> {
     @NotNull
     protected Integer number;
 
+    @NotNull
+    protected String name;
+
     @Transient
     private Long sagaRef = 0L;
 
@@ -35,6 +38,7 @@ public class SeasonModel extends AuditModel<String> {
         model.setUpdatedBy(entity.getUpdatedBy());
         model.setId(entity.getId());
         model.setNumber(entity.getNumber());
+        model.setName(entity.getName());
         if(entity.getSaga() != null) {
             model.setSagaRef(entity.getSaga().getId());
         }
