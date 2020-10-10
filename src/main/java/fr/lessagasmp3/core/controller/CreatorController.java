@@ -18,9 +18,9 @@ import java.util.Set;
 
 @RestController
 @RequestMapping("/api")
-public class AuthorController {
+public class CreatorController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AuthorController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CreatorController.class);
 
     @Autowired
     private CreatorRepository creatorRepository;
@@ -34,7 +34,7 @@ public class AuthorController {
         for(Long id : ids) {
             Creator entity = creatorRepository.findById(id).orElse(null);
             if(entity == null) {
-                LOGGER.error("Impossible to get author {} : it doesn't exist", id);
+                LOGGER.error("Impossible to get creator {} : it doesn't exist", id);
                 continue;
             }
             models.add(CreatorModel.fromEntity(entity));
@@ -60,7 +60,7 @@ public class AuthorController {
         // Verify that body is complete
         if(creatorModel == null ||
                 creatorModel.getName() == null || creatorModel.getName().isEmpty()) {
-            LOGGER.error("Impossible to create author : body is incomplete");
+            LOGGER.error("Impossible to create creator : body is incomplete");
             throw new BadRequestException();
         }
 
@@ -79,14 +79,14 @@ public class AuthorController {
         if(creatorModel == null ||
                 creatorModel.getId() <= 0 ||
                 creatorModel.getName() == null || creatorModel.getName().isEmpty()) {
-            LOGGER.error("Impossible to create author : body is incomplete");
+            LOGGER.error("Impossible to create creator : body is incomplete");
             throw new BadRequestException();
         }
 
         // Verify that author exists
         Creator creator = creatorRepository.findById(creatorModel.getId()).orElse(null);
         if(creator == null) {
-            LOGGER.error("Impossible to update author : author {} not found", creatorModel.getId());
+            LOGGER.error("Impossible to update creator : creator {} not found", creatorModel.getId());
             throw new NotFoundException();
         }
 
