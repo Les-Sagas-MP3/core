@@ -15,7 +15,7 @@ public class IdentityModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    protected Long id;
+    protected Long id = 0L;
 
 }
 

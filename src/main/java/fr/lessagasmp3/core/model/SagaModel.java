@@ -9,7 +9,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.time.Duration;
 import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.Objects;
@@ -32,7 +31,7 @@ public class SagaModel extends AuditModel<String> {
     protected Date startDate = new Date();
 
     @NotNull
-    protected Duration duration = Duration.ZERO;
+    protected Long duration = 0L;
 
     @Column(columnDefinition = "TEXT")
     @NotNull
@@ -44,6 +43,10 @@ public class SagaModel extends AuditModel<String> {
     @Column(columnDefinition = "TEXT")
     @NotNull
     protected String genese = Strings.EMPTY;
+
+    @Column(columnDefinition = "TEXT")
+    @NotNull
+    protected String awards = Strings.EMPTY;
 
     @NotNull
     protected String backgroundUrl = Strings.EMPTY;
@@ -105,6 +108,7 @@ public class SagaModel extends AuditModel<String> {
         model.setSynopsis(entity.getSynopsis());
         model.setOrigin(entity.getOrigin());
         model.setGenese(entity.getGenese());
+        model.setAwards(entity.getAwards());
         model.setBackgroundUrl(entity.getBackgroundUrl());
         model.setCoverUrl(entity.getCoverUrl());
         model.setUrl(entity.getUrl());
