@@ -1,10 +1,15 @@
 package fr.lessagasmp3.core.controller;
 
 import com.google.gson.Gson;
+import fr.lessagasmp3.core.entity.Category;
+import fr.lessagasmp3.core.entity.Creator;
 import fr.lessagasmp3.core.entity.Saga;
 import fr.lessagasmp3.core.exception.BadRequestException;
+import fr.lessagasmp3.core.exception.NotFoundException;
 import fr.lessagasmp3.core.model.SagaModel;
 import fr.lessagasmp3.core.pagination.DataPage;
+import fr.lessagasmp3.core.repository.CategoryRepository;
+import fr.lessagasmp3.core.repository.CreatorRepository;
 import fr.lessagasmp3.core.repository.SagaRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +33,12 @@ public class SagaController {
 
     @Autowired
     private Gson gson;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
+
+    @Autowired
+    private CreatorRepository creatorRepository;
 
     @Autowired
     private SagaRepository sagaRepository;
@@ -97,4 +108,121 @@ public class SagaController {
         return SagaModel.fromEntity(sagaRepository.save(entity));
     }
 
+    @PreAuthorize("hasRole('USER')")
+    @RequestMapping(value = "/saga", method = RequestMethod.PUT, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    public void update(@RequestBody String modelStr) {
+
+        SagaModel model = gson.fromJson(modelStr, SagaModel.class);
+
+        // Verify that body is complete
+        if(model == null || model.getId() <= 0) {
+            LOGGER.error("Impossible to create saga : body is incomplete");
+            throw new BadRequestException();
+        }
+
+        // Verify that entity exists
+        Saga entity = sagaRepository.findById(model.getId()).orElse(null);
+        if(entity == null) {
+            LOGGER.error("Impossible to update saga : saga {} not found", model.getId());
+            throw new NotFoundException();
+        }
+
+        // Update and save entity
+        entity.setTitle(model.getTitle());
+        entity.setStatus(model.getStatus());
+        entity.setStartDate(model.getStartDate());
+        entity.setDuration(model.getDuration());
+        entity.setSynopsis(model.getSynopsis());
+        entity.setOrigin(model.getOrigin());
+        entity.setGenese(model.getGenese());
+        entity.setAwards(model.getAwards());
+        entity.setBackgroundUrl(model.getBackgroundUrl());
+        entity.setCoverUrl(model.getCoverUrl());
+        entity.setUrl(model.getUrl());
+        entity.setUrlWiki(model.getUrlWiki());
+        entity.setLevelArt(model.getLevelArt());
+        entity.setLevelTech(model.getLevelTech());
+        entity.setNbReviews(model.getNbReviews());
+        entity.setUrlReviews(model.getUrlReviews());
+        entity.setNbBravos(model.getNbBravos());
+        sagaRepository.save(entity);
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @RequestMapping(value = "/saga", method = RequestMethod.PUT, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE, params = {"id", "authorId"})
+    public void addAuthor(@RequestParam("id") Long id, @RequestParam("search") Long authorId) {
+
+        // Verify that body is complete
+        if(id <= 0 || authorId <= 0) {
+            LOGGER.error("Impossible to associate saga {} with author {} : IDs are incorrects", id, authorId);
+            throw new BadRequestException();
+        }
+
+        // Verify that entity exists
+        Saga entity = sagaRepository.findById(id).orElse(null);
+        Creator creator = creatorRepository.findById(authorId).orElse(null);
+        if(entity == null || creator == null) {
+            LOGGER.error("Impossible to associate saga {} with author {} : saga or author not found", id, authorId);
+            throw new NotFoundException();
+        }
+
+        // Update and save entity
+        entity.getAuthors().stream()
+                .filter(author -> authorId.equals(author.getId()))
+                .findAny()
+                .ifPresentOrElse(author -> {}, () -> entity.getAuthors().add(creator));
+        sagaRepository.save(entity);
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @RequestMapping(value = "/saga", method = RequestMethod.PUT, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE, params = {"id", "composerId"})
+    public void addComposer(@RequestParam("id") Long id, @RequestParam("composerId") Long composerId) {
+
+        // Verify that body is complete
+        if(id <= 0 || composerId <= 0) {
+            LOGGER.error("Impossible to associate saga {} with composer {} : IDs are incorrects", id, composerId);
+            throw new BadRequestException();
+        }
+
+        // Verify that entity exists
+        Saga entity = sagaRepository.findById(id).orElse(null);
+        Creator creator = creatorRepository.findById(composerId).orElse(null);
+        if(entity == null || creator == null) {
+            LOGGER.error("Impossible to associate saga {} with composer {} : saga or composer not found", id, composerId);
+            throw new NotFoundException();
+        }
+
+        // Update and save entity
+        entity.getComposers().stream()
+                .filter(composer -> composerId.equals(composer.getId()))
+                .findAny()
+                .ifPresentOrElse(author -> {}, () -> entity.getComposers().add(creator));
+        sagaRepository.save(entity);
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @RequestMapping(value = "/saga", method = RequestMethod.PUT, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE, params = {"id", "categoryId"})
+    public void addCategory(@RequestParam("id") Long id, @RequestParam("categoryId") Long categoryId) {
+
+        // Verify that body is complete
+        if(id <= 0 || categoryId <= 0) {
+            LOGGER.error("Impossible to associate saga {} with category {} : IDs are incorrects", id, categoryId);
+            throw new BadRequestException();
+        }
+
+        // Verify that entity exists
+        Saga entity = sagaRepository.findById(id).orElse(null);
+        Category category = categoryRepository.findById(id).orElse(null);
+        if(entity == null || category == null) {
+            LOGGER.error("Impossible to associate saga {} with category {} : saga or category not found", id, categoryId);
+            throw new NotFoundException();
+        }
+
+        // Update and save entity
+        entity.getCategories().stream()
+                .filter(sagaCategory -> categoryId.equals(sagaCategory.getId()))
+                .findAny()
+                .ifPresentOrElse(author -> {}, () -> entity.getCategories().add(category));
+        sagaRepository.save(entity);
+    }
 }

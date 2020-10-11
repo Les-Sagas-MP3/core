@@ -2,10 +2,12 @@ package fr.lessagasmp3.core.controller;
 
 import com.google.gson.Gson;
 import fr.lessagasmp3.core.entity.Anecdote;
+import fr.lessagasmp3.core.entity.Saga;
 import fr.lessagasmp3.core.exception.BadRequestException;
 import fr.lessagasmp3.core.exception.NotFoundException;
 import fr.lessagasmp3.core.model.AnecdoteModel;
 import fr.lessagasmp3.core.repository.AnecdoteRepository;
+import fr.lessagasmp3.core.repository.SagaRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,9 @@ public class AnecdoteController {
     private AnecdoteRepository anecdoteRepository;
 
     @Autowired
+    private SagaRepository sagaRepository;
+
+    @Autowired
     private Gson gson;
 
     @RequestMapping(value = "/anecdote", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE, params = {"ids"})
@@ -42,6 +47,15 @@ public class AnecdoteController {
         return models;
     }
 
+    @RequestMapping(value = "/anecdote", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE, params = {"content", "sagaId"})
+    public AnecdoteModel getByAnecdoteAndSagaId(@RequestParam("content") String content, @RequestParam("sagaId") Long sagaId) {
+        Anecdote entity = anecdoteRepository.findByAnecdoteAndSagaId(content, sagaId);
+        if(entity != null) {
+            return AnecdoteModel.fromEntity(entity);
+        }
+        return null;
+    }
+
     @PreAuthorize("hasRole('USER')")
     @RequestMapping(value = "/anecdote", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public AnecdoteModel create(@RequestBody String modelStr) {
@@ -54,8 +68,16 @@ public class AnecdoteController {
             throw new BadRequestException();
         }
 
+        // Verify that entities exists
+        Saga saga = sagaRepository.findById(model.getSagaRef()).orElse(null);
+        if(saga == null) {
+            LOGGER.error("Impossible to create season : saga {} not found", model.getSagaRef());
+            throw new NotFoundException();
+        }
+
         // Create entity
         Anecdote anecdote = Anecdote.fromModel(model);
+        anecdote.setSaga(saga);
         return AnecdoteModel.fromEntity(anecdoteRepository.save(anecdote));
     }
 
@@ -69,7 +91,7 @@ public class AnecdoteController {
             throw new BadRequestException();
         }
 
-        // Verify that author exists
+        // Verify that entities exists
         Anecdote anecdote = anecdoteRepository.findById(model.getId()).orElse(null);
         if(anecdote == null) {
             LOGGER.error("Impossible to update anecdote : anecdote {} not found", model.getId());

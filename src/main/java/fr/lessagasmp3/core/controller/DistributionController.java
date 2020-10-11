@@ -61,9 +61,9 @@ public class DistributionController {
 
         // Verify that references exist
         Creator creator = creatorRepository.findById(model.getActorRef()).orElse(null);
-        Saga saga = sagaRepository.findById(model.getActorRef()).orElse(null);
+        Saga saga = sagaRepository.findById(model.getSagaRef()).orElse(null);
         if(creator == null || saga == null) {
-            LOGGER.error("Impossible to create distribution entry : creator {} of saga {} not found", model.getActorRef(), model.getSagaRef());
+            LOGGER.error("Impossible to create distribution entry : creator {} or saga {} not found", model.getActorRef(), model.getSagaRef());
             throw new NotFoundException();
         }
 
