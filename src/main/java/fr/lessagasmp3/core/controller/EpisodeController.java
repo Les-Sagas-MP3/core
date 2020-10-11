@@ -2,10 +2,12 @@ package fr.lessagasmp3.core.controller;
 
 import com.google.gson.Gson;
 import fr.lessagasmp3.core.entity.Episode;
+import fr.lessagasmp3.core.entity.Season;
 import fr.lessagasmp3.core.exception.BadRequestException;
 import fr.lessagasmp3.core.exception.NotFoundException;
 import fr.lessagasmp3.core.model.EpisodeModel;
 import fr.lessagasmp3.core.repository.EpisodeRepository;
+import fr.lessagasmp3.core.repository.SeasonRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +25,13 @@ public class EpisodeController {
     private static final Logger LOGGER = LoggerFactory.getLogger(EpisodeController.class);
 
     @Autowired
+    private Gson gson;
+
+    @Autowired
     private EpisodeRepository episodeRepository;
 
     @Autowired
-    private Gson gson;
+    private SeasonRepository seasonRepository;
 
     @RequestMapping(value = "/episode", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE, params = {"ids"})
     public Set<EpisodeModel> getAllByIds(@RequestParam("ids") Set<Long> ids) {
@@ -42,6 +47,15 @@ public class EpisodeController {
         return models;
     }
 
+    @RequestMapping(value = "/episode", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE, params = {"number", "seasonId"})
+    public EpisodeModel getByNumberAndSeasonId(@RequestParam("number") Integer number, @RequestParam("seasonId") Long seasonId) {
+        Episode entity = episodeRepository.findByNumberAndSeasonId(number, seasonId);
+        if(entity != null) {
+            return EpisodeModel.fromEntity(entity);
+        }
+        return null;
+    }
+
     @PreAuthorize("hasRole('USER')")
     @RequestMapping(value = "/episode", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public EpisodeModel create(@RequestBody String modelStr) {
@@ -54,14 +68,24 @@ public class EpisodeController {
             throw new BadRequestException();
         }
 
+        // Verify that entities exists
+        Season season = seasonRepository.findById(model.getSeasonRef()).orElse(null);
+        if(season == null) {
+            LOGGER.error("Impossible to create episode : season {} not found", model.getSeasonRef());
+            throw new NotFoundException();
+        }
+
         // Create entity
         Episode episode = Episode.fromModel(model);
+        episode.setSeason(season);
         return EpisodeModel.fromEntity(episodeRepository.save(episode));
     }
 
     @PreAuthorize("hasRole('USER')")
     @RequestMapping(value = "/episode", method = RequestMethod.PUT, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    public void update(@RequestBody EpisodeModel model) {
+    public void update(@RequestBody String modelStr) {
+
+        EpisodeModel model = gson.fromJson(modelStr, EpisodeModel.class);
 
         // Verify that body is complete
         if(model == null || model.getId() <= 0) {
@@ -69,7 +93,7 @@ public class EpisodeController {
             throw new BadRequestException();
         }
 
-        // Verify that author exists
+        // Verify that entity exists
         Episode episode = episodeRepository.findById(model.getId()).orElse(null);
         if(episode == null) {
             LOGGER.error("Impossible to update episode : episode {} not found", model.getId());

@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface AnecdoteRepository extends JpaRepository<Anecdote, Long> {
+    Anecdote findByAnecdoteAndSagaId(String content, Long sagaId);
 }
