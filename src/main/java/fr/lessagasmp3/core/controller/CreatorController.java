@@ -1,6 +1,7 @@
 package fr.lessagasmp3.core.controller;
 
 import com.google.gson.Gson;
+import fr.lessagasmp3.core.constant.Strings;
 import fr.lessagasmp3.core.entity.Creator;
 import fr.lessagasmp3.core.exception.BadRequestException;
 import fr.lessagasmp3.core.exception.NotFoundException;
@@ -53,9 +54,9 @@ public class CreatorController {
 
     @PreAuthorize("hasRole('USER')")
     @RequestMapping(value = "/authors", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public CreatorModel create(@RequestBody String creatorModelStr) {
+    public CreatorModel create(@RequestBody String modelStr) {
 
-        CreatorModel creatorModel = gson.fromJson(creatorModelStr, CreatorModel.class);
+        CreatorModel creatorModel = gson.fromJson(Strings.convertToUtf8(modelStr), CreatorModel.class);
 
         // Verify that body is complete
         if(creatorModel == null ||
@@ -73,7 +74,9 @@ public class CreatorController {
 
     @PreAuthorize("hasRole('USER')")
     @RequestMapping(value = "/authors", method = RequestMethod.PUT, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    public void update(@RequestBody CreatorModel creatorModel) {
+    public void update(@RequestBody String modelStr) {
+
+        CreatorModel creatorModel = gson.fromJson(Strings.convertToUtf8(modelStr), CreatorModel.class);
 
         // Verify that body is complete
         if(creatorModel == null ||

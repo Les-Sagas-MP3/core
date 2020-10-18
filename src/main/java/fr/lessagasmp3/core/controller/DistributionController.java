@@ -1,6 +1,7 @@
 package fr.lessagasmp3.core.controller;
 
 import com.google.gson.Gson;
+import fr.lessagasmp3.core.constant.Strings;
 import fr.lessagasmp3.core.entity.Creator;
 import fr.lessagasmp3.core.entity.DistributionEntry;
 import fr.lessagasmp3.core.entity.Saga;
@@ -48,13 +49,12 @@ public class DistributionController {
     @RequestMapping(value = "/distribution", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public DistributionEntryModel create(@RequestBody String modelStr) {
 
-        DistributionEntryModel model = gson.fromJson(modelStr, DistributionEntryModel.class);
+        DistributionEntryModel model = gson.fromJson(Strings.convertToUtf8(modelStr), DistributionEntryModel.class);
 
         // Verify that body is complete
         if(model == null ||
                 model.getActorRef() <= 0 ||
-                model.getSagaRef() <= 0 ||
-                model.getRoles() == null || model.getRoles().isEmpty()) {
+                model.getSagaRef() <= 0) {
             LOGGER.error("Impossible to create distribution entry : body is incomplete");
             throw new BadRequestException();
         }

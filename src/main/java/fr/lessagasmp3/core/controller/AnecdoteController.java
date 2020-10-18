@@ -1,6 +1,7 @@
 package fr.lessagasmp3.core.controller;
 
 import com.google.gson.Gson;
+import fr.lessagasmp3.core.constant.Strings;
 import fr.lessagasmp3.core.entity.Anecdote;
 import fr.lessagasmp3.core.entity.Saga;
 import fr.lessagasmp3.core.exception.BadRequestException;
@@ -60,7 +61,7 @@ public class AnecdoteController {
     @RequestMapping(value = "/anecdote", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public AnecdoteModel create(@RequestBody String modelStr) {
 
-        AnecdoteModel model = gson.fromJson(modelStr, AnecdoteModel.class);
+        AnecdoteModel model = gson.fromJson(Strings.convertToUtf8(modelStr), AnecdoteModel.class);
 
         // Verify that body is complete
         if(model == null) {
@@ -83,7 +84,9 @@ public class AnecdoteController {
 
     @PreAuthorize("hasRole('USER')")
     @RequestMapping(value = "/anecdote", method = RequestMethod.PUT, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    public void update(@RequestBody AnecdoteModel model) {
+    public void update(@RequestBody String modelStr) {
+
+        AnecdoteModel model = gson.fromJson(Strings.convertToUtf8(modelStr), AnecdoteModel.class);
 
         // Verify that body is complete
         if(model == null || model.getId() <= 0) {

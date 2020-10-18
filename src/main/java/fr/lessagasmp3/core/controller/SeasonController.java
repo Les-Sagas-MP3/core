@@ -1,6 +1,7 @@
 package fr.lessagasmp3.core.controller;
 
 import com.google.gson.Gson;
+import fr.lessagasmp3.core.constant.Strings;
 import fr.lessagasmp3.core.entity.Saga;
 import fr.lessagasmp3.core.entity.Season;
 import fr.lessagasmp3.core.exception.BadRequestException;
@@ -60,7 +61,7 @@ public class SeasonController {
     @RequestMapping(value = "/season", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public SeasonModel create(@RequestBody String modelStr) {
 
-        SeasonModel model = gson.fromJson(modelStr, SeasonModel.class);
+        SeasonModel model = gson.fromJson(Strings.convertToUtf8(modelStr), SeasonModel.class);
 
         // Verify that body is complete
         if(model == null) {
@@ -85,7 +86,7 @@ public class SeasonController {
     @RequestMapping(value = "/season", method = RequestMethod.PUT, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public void update(@RequestBody String modelStr) {
 
-        SeasonModel model = gson.fromJson(modelStr, SeasonModel.class);
+        SeasonModel model = gson.fromJson(Strings.convertToUtf8(modelStr), SeasonModel.class);
 
         // Verify that body is complete
         if(model == null || model.getId() <= 0) {
