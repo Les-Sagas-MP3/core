@@ -6,6 +6,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
@@ -17,6 +18,7 @@ import java.util.Objects;
 public class DistributionEntryModel extends AuditModel<String> {
 
     @NotNull
+    @Column(columnDefinition = "TEXT")
     protected String roles = Strings.EMPTY;
 
     @Transient

@@ -1,6 +1,7 @@
 package fr.lessagasmp3.core.controller;
 
 import com.google.gson.Gson;
+import fr.lessagasmp3.core.constant.Strings;
 import fr.lessagasmp3.core.entity.Category;
 import fr.lessagasmp3.core.entity.Creator;
 import fr.lessagasmp3.core.entity.Saga;
@@ -94,7 +95,9 @@ public class SagaController {
     @RequestMapping(value = "/saga", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public SagaModel create(@RequestBody String modelStr) {
 
-        SagaModel model = gson.fromJson(modelStr, SagaModel.class);
+        LOGGER.debug("POST /api/saga");
+        LOGGER.debug("BODY : {}", modelStr);
+        SagaModel model = gson.fromJson(Strings.convertToUtf8(modelStr), SagaModel.class);
 
         // Verify that body is complete
         if(model == null ||
@@ -103,7 +106,7 @@ public class SagaController {
             throw new BadRequestException();
         }
 
-        // Create author
+        // Create entity
         Saga entity = Saga.fromModel(model);
         return SagaModel.fromEntity(sagaRepository.save(entity));
     }
@@ -112,7 +115,9 @@ public class SagaController {
     @RequestMapping(value = "/saga", method = RequestMethod.PUT, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public void update(@RequestBody String modelStr) {
 
-        SagaModel model = gson.fromJson(modelStr, SagaModel.class);
+        LOGGER.debug("PUT /api/saga");
+        LOGGER.debug("BODY : {}", modelStr);
+        SagaModel model = gson.fromJson(Strings.convertToUtf8(modelStr), SagaModel.class);
 
         // Verify that body is complete
         if(model == null || model.getId() <= 0) {
@@ -129,7 +134,6 @@ public class SagaController {
 
         // Update and save entity
         entity.setTitle(model.getTitle());
-        entity.setStatus(model.getStatus());
         entity.setStartDate(model.getStartDate());
         entity.setDuration(model.getDuration());
         entity.setSynopsis(model.getSynopsis());
@@ -149,8 +153,8 @@ public class SagaController {
     }
 
     @PreAuthorize("hasRole('USER')")
-    @RequestMapping(value = "/saga", method = RequestMethod.PUT, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE, params = {"id", "authorId"})
-    public void addAuthor(@RequestParam("id") Long id, @RequestParam("search") Long authorId) {
+    @RequestMapping(value = "/saga", method = RequestMethod.POST, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE, params = {"id", "authorId"})
+    public void addAuthor(@RequestParam("id") Long id, @RequestParam("authorId") Long authorId) {
 
         // Verify that body is complete
         if(id <= 0 || authorId <= 0) {
@@ -175,7 +179,7 @@ public class SagaController {
     }
 
     @PreAuthorize("hasRole('USER')")
-    @RequestMapping(value = "/saga", method = RequestMethod.PUT, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE, params = {"id", "composerId"})
+    @RequestMapping(value = "/saga", method = RequestMethod.POST, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE, params = {"id", "composerId"})
     public void addComposer(@RequestParam("id") Long id, @RequestParam("composerId") Long composerId) {
 
         // Verify that body is complete
@@ -201,7 +205,7 @@ public class SagaController {
     }
 
     @PreAuthorize("hasRole('USER')")
-    @RequestMapping(value = "/saga", method = RequestMethod.PUT, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE, params = {"id", "categoryId"})
+    @RequestMapping(value = "/saga", method = RequestMethod.POST, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE, params = {"id", "categoryId"})
     public void addCategory(@RequestParam("id") Long id, @RequestParam("categoryId") Long categoryId) {
 
         // Verify that body is complete
@@ -212,7 +216,7 @@ public class SagaController {
 
         // Verify that entity exists
         Saga entity = sagaRepository.findById(id).orElse(null);
-        Category category = categoryRepository.findById(id).orElse(null);
+        Category category = categoryRepository.findById(categoryId).orElse(null);
         if(entity == null || category == null) {
             LOGGER.error("Impossible to associate saga {} with category {} : saga or category not found", id, categoryId);
             throw new NotFoundException();

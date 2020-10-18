@@ -1,10 +1,14 @@
 package fr.lessagasmp3.core.constant;
 
+import org.apache.tika.parser.txt.CharsetDetector;
+
 public class Strings {
 
     public static final String EMPTY = "";
 
     private static final String ALPHA_NUMERIC_STRING = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+    private static final CharsetDetector DETECTOR = new CharsetDetector();
 
     public static String randomString() {
         int count = 12;
@@ -15,4 +19,9 @@ public class Strings {
         }
         return builder.toString();
     }
+
+    public static String convertToUtf8(String str) {
+        return DETECTOR.getString(str.getBytes(), "utf-8");
+    }
+
 }
