@@ -52,15 +52,6 @@ jobs:
         run: git config user.email "${{ secrets.GIT_CONFIG_EMAIL }}" && git config user.name "${{ secrets.GIT_CONFIG_NAME }}"
       - run: git tag ${{ needs.verify-version.outputs.version }}
       - run: git push origin ${{ needs.verify-version.outputs.version }}
-      - name: Create Release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ needs.verify-version.outputs.version }}
-          release_name: ${{ needs.verify-version.outputs.version }}
-          draft: false
-          prerelease: false
       - name: Set up JDK
         uses: actions/setup-java@v1
         with:
@@ -69,12 +60,26 @@ jobs:
           settings-path: ${{ github.workspace }}
       - name: Build with Maven
         run: ./mvnw -B clean install --file pom.xml
-      - name: Upload JAR as artifact
-        uses: actions/upload-artifact@v2
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          name: core.jar
-          path: ${{ github.workspace }}/target/core-${{ needs.verify-version.outputs.version }}-exec.jar
-
+          tag_name: ${{ needs.verify-version.outputs.version }}
+          release_name: ${{ needs.verify-version.outputs.version }}
+          draft: false
+          prerelease: false
+      - name: Upload JAR as artifact
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ github.workspace }}/target/core-${{ needs.verify-version.outputs.version }}-exec.jar
+          asset_name: core-exec.jar
+          asset_content_type: application/java-archive
 
   publish-maven:
     needs: [verify-version, release]
