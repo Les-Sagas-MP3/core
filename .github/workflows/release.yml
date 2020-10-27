@@ -61,6 +61,12 @@ jobs:
           release_name: ${{ needs.verify-version.outputs.version }}
           draft: false
           prerelease: false
+      - name: Upload JAR as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: core.jar
+          path: ${{ github.workspace }}/target/core-${{ needs.verify-version.outputs.version }}-exec.jar
+
 
   publish-maven:
     needs: [verify-version, release]
