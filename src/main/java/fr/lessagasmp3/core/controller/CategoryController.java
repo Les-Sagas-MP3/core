@@ -50,7 +50,7 @@ public class CategoryController {
 
     @RequestMapping(value = "/categories", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE, params = {"name"})
     public CategoryModel getByName(@RequestParam("name") String name) {
-        Category entity = categoryRepository.findByName(name);
+        Category entity = categoryRepository.findByNameIgnoreCase(name);
         if(entity != null) {
             return CategoryModel.fromEntity(entity);
         }

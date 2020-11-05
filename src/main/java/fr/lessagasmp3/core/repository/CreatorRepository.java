@@ -8,7 +8,7 @@ import java.util.Set;
 
 @Repository
 public interface CreatorRepository extends JpaRepository<Creator, Long> {
-    Creator findByName(String name);
+    Creator findByNameIgnoreCase(String name);
 
     Set<Creator> findAllByUserId(Long userId);
 }

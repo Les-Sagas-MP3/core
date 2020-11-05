@@ -45,7 +45,7 @@ public class CreatorController {
 
     @RequestMapping(value = "/authors", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE, params = {"name"})
     public CreatorModel getByName(@RequestParam("name") String name) {
-        Creator entity = creatorRepository.findByName(name);
+        Creator entity = creatorRepository.findByNameIgnoreCase(name);
         if(entity != null) {
             return CreatorModel.fromEntity(entity);
         }

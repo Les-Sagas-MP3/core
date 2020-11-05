@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface DistributionEntryRepository extends JpaRepository<DistributionEntry, Long> {
-    DistributionEntry findByActorIdAndSagaIdAndRoles(Long actorId, Long sagaId, String roles);
+    DistributionEntry findByActorIdAndSagaIdAndRolesIgnoreCase(Long actorId, Long sagaId, String roles);
 }
