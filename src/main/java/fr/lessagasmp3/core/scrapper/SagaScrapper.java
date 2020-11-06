@@ -133,7 +133,7 @@ public class SagaScrapper {
                     String authorsString = cell.getFirstChild().getTextContent();
                     String[] authorsTab = authorsString.split("(,\\s*)|(\\set\\s)|(\\s&\\s)");
                     for (String s : authorsTab) {
-                        creator = creatorRepository.findByName(s);
+                        creator = creatorRepository.findByNameIgnoreCase(s);
                         if (creator == null) {
                             creator = new Creator();
                             creator.setName(s);
@@ -148,7 +148,7 @@ public class SagaScrapper {
                     String categoriesString = cell.getFirstChild().getTextContent();
                     String[] categoriesTab = categoriesString.split(",\\s");
                     for (String s : categoriesTab) {
-                        category = categoryRepository.findByName(s);
+                        category = categoryRepository.findByNameIgnoreCase(s);
                         if (category == null) {
                             category = new Category();
                             category.setName(s);

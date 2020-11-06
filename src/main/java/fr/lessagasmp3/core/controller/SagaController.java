@@ -59,7 +59,7 @@ public class SagaController {
 
     @RequestMapping(value = "/saga", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE, params = {"title"})
     public SagaModel getByTitle(@RequestParam("title") String title) {
-        Saga entity = sagaRepository.findByTitle(title);
+        Saga entity = sagaRepository.findByTitleIgnoreCase(title);
         if(entity != null) {
             return SagaModel.fromEntity(entity);
         }

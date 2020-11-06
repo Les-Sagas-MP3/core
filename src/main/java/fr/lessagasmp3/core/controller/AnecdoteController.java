@@ -50,7 +50,7 @@ public class AnecdoteController {
 
     @RequestMapping(value = "/anecdote", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE, params = {"content", "sagaId"})
     public AnecdoteModel getByAnecdoteAndSagaId(@RequestParam("content") String content, @RequestParam("sagaId") Long sagaId) {
-        Anecdote entity = anecdoteRepository.findByAnecdoteAndSagaId(content, sagaId);
+        Anecdote entity = anecdoteRepository.findByAnecdoteIgnoreCaseAndSagaId(content, sagaId);
         if(entity != null) {
             return AnecdoteModel.fromEntity(entity);
         }
