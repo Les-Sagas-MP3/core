@@ -1,4 +1,4 @@
-package fr.lessagasmp3.core.controller;
+package fr.lessagasmp3.core.controller.saga;
 
 import com.google.gson.Gson;
 import fr.lessagasmp3.core.constant.Strings;
@@ -140,7 +140,7 @@ public class SagaController {
         entity.setOrigin(model.getOrigin());
         entity.setGenese(model.getGenese());
         entity.setAwards(model.getAwards());
-        entity.setBackgroundUrl(model.getBackgroundUrl());
+        entity.setImgurAlbumHash(model.getImgurAlbumHash());
         entity.setCoverUrl(model.getCoverUrl());
         entity.setUrl(model.getUrl());
         entity.setUrlWiki(model.getUrlWiki());
@@ -229,4 +229,5 @@ public class SagaController {
                 .ifPresentOrElse(author -> {}, () -> entity.getCategories().add(category));
         sagaRepository.save(entity);
     }
+
 }
