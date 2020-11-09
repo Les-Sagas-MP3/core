@@ -125,3 +125,28 @@ jobs:
       run: docker push docker.pkg.github.com/les-sagas-mp3/core/core:latest
     - name: Publish version to Registry
       run: docker push docker.pkg.github.com/les-sagas-mp3/core/core:${{ steps.get_version.outputs.VERSION }}
+
+  deploy-production:
+    needs: [verify-version, release]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: '${{ needs.verify-version.outputs.version }}'
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: 14
+          server-id: github
+          settings-path: ${{ github.workspace }}
+      - name: Get the version
+        id: get_version
+        run: echo ::set-output name=VERSION::$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
+      - name: Execute deployment remotely
+        uses: appleboy/ssh-action@v0.0.7
+        with:
+          host: ${{ secrets.PRODUCTION_HOST }}
+          username: ${{ secrets.PRODUCTION_USER }}
+          key : ${{ secrets.PRODUCTION_KEY }}
+          port: ${{ secrets.PRODUCTION_PORT }}
+          script: (nohup /opt/les-sagas-mp3/deploy/core.sh ${{ steps.get_version.outputs.VERSION }} &> /opt/les-sagas-mp3/deploy/core.log < /dev/null &) && exit 0
