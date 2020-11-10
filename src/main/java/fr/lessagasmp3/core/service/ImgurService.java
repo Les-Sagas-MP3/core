@@ -51,12 +51,6 @@ public class ImgurService extends HttpClientService {
         return null;
     }
 
-    public String getAlbum(String albumHash) {
-        String url = "https://api.imgur.com/3/album/" + albumHash;
-        String json = executeRequest(new HttpGet(url));
-        return json;
-    }
-
     public String upload(File file, String albumHash, String title) {
         String url = "https://api.imgur.com/3/upload";
 

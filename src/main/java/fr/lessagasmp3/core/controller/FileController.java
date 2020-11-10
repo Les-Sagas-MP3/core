@@ -27,7 +27,7 @@ public class FileController {
     private FileRepository fileRepository;
 
     @RequestMapping(value = "/file/upload", method = RequestMethod.POST, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    public String uploadFile(@RequestParam("file") MultipartFile multipartFile,
+    public String upload(@RequestParam("file") MultipartFile multipartFile,
                                              @RequestParam("directory") String directoryPath,
                                              @RequestParam("name") String name,
                                              @RequestParam(name = "saveInDb", value = "true", required = false) Boolean saveInDb) {
