@@ -5,7 +5,6 @@ import fr.lessagasmp3.core.entity.Saga;
 import fr.lessagasmp3.core.exception.BadRequestException;
 import fr.lessagasmp3.core.exception.NotFoundException;
 import fr.lessagasmp3.core.repository.SagaRepository;
-import fr.lessagasmp3.core.service.ImgurService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,16 +14,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/api/saga")
 public class SagaImgController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SagaImgController.class);
-
-    @Autowired
-    private ImgurService imgurService;
 
     @Autowired
     private FileController fileController;
@@ -40,35 +35,12 @@ public class SagaImgController {
         Saga entity = initUpload(sagaId, multipartFile);
 
         // Save File locally in a temporary folder
-        String filePath = fileController.upload(multipartFile, "tmp/" + sagaId, "cover", false);
+        String path = fileController.upload(multipartFile, "img" + File.separator + sagaId, "cover", false);
 
-        // Execute end of procedure in a separate thread
-        new Thread(() -> {
-
-            // Upload file to third-party
-            File coverFile = new File(filePath);
-            boolean success = false;
-            while(!success) {
-                LOGGER.debug("Trying to upload {} to imgur", coverFile.getName());
-                try {
-                    TimeUnit.SECONDS.sleep(10);
-                    entity.setCoverUrl(imgurService.upload(coverFile, entity.getImgurAlbumHash(), "Cover"));
-                    success = true;
-                } catch (InterruptedException | IllegalStateException e) {
-                    LOGGER.error(e.getMessage(), e);
-                }
-            }
-
-            // Save infos
-            sagaRepository.save(entity);
-
-            // Delete temp file
-            if(!coverFile.delete()) {
-                LOGGER.error("Cannot delete {} file", filePath);
-            }
-
-        }).start();
-
+        // Set relative file URL
+        entity.setCoverUrl("/img/" + sagaId + "/" + new File(path).getName());
+        LOGGER.debug(entity.getCoverUrl());
+        sagaRepository.save(entity);
     }
 
     @PreAuthorize("hasRole('USER')")
@@ -79,35 +51,12 @@ public class SagaImgController {
         Saga entity = initUpload(sagaId, multipartFile);
 
         // Save File locally in a temporary folder
-        String filePath = fileController.upload(multipartFile, "tmp/" + sagaId, "banner", false);
+        String path = fileController.upload(multipartFile, "img" + File.separator + sagaId, "banner", false);
 
-        // Execute end of procedure in a separate thread
-        new Thread(() -> {
-
-            // Upload file to third-party
-            File coverFile = new File(filePath);
-            boolean success = false;
-            while(!success) {
-                LOGGER.debug("Trying to upload {} to imgur", coverFile.getName());
-                try {
-                    TimeUnit.SECONDS.sleep(10);
-                    entity.setBannerUrl(imgurService.upload(coverFile, entity.getImgurAlbumHash(), "Banner"));
-                    success = true;
-                } catch (InterruptedException | IllegalStateException e) {
-                    LOGGER.error(e.getMessage(), e);
-                }
-            }
-
-            // Save infos
-            sagaRepository.save(entity);
-
-            // Delete temp file
-            if(!coverFile.delete()) {
-                LOGGER.error("Cannot delete {} file", filePath);
-            }
-
-        }).start();
-
+        // Set relative file URL
+        entity.setBannerUrl("/img/" + sagaId + "/" + new File(path).getName());
+        LOGGER.debug(entity.getBannerUrl());
+        sagaRepository.save(entity);
     }
 
     private Saga initUpload(Long sagaId, MultipartFile multipartFile) {
@@ -123,11 +72,6 @@ public class SagaImgController {
         if(entity == null) {
             LOGGER.error("Impossible to upload cover : saga {} not found", sagaId);
             throw new NotFoundException();
-        }
-
-        // If album does not exist, create one
-        if(entity.getImgurAlbumHash().isEmpty()) {
-            entity.setImgurAlbumHash(imgurService.createAlbum(entity.getTitle()));
         }
 
         return entity;

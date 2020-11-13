@@ -49,9 +49,6 @@ public class SagaModel extends AuditModel<String> {
     protected String awards = Strings.EMPTY;
 
     @NotNull
-    protected String imgurAlbumHash = Strings.EMPTY;
-
-    @NotNull
     protected String bannerUrl = Strings.EMPTY;
 
     @NotNull
@@ -112,7 +109,6 @@ public class SagaModel extends AuditModel<String> {
         model.setOrigin(entity.getOrigin());
         model.setGenese(entity.getGenese());
         model.setAwards(entity.getAwards());
-        model.setImgurAlbumHash(entity.getImgurAlbumHash());
         model.setBannerUrl(entity.getBannerUrl());
         model.setCoverUrl(entity.getCoverUrl());
         model.setUrl(entity.getUrl());

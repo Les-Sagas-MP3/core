@@ -64,7 +64,6 @@ public class Saga extends SagaModel {
         entity.setOrigin(model.getOrigin());
         entity.setGenese(model.getGenese());
         entity.setAwards(model.getAwards());
-        entity.setImgurAlbumHash(model.getImgurAlbumHash());
         entity.setBannerUrl(model.getBannerUrl());
         entity.setCoverUrl(model.getCoverUrl());
         entity.setUrl(model.getUrl());
