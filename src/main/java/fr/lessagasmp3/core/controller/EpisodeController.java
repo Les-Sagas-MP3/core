@@ -16,8 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api")
@@ -35,16 +34,13 @@ public class EpisodeController {
     private SeasonRepository seasonRepository;
 
     @RequestMapping(value = "/episode", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE, params = {"ids"})
-    public Set<EpisodeModel> getAllByIds(@RequestParam("ids") Set<Long> ids) {
-        Set<EpisodeModel> models = new LinkedHashSet<>();
-        for(Long id : ids) {
-            Episode entity = episodeRepository.findById(id).orElse(null);
-            if(entity == null) {
-                LOGGER.error("Impossible to get episode {} : it doesn't exist", id);
-                continue;
-            }
-            models.add(EpisodeModel.fromEntity(entity));
-        }
+    public List<EpisodeModel> getAllByIds(@RequestParam("ids") Set<Long> ids) {
+        List<Episode> entities = episodeRepository.findAllById(ids);
+
+        List<EpisodeModel> models = new ArrayList<>();
+        entities.forEach(entity -> models.add(EpisodeModel.fromEntity(entity)));
+        Collections.sort(models);
+
         return models;
     }
 

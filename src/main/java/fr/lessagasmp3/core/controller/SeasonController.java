@@ -16,7 +16,9 @@ import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.LinkedHashSet;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -35,16 +37,13 @@ public class SeasonController {
     private Gson gson;
 
     @RequestMapping(value = "/season", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE, params = {"ids"})
-    public Set<SeasonModel> getAllByIds(@RequestParam("ids") Set<Long> ids) {
-        Set<SeasonModel> models = new LinkedHashSet<>();
-        for(Long id : ids) {
-            Season entity = seasonRepository.findById(id).orElse(null);
-            if(entity == null) {
-                LOGGER.error("Impossible to get season {} : it doesn't exist", id);
-                continue;
-            }
-            models.add(SeasonModel.fromEntity(entity));
-        }
+    public List<SeasonModel> getAllByIds(@RequestParam("ids") Set<Long> ids) {
+        List<Season> entities = seasonRepository.findAllById(ids);
+
+        List<SeasonModel> models = new ArrayList<>();
+        entities.forEach(entity -> models.add(SeasonModel.fromEntity(entity)));
+        Collections.sort(models);
+
         return models;
     }
 

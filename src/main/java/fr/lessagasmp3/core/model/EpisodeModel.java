@@ -13,7 +13,7 @@ import java.util.Objects;
 @MappedSuperclass
 @Getter(AccessLevel.PUBLIC)
 @Setter(AccessLevel.PUBLIC)
-public class EpisodeModel extends AuditModel<String> {
+public class EpisodeModel extends AuditModel<String> implements Comparable<EpisodeModel> {
 
     @NotNull
     protected Integer number;
@@ -48,4 +48,8 @@ public class EpisodeModel extends AuditModel<String> {
         return model;
     }
 
+    @Override
+    public int compareTo(EpisodeModel e) {
+        return this.getNumber().compareTo(e.getNumber());
+    }
 }
