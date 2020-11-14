@@ -15,7 +15,7 @@ import java.util.Set;
 @MappedSuperclass
 @Getter(AccessLevel.PUBLIC)
 @Setter(AccessLevel.PUBLIC)
-public class SeasonModel extends AuditModel<String> {
+public class SeasonModel extends AuditModel<String> implements Comparable<SeasonModel> {
 
     @NotNull
     protected Integer number;
@@ -46,4 +46,8 @@ public class SeasonModel extends AuditModel<String> {
         return model;
     }
 
+    @Override
+    public int compareTo(SeasonModel s) {
+        return this.getNumber().compareTo(s.getNumber());
+    }
 }
