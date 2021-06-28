@@ -15,7 +15,7 @@
 	<description>Les Sagas MP3 - Main API Component</description>
 
 	<properties>
-		<java.version>1.16</java.version>
+		<java.version>16</java.version>
 	</properties>
 
 	<distributionManagement>
