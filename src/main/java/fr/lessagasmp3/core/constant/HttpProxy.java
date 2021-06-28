@@ -43,9 +43,9 @@ public class HttpProxy {
         }
 
         if(!HTTPS_HOST.isEmpty() && HTTPS_PORT != 0) {
-            proxyConfig = new ProxyConfig(HTTPS_HOST, HTTPS_PORT);
+            proxyConfig = new ProxyConfig(HTTPS_HOST, HTTPS_PORT, "http");
         } else if(!HTTP_HOST.isEmpty() && HTTP_PORT != 0) {
-            proxyConfig = new ProxyConfig(HTTP_HOST, HTTP_PORT);
+            proxyConfig = new ProxyConfig(HTTP_HOST, HTTP_PORT, "http");
         }
 
     }

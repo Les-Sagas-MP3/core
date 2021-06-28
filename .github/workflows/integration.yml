@@ -10,58 +10,54 @@ jobs:
   verify-version:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up JDK
-      uses: actions/setup-java@v1
-      with:
-        java-version: 14
-        server-id: github
-        settings-path: ${{ github.workspace }}
-    - name: Get the version
-      id: get_version
-      run: echo ::set-output name=VERSION::$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
-    - name: Get release
-      id: get_release
-      run: echo ::set-output name=RELEASE_HTTP_CODE::$(curl -s -o out.html -w '%{http_code}'  https://github.com/les-sagas-mp3/core/releases/tag/${{ steps.get_version.outputs.VERSION }};)
-    - name: Test release existence
-      run: if [[ "${{ steps.get_release.outputs.RELEASE_HTTP_CODE }}" -eq "200" ]]; then exit 1; else exit 0; fi
+      - uses: actions/checkout@v2
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '16'
+      - name: Get the version
+        id: get_version
+        run: echo ::set-output name=VERSION::$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
+      - name: Get release
+        id: get_release
+        run: echo ::set-output name=RELEASE_HTTP_CODE::$(curl -s -o out.html -w '%{http_code}'  https://github.com/les-sagas-mp3/core/releases/tag/${{ steps.get_version.outputs.VERSION }};)
+      - name: Test release existence
+        run: if [[ "${{ steps.get_release.outputs.RELEASE_HTTP_CODE }}" -eq "200" ]]; then exit 1; else exit 0; fi
 
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up JDK
-      uses: actions/setup-java@v1
-      with:
-        java-version: 14
-        server-id: github
-        settings-path: ${{ github.workspace }}
-    - name: Build with Maven
-      run: ./mvnw -B clean install --file pom.xml -P docker
+      - uses: actions/checkout@v2
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '16'
+      - name: Build with Maven
+        run: ./mvnw -B clean spring-boot:build-image --file pom.xml
 
   publish-docker:
     needs: build
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up JDK
-      uses: actions/setup-java@v1
-      with:
-        java-version: 14
-        server-id: github
-        settings-path: ${{ github.workspace }}
-    - name: Build with Maven
-      run: ./mvnw -B clean install --file pom.xml -P docker
-    - name: Get the version
-      id: get_version
-      run: echo ::set-output name=VERSION::$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
-    - uses: sjdonado/heroku@0f16401029a67519b6547af7247983640996393a
-    - name: Tag the image
-      run: docker tag core:latest docker.pkg.github.com/les-sagas-mp3/core/core:${{ steps.get_version.outputs.VERSION }}
-    - name: Login to Registry
-      run: docker login docker.pkg.github.com -u thomah -p ${{secrets.GITHUB_TOKEN}}
-    - name: Publish to Registry
-      run: docker push docker.pkg.github.com/les-sagas-mp3/core/core:${{ steps.get_version.outputs.VERSION }}
+      - uses: actions/checkout@v2
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '16'
+      - name: Build with Maven
+        run: ./mvnw -B clean spring-boot:build-image --file pom.xml
+      - name: Get the version
+        id: get_version
+        run: echo ::set-output name=VERSION::$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
+      - name: Tag the image for Docker Hub
+        run: docker tag core:${{ steps.get_version.outputs.VERSION }} lessagasmp3/api:${{ steps.get_version.outputs.VERSION }}
+      - name: Login to Docker Hub
+        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+      - name: Publish to Docker Hub
+        run: docker push lessagasmp3/api:${{ steps.get_version.outputs.VERSION }}
 
   deploy-heroku:
     needs: publish-docker
@@ -72,12 +68,10 @@ jobs:
       id: get_version
       run: echo ::set-output name=VERSION::$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
     - uses: sjdonado/heroku@0f16401029a67519b6547af7247983640996393a
-    - name: Login to Registry
-      run: docker login docker.pkg.github.com -u thomah -p ${{secrets.GITHUB_TOKEN}}
     - name: Pull Docker Image
-      run: docker pull docker.pkg.github.com/les-sagas-mp3/core/core:${{ steps.get_version.outputs.VERSION }}
+      run: docker pull lessagasmp3/api:${{ steps.get_version.outputs.VERSION }}
     - name: Tag the image
-      run: docker tag docker.pkg.github.com/les-sagas-mp3/core/core:${{ steps.get_version.outputs.VERSION }} registry.heroku.com/les-sagas-mp3-api/web
+      run: docker tag lessagasmp3/api:${{ steps.get_version.outputs.VERSION }} registry.heroku.com/les-sagas-mp3-api/web
     - name: Get Heroku Tools
       run: wget -qO- https://toolbelt.heroku.com/install.sh | sh
     - name: Login to Heroku Registry
