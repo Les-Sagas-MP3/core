@@ -1,6 +1,5 @@
 package fr.lessagasmp3.core.model;
 
-import com.google.firebase.database.annotations.NotNull;
 import fr.lessagasmp3.core.constant.EventLogName;
 import fr.lessagasmp3.core.entity.EventLog;
 import lombok.AccessLevel;
@@ -11,6 +10,7 @@ import javax.persistence.Column;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.MappedSuperclass;
+import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 @MappedSuperclass

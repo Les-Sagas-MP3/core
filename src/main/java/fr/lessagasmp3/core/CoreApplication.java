@@ -68,7 +68,7 @@ public class CoreApplication {
 			}
 
 			// Create admin user
-			String email = "admin";
+			String email = "admin@les-sagas-mp3.fr";
 			//String generatedPassword = Strings.randomString();
 			String generatedPassword = "admin";
 			User admin = new User(email, generatedPassword);
@@ -89,7 +89,8 @@ public class CoreApplication {
 				File googleAppCredentialsFile = new File(GOOGLE_APPLICATION_CREDENTIALS);
 				if(googleAppCredentialsFile.exists()) {
 					try {
-						FirebaseOptions options = new FirebaseOptions.Builder()
+						FirebaseOptions.Builder builder = FirebaseOptions.builder();
+						FirebaseOptions options = builder
 								.setCredentials(GoogleCredentials.getApplicationDefault())
 								.setDatabaseUrl(FIREBASE_URL)
 								.build();
