@@ -10,13 +10,13 @@ import fr.lessagasmp3.core.entity.User;
 import fr.lessagasmp3.core.repository.AuthorityRepository;
 import fr.lessagasmp3.core.repository.FileRepository;
 import fr.lessagasmp3.core.repository.UserRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -25,10 +25,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
+@Slf4j
+@EnableScheduling
 @SpringBootApplication
 public class CoreApplication {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(CoreApplication.class);
 	private static final String GOOGLE_APPLICATION_CREDENTIALS = System.getenv("GOOGLE_APPLICATION_CREDENTIALS");
 	private static final String FIREBASE_URL = System.getenv("FIREBASE_URL");
 
@@ -52,10 +53,10 @@ public class CoreApplication {
 	public void init() {
 
 		// First launch of App
-		if(authorityRepository.count() == 0) {
+		if (authorityRepository.count() == 0) {
 
 			// Create authorities
-			for(AuthorityName authorityName : AuthorityName.values()) {
+			for (AuthorityName authorityName : AuthorityName.values()) {
 				authorityRepository.save(new Authority(authorityName));
 			}
 
@@ -63,14 +64,14 @@ public class CoreApplication {
 			List<Authority> authorities = authorityRepository.findAll();
 			Authority userAuthority = authorities.stream().filter(authority -> authority.getName().equals(AuthorityName.ROLE_USER)).findFirst().orElse(null);
 			Authority adminAuthority = authorities.stream().filter(authority -> authority.getName().equals(AuthorityName.ROLE_ADMIN)).findFirst().orElse(null);
-			if(userAuthority == null ||adminAuthority == null) {
+			if (userAuthority == null || adminAuthority == null) {
 				throw new IllegalStateException();
 			}
 
 			// Create admin user
-			String email = "admin";
+			String email = "admin@les-sagas-mp3.fr";
 			//String generatedPassword = Strings.randomString();
-			String generatedPassword = "admin";
+			String generatedPassword = "admin@les-sagas-mp3.fr";
 			User admin = new User(email, generatedPassword);
 			admin.setUsername(email);
 			admin.setEnabled(true);
@@ -79,55 +80,56 @@ public class CoreApplication {
 			admin.setEnabled(true);
 			userRepository.save(admin);
 
-			LOGGER.info("ONLY PRINTED ONCE - Default credentials are : admin / {}", generatedPassword);
-		}
+			log.info("ONLY PRINTED ONCE - Default credentials are : admin@les-sagas-mp3.fr / {}", generatedPassword);
 
-		// Init Firebase connexion
-		if(FIREBASE_URL != null) {
-			if(GOOGLE_APPLICATION_CREDENTIALS != null) {
-				LOGGER.info("Loading Firebase key from {}", GOOGLE_APPLICATION_CREDENTIALS);
-				File googleAppCredentialsFile = new File(GOOGLE_APPLICATION_CREDENTIALS);
-				if(googleAppCredentialsFile.exists()) {
-					try {
-						FirebaseOptions options = new FirebaseOptions.Builder()
-								.setCredentials(GoogleCredentials.getApplicationDefault())
-								.setDatabaseUrl(FIREBASE_URL)
-								.build();
-						FirebaseApp.initializeApp(options);
-					} catch (IOException e) {
-						LOGGER.error("Cannot initialize Firebase options", e);
+			// Init Firebase connexion
+			if (FIREBASE_URL != null) {
+				if (GOOGLE_APPLICATION_CREDENTIALS != null) {
+					log.info("Loading Firebase key from {}", GOOGLE_APPLICATION_CREDENTIALS);
+					File googleAppCredentialsFile = new File(GOOGLE_APPLICATION_CREDENTIALS);
+					if (googleAppCredentialsFile.exists()) {
+						try {
+							FirebaseOptions.Builder builder = FirebaseOptions.builder();
+							FirebaseOptions options = builder
+									.setCredentials(GoogleCredentials.getApplicationDefault())
+									.setDatabaseUrl(FIREBASE_URL)
+									.build();
+							FirebaseApp.initializeApp(options);
+						} catch (IOException e) {
+							log.error("Cannot initialize Firebase options", e);
+						}
+					} else {
+						log.warn("The file {} does not exist", GOOGLE_APPLICATION_CREDENTIALS);
+						loadGoogleApplicationCredentialsFromDb();
 					}
 				} else {
-					LOGGER.warn("The file {} does not exist", GOOGLE_APPLICATION_CREDENTIALS);
 					loadGoogleApplicationCredentialsFromDb();
 				}
+			}
+
+		}
+	}
+
+		public void loadGoogleApplicationCredentialsFromDb() {
+			log.info("Loading Firebase key from database");
+			fr.lessagasmp3.core.entity.File file = fileRepository.findByDirectoryAndName("config", "GOOGLE_APPLICATION_CREDENTIALS");
+			if(file == null) {
+				log.error("No Firebase key stored in database");
 			} else {
-				loadGoogleApplicationCredentialsFromDb();
+				fileController.prepareDirectories(file.getDirectory());
+				Path fileName = Path.of(file.getPath());
+				try {
+					Files.writeString(fileName, file.getContent());
+					FileInputStream refreshToken = new FileInputStream(file.getPath());
+					FirebaseOptions options = new FirebaseOptions.Builder()
+							.setCredentials(GoogleCredentials.fromStream(refreshToken))
+							.setDatabaseUrl(FIREBASE_URL)
+							.build();
+					FirebaseApp.initializeApp(options);
+				} catch (IOException e) {
+					log.error("Cannot write {}", fileName, e);
+				}
 			}
 		}
-
-	}
-
-	public void loadGoogleApplicationCredentialsFromDb() {
-		LOGGER.info("Loading Firebase key from database");
-		fr.lessagasmp3.core.entity.File file = fileRepository.findByDirectoryAndName("config", "GOOGLE_APPLICATION_CREDENTIALS");
-		if(file == null) {
-			LOGGER.error("No Firebase key stored in database");
-		} else {
-			fileController.prepareDirectories(file.getDirectory());
-			Path fileName = Path.of(file.getPath());
-			try {
-				Files.writeString(fileName, file.getContent());
-				FileInputStream refreshToken = new FileInputStream(file.getPath());
-				FirebaseOptions options = new FirebaseOptions.Builder()
-						.setCredentials(GoogleCredentials.fromStream(refreshToken))
-						.setDatabaseUrl(FIREBASE_URL)
-						.build();
-				FirebaseApp.initializeApp(options);
-			} catch (IOException e) {
-				LOGGER.error("Cannot write {}", fileName, e);
-			}
-		}
-	}
 
 }

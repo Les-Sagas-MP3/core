@@ -194,8 +194,8 @@ public class SagaScrapper {
                         throw new IOException("More than one saga with following title in DB : " + saga.getTitle());
                     }
 
-                    LOGGER.debug("Save : " + saga.toString());
-                    sagaRepository.save(saga);
+                    saga = sagaRepository.save(saga);
+                    LOGGER.debug("Save : " + saga);
                 }
             } catch (IOException | URISyntaxException e) {
                 LOGGER.error(e.getMessage());

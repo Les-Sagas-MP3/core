@@ -2,6 +2,7 @@ package fr.lessagasmp3.core.controller;
 
 import fr.lessagasmp3.core.scrapper.NewsScrapper;
 import fr.lessagasmp3.core.scrapper.SagaScrapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.http.MediaType;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @RestController
 public class SyncController {
 
@@ -35,13 +37,15 @@ public class SyncController {
         taskExecutor.execute(() -> newsScrapper.scrap());
     }
 
-    @Scheduled(cron = "0 0 */6 * * *")
+    @Scheduled(cron = "0 0 */6 * * ?", zone = "Europe/Paris")
     public void scheduleSyncSagas() {
+        log.info("Starting synchronization of sagas");
         syncSagas();
     }
 
-    @Scheduled(cron = "0 0 */6 * * *")
+    @Scheduled(cron = "0 * * * * ?", zone = "Europe/Paris")
     public void scheduleSyncNews() {
+        log.info("Starting synchronization of news");
         syncNews();
     }
 

@@ -9,6 +9,7 @@ import fr.lessagasmp3.core.security.JwtRequest;
 import fr.lessagasmp3.core.security.JwtResponse;
 import fr.lessagasmp3.core.security.JwtTokenUtil;
 import fr.lessagasmp3.core.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.security.Principal;
 import java.util.Objects;
 
+@Slf4j
 @RestController
 @RequestMapping("/api")
 public class AuthenticationController {

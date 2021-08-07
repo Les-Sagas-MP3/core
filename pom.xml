@@ -5,12 +5,12 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.5.2</version>
+		<version>2.5.3</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>fr.lessagasmp3</groupId>
 	<artifactId>core</artifactId>
-	<version>0.4.0</version>
+	<version>0.4.1-SNAPSHOT</version>
 	<name>core</name>
 	<description>Les Sagas MP3 - Main API Component</description>
 
@@ -51,22 +51,38 @@
 		<dependency>
 			<groupId>net.sourceforge.htmlunit</groupId>
 			<artifactId>htmlunit</artifactId>
+<<<<<<< HEAD
+			<version>2.52.0</version>
+=======
 			<version>2.50.0</version>
+>>>>>>> master
 		</dependency>
 		<dependency>
 			<groupId>com.google.firebase</groupId>
 			<artifactId>firebase-admin</artifactId>
+<<<<<<< HEAD
+			<version>8.0.0</version>
+=======
 			<version>7.3.0</version>
+>>>>>>> master
 		</dependency>
 		<dependency>
 			<groupId>org.apache.tika</groupId>
 			<artifactId>tika-core</artifactId>
+<<<<<<< HEAD
+			<version>2.0.0</version>
+=======
 			<version>1.26</version>
+>>>>>>> master
 		</dependency>
 		<dependency>
 			<groupId>org.apache.tika</groupId>
 			<artifactId>tika-parsers</artifactId>
+<<<<<<< HEAD
+			<version>1.27</version>
+=======
 			<version>1.26</version>
+>>>>>>> master
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -117,6 +133,8 @@
 		</dependency>
 	</dependencies>
 
+<<<<<<< HEAD
+=======
 	<profiles>
 		<profile>
 			<id>makeRelease</id>
@@ -135,4 +153,5 @@
 	</profiles>
 
 
+>>>>>>> master
 </project>
