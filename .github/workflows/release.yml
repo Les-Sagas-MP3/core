@@ -39,10 +39,9 @@ jobs:
           distribution: 'adopt'
           java-version: '16'
       - name: Build with Maven
-        run: ./mvnw -B clean spring-boot:build-image --file pom.xml
+        run: ./mvnw -B clean install spring-boot:build-image --file pom.xml
 
   release:
-
     needs: [verify-version, build]
     runs-on: ubuntu-latest
     steps:
@@ -51,6 +50,13 @@ jobs:
         run: git config user.email "${{ secrets.GIT_CONFIG_EMAIL }}" && git config user.name "${{ secrets.GIT_CONFIG_NAME }}"
       - run: git tag ${{ needs.verify-version.outputs.version }}
       - run: git push origin ${{ needs.verify-version.outputs.version }}
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '16'
+      - name: Build with Maven
+        run: ./mvnw -B clean install --file pom.xml -P makeRelease
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
