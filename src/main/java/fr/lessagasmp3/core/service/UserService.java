@@ -3,8 +3,11 @@ package fr.lessagasmp3.core.service;
 import fr.lessagasmp3.core.constant.AuthorityName;
 import fr.lessagasmp3.core.entity.Authority;
 import fr.lessagasmp3.core.entity.User;
+import fr.lessagasmp3.core.exception.BadRequestException;
+import fr.lessagasmp3.core.exception.EntityAlreadyExistsException;
 import fr.lessagasmp3.core.repository.AuthorityRepository;
 import fr.lessagasmp3.core.repository.UserRepository;
+import fr.lessagasmp3.core.security.JwtRequest;
 import fr.lessagasmp3.core.security.JwtUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +18,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
@@ -32,6 +36,23 @@ public class UserService implements UserDetailsService {
 
     @Autowired
     private UserRepository userRepository;
+
+    public void create(JwtRequest jwtRequest) {
+        User user = userRepository.findByEmail(jwtRequest.getEmail());
+        if (user != null) {
+            throw new EntityAlreadyExistsException();
+        } else {
+            user = new User();
+            user.setEmail(jwtRequest.getEmail());
+            user.setPassword(BCrypt.hashpw(jwtRequest.getPassword(), BCrypt.gensalt()));
+            user.setEnabled(true);
+            user.setUsername(jwtRequest.getEmail());
+
+            Authority authority = authorityRepository.findByName(AuthorityName.ROLE_USER);
+            user.getAuthorities().add(authority);
+            userRepository.save(user);
+        }
+    }
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
