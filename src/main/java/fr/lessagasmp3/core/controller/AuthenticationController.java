@@ -2,6 +2,8 @@ package fr.lessagasmp3.core.controller;
 
 import fr.lessagasmp3.core.constant.Strings;
 import fr.lessagasmp3.core.entity.User;
+import fr.lessagasmp3.core.exception.BadRequestException;
+import fr.lessagasmp3.core.exception.EntityAlreadyExistsException;
 import fr.lessagasmp3.core.exception.NotFoundException;
 import fr.lessagasmp3.core.exception.UnauthaurizedException;
 import fr.lessagasmp3.core.model.UserModel;
@@ -44,8 +46,17 @@ public class AuthenticationController {
     @Autowired
     private UserService userService;
 
+    @RequestMapping(value = "/auth/signup", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public void singup(@RequestBody JwtRequest request) {
+        try {
+            userService.create(request);
+        } catch (EntityAlreadyExistsException e) {
+            throw new BadRequestException();
+        }
+    }
+
     @RequestMapping(value = "/auth/login", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public JwtResponse generateAuthenticationToken(@RequestBody JwtRequest request) {
+    public JwtResponse login(@RequestBody JwtRequest request) {
         authenticate(request.getEmail(), request.getPassword());
         final UserDetails userDetails = jwtInMemoryUserDetailsService.loadUserByUsername(request.getEmail());
         final String token = jwtTokenUtil.generateToken(userDetails);
