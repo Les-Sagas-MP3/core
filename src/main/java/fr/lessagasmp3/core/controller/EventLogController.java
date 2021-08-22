@@ -4,7 +4,6 @@ import fr.lessagasmp3.core.constant.EventLogName;
 import fr.lessagasmp3.core.entity.EventLog;
 import fr.lessagasmp3.core.model.EventLogModel;
 import fr.lessagasmp3.core.repository.EventLogRepository;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@Slf4j
 @RestController
 @RequestMapping("/api")
 public class EventLogController {

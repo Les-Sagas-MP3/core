@@ -4,19 +4,18 @@ import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.*;
 import fr.lessagasmp3.core.constant.EventLogName;
 import fr.lessagasmp3.core.constant.HttpProxy;
-import fr.lessagasmp3.core.entity.Creator;
 import fr.lessagasmp3.core.entity.Category;
+import fr.lessagasmp3.core.entity.Creator;
 import fr.lessagasmp3.core.entity.EventLog;
 import fr.lessagasmp3.core.entity.Saga;
-import fr.lessagasmp3.core.repository.CreatorRepository;
 import fr.lessagasmp3.core.repository.CategoryRepository;
+import fr.lessagasmp3.core.repository.CreatorRepository;
 import fr.lessagasmp3.core.repository.EventLogRepository;
 import fr.lessagasmp3.core.repository.SagaRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -26,14 +25,14 @@ import org.springframework.web.client.RestTemplate;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Set;
 
+@Slf4j
 @Component
 public class SagaScrapper {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(SagaScrapper.class);
     private static final String[] SCHEMES = {"http","https"};
     private static final UrlValidator URL_VALIDATOR = new UrlValidator(SCHEMES);
 
@@ -57,7 +56,7 @@ public class SagaScrapper {
     private SagaRepository sagaRepository;
 
     public void scrap() {
-        LOGGER.info("Scrap sagas started");
+        log.info("Scrap sagas started");
         eventLogRepository.save(new EventLog(EventLogName.SYNC_SAGAS_START));
         int nbRows = 50;
         short nbPage = 0;
@@ -84,7 +83,7 @@ public class SagaScrapper {
         while (nbRows > 0) {
             searchUrl = "https://forum.netophonix.com/sagaslist.php?mode=titres&order=ASC&start=" + nbPage;
             try {
-                LOGGER.debug("Scrap url : {}", searchUrl);
+                log.debug("Scrap url : {}", searchUrl);
                 page = client.getPage(searchUrl);
 
                 // Get HTML rows
@@ -107,13 +106,13 @@ public class SagaScrapper {
                             RestTemplate restTemplate = new RestTemplate();
                             String result = null;
                             try {
-                                LOGGER.debug("URL check : {}", anchor.getHrefAttribute());
+                                log.debug("URL check : {}", anchor.getHrefAttribute());
                                 if(!URL_VALIDATOR.isValid(anchor.getHrefAttribute())) {
                                     throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
                                 }
                                 result = restTemplate.getForObject(anchor.getHrefAttribute(), String.class);
                             } catch(Exception e) {
-                                LOGGER.error("URL check failed : {}", anchor.getHrefAttribute());
+                                log.error("URL check failed : {}", anchor.getHrefAttribute());
                             }
                             if(result != null) {
                                 saga.setUrl(anchor.getHrefAttribute());
@@ -163,7 +162,7 @@ public class SagaScrapper {
                     elements = cell.getFirstChild().getByXPath("img");
                     if (elements.size() == 1) {
                         image = (HtmlImage) elements.get(0);
-                        List<NameValuePair> paramUrlPicLevel = URLEncodedUtils.parse(new URI(image.getSrcAttribute()), Charset.forName("UTF-8"));
+                        List<NameValuePair> paramUrlPicLevel = URLEncodedUtils.parse(new URI(image.getSrcAttribute()), StandardCharsets.UTF_8);
                         if (!image.getSrcAttribute().equals("images/sagaliste-novote.gif")) {
                             saga.setLevelArt(Integer.parseInt(paramUrlPicLevel.stream().filter(it -> it.getName().equals("art")).findFirst().get().getValue()));
                             saga.setLevelTech(Integer.parseInt(paramUrlPicLevel.stream().filter(it -> it.getName().equals("tech")).findFirst().get().getValue()));
@@ -178,8 +177,6 @@ public class SagaScrapper {
                         node = span.getFirstChild();
                         anchor = (HtmlAnchor) span.getFirstChild();
                         saga.setUrlReviews(anchor.getHrefAttribute());
-                    } else {
-                        node = span;
                     }
                     saga.setNbReviews(Integer.valueOf(node.getTextContent().replaceAll(" avis", "")));
 
@@ -195,16 +192,16 @@ public class SagaScrapper {
                     }
 
                     saga = sagaRepository.save(saga);
-                    LOGGER.debug("Save : " + saga);
+                    log.debug("Save : " + saga);
                 }
             } catch (IOException | URISyntaxException e) {
-                LOGGER.error(e.getMessage());
+                log.error(e.getMessage());
                 e.printStackTrace();
             }
             //nbRows = 0;
             nbPage+= nbRows;
         }
-        LOGGER.info("Scrap sagas ended");
+        log.info("Scrap sagas ended");
         eventLogRepository.save(new EventLog(EventLogName.SYNC_SAGAS_STOP));
     }
 

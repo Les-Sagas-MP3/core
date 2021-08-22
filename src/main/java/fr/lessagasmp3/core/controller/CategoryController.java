@@ -5,8 +5,7 @@ import fr.lessagasmp3.core.exception.BadRequestException;
 import fr.lessagasmp3.core.exception.NotFoundException;
 import fr.lessagasmp3.core.model.CategoryModel;
 import fr.lessagasmp3.core.repository.CategoryRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,11 +16,10 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+@Slf4j
 @RestController
 @RequestMapping("/api")
 public class CategoryController {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(CategoryController.class);
 
     @Autowired
     private CategoryRepository categoryRepository;
@@ -40,7 +38,7 @@ public class CategoryController {
         for(Long id : ids) {
             Category entity = categoryRepository.findById(id).orElse(null);
             if(entity == null) {
-                LOGGER.error("Impossible to get category {} : it doesn't exist", id);
+                log.error("Impossible to get category {} : it doesn't exist", id);
                 continue;
             }
             models.add(CategoryModel.fromEntity(entity));
@@ -64,7 +62,7 @@ public class CategoryController {
         // Verify that body is complete
         if(categoryModel == null ||
                 categoryModel.getName() == null || categoryModel.getName().isEmpty()) {
-            LOGGER.error("Impossible to create category : body is incomplete");
+            log.error("Impossible to create category : body is incomplete");
             throw new BadRequestException();
         }
 
@@ -83,14 +81,14 @@ public class CategoryController {
         if(categoryModel == null ||
                 categoryModel.getId() <= 0 ||
                 categoryModel.getName() == null || categoryModel.getName().isEmpty()) {
-            LOGGER.error("Impossible to create category : body is incomplete");
+            log.error("Impossible to create category : body is incomplete");
             throw new BadRequestException();
         }
 
         // Verify that category exists
         Category category = categoryRepository.findById(categoryModel.getId()).orElse(null);
         if(category == null) {
-            LOGGER.error("Impossible to update category : category {} not found", categoryModel.getId());
+            log.error("Impossible to update category : category {} not found", categoryModel.getId());
             throw new NotFoundException();
         }
 

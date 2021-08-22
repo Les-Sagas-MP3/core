@@ -81,32 +81,31 @@ public class CoreApplication {
 			userRepository.save(admin);
 
 			log.info("ONLY PRINTED ONCE - Default credentials are : admin@les-sagas-mp3.fr / {}", generatedPassword);
+		}
 
-			// Init Firebase connexion
-			if (FIREBASE_URL != null) {
-				if (GOOGLE_APPLICATION_CREDENTIALS != null) {
-					log.info("Loading Firebase key from {}", GOOGLE_APPLICATION_CREDENTIALS);
-					File googleAppCredentialsFile = new File(GOOGLE_APPLICATION_CREDENTIALS);
-					if (googleAppCredentialsFile.exists()) {
-						try {
-							FirebaseOptions.Builder builder = FirebaseOptions.builder();
-							FirebaseOptions options = builder
-									.setCredentials(GoogleCredentials.getApplicationDefault())
-									.setDatabaseUrl(FIREBASE_URL)
-									.build();
-							FirebaseApp.initializeApp(options);
-						} catch (IOException e) {
-							log.error("Cannot initialize Firebase options", e);
-						}
-					} else {
-						log.warn("The file {} does not exist", GOOGLE_APPLICATION_CREDENTIALS);
-						loadGoogleApplicationCredentialsFromDb();
+		// Init Firebase connexion
+		if (FIREBASE_URL != null) {
+			if (GOOGLE_APPLICATION_CREDENTIALS != null) {
+				log.info("Loading Firebase key from {}", GOOGLE_APPLICATION_CREDENTIALS);
+				File googleAppCredentialsFile = new File(GOOGLE_APPLICATION_CREDENTIALS);
+				if (googleAppCredentialsFile.exists()) {
+					try {
+						FirebaseOptions.Builder builder = FirebaseOptions.builder();
+						FirebaseOptions options = builder
+								.setCredentials(GoogleCredentials.getApplicationDefault())
+								.setDatabaseUrl(FIREBASE_URL)
+								.build();
+						FirebaseApp.initializeApp(options);
+					} catch (IOException e) {
+						log.error("Cannot initialize Firebase options", e);
 					}
 				} else {
+					log.warn("The file {} does not exist", GOOGLE_APPLICATION_CREDENTIALS);
 					loadGoogleApplicationCredentialsFromDb();
 				}
+			} else {
+				loadGoogleApplicationCredentialsFromDb();
 			}
-
 		}
 	}
 

@@ -11,18 +11,16 @@ import fr.lessagasmp3.core.model.DistributionEntryModel;
 import fr.lessagasmp3.core.repository.CreatorRepository;
 import fr.lessagasmp3.core.repository.DistributionEntryRepository;
 import fr.lessagasmp3.core.repository.SagaRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @RestController
 @RequestMapping("/api")
 public class DistributionController {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(DistributionController.class);
 
     @Autowired
     private CreatorRepository creatorRepository;
@@ -55,7 +53,7 @@ public class DistributionController {
         if(model == null ||
                 model.getActorRef() <= 0 ||
                 model.getSagaRef() <= 0) {
-            LOGGER.error("Impossible to create distribution entry : body is incomplete");
+            log.error("Impossible to create distribution entry : body is incomplete");
             throw new BadRequestException();
         }
 
@@ -63,7 +61,7 @@ public class DistributionController {
         Creator creator = creatorRepository.findById(model.getActorRef()).orElse(null);
         Saga saga = sagaRepository.findById(model.getSagaRef()).orElse(null);
         if(creator == null || saga == null) {
-            LOGGER.error("Impossible to create distribution entry : creator {} or saga {} not found", model.getActorRef(), model.getSagaRef());
+            log.error("Impossible to create distribution entry : creator {} or saga {} not found", model.getActorRef(), model.getSagaRef());
             throw new NotFoundException();
         }
 
@@ -85,7 +83,7 @@ public class DistributionController {
                 model.getActorRef() <= 0 ||
                 model.getSagaRef() <= 0 ||
                 model.getRoles() == null || model.getRoles().isEmpty()) {
-            LOGGER.error("Impossible to create distribution entry : body is incomplete");
+            log.error("Impossible to create distribution entry : body is incomplete");
             throw new BadRequestException();
         }
 
@@ -94,7 +92,7 @@ public class DistributionController {
         Creator creator = creatorRepository.findById(model.getActorRef()).orElse(null);
         Saga saga = sagaRepository.findById(model.getActorRef()).orElse(null);
         if(entity == null || creator == null || saga == null) {
-            LOGGER.error("Impossible to create distribution entry : at least one reference is not found");
+            log.error("Impossible to create distribution entry : at least one reference is not found");
             throw new NotFoundException();
         }
 

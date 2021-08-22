@@ -9,8 +9,7 @@ import fr.lessagasmp3.core.exception.NotFoundException;
 import fr.lessagasmp3.core.model.SeasonModel;
 import fr.lessagasmp3.core.repository.SagaRepository;
 import fr.lessagasmp3.core.repository.SeasonRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,11 +20,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+@Slf4j
 @RestController
 @RequestMapping("/api")
 public class SeasonController {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(SeasonController.class);
 
     @Autowired
     private SagaRepository sagaRepository;
@@ -64,14 +62,14 @@ public class SeasonController {
 
         // Verify that body is complete
         if(model == null) {
-            LOGGER.error("Impossible to create season : body is incomplete");
+            log.error("Impossible to create season : body is incomplete");
             throw new BadRequestException();
         }
 
         // Verify that entities exists
         Saga saga = sagaRepository.findById(model.getSagaRef()).orElse(null);
         if(saga == null) {
-            LOGGER.error("Impossible to create season : saga {} not found", model.getSagaRef());
+            log.error("Impossible to create season : saga {} not found", model.getSagaRef());
             throw new NotFoundException();
         }
 
@@ -89,14 +87,14 @@ public class SeasonController {
 
         // Verify that body is complete
         if(model == null || model.getId() <= 0) {
-            LOGGER.error("Impossible to create season : body is incomplete");
+            log.error("Impossible to create season : body is incomplete");
             throw new BadRequestException();
         }
 
         // Verify that entity exists
         Season season = seasonRepository.findById(model.getId()).orElse(null);
         if(season == null) {
-            LOGGER.error("Impossible to update season : season {} not found", model.getId());
+            log.error("Impossible to update season : season {} not found", model.getId());
             throw new NotFoundException();
         }
 

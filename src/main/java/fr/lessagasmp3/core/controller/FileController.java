@@ -3,8 +3,7 @@ package fr.lessagasmp3.core.controller;
 import fr.lessagasmp3.core.constant.MimeTypes;
 import fr.lessagasmp3.core.constant.Strings;
 import fr.lessagasmp3.core.repository.FileRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
@@ -18,11 +17,10 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+@Slf4j
 @RestController
 @RequestMapping("/api")
 public class FileController {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(FileController.class);
 
     @Autowired
     private FileRepository fileRepository;
@@ -39,22 +37,22 @@ public class FileController {
             throw new RuntimeException("You must select the a file for uploading");
         }
 
-        LOGGER.debug("name: " + name);
+        log.debug("name: " + name);
         String finalFileName = multipartFile.getOriginalFilename();
         String fullPath = Strings.EMPTY;
         try {
             InputStream inputStream = multipartFile.getInputStream();
-            LOGGER.debug("inputStream: " + inputStream);
+            log.debug("inputStream: " + inputStream);
             String originalName = multipartFile.getOriginalFilename();
-            LOGGER.debug("originalName: " + originalName);
+            log.debug("originalName: " + originalName);
             String contentType = multipartFile.getContentType();
-            LOGGER.debug("contentType: " + contentType);
+            log.debug("contentType: " + contentType);
             long size = multipartFile.getSize();
-            LOGGER.debug("size: " + size);
+            log.debug("size: " + size);
             String extension = "." + MimeTypes.getDefaultExt(contentType);
-            LOGGER.debug("extension: " + extension);
+            log.debug("extension: " + extension);
             finalFileName = name + extension;
-            LOGGER.debug("saved filename: " + finalFileName);
+            log.debug("saved filename: " + finalFileName);
 
             prepareDirectories(directoryPath);
 
@@ -74,7 +72,7 @@ public class FileController {
             fileRepository.save(entity);
 
         } catch (IOException e) {
-            LOGGER.error("Cannot save file {}", finalFileName, e);
+            log.error("Cannot save file {}", finalFileName, e);
         }
 
         return fullPath;
@@ -83,24 +81,26 @@ public class FileController {
     public void prepareDirectories(String directoryPath) {
         File directory = new File(storageFolder);
         if (!directory.exists()) {
-            LOGGER.info("Creating path {}", directory.getPath());
-            directory.mkdirs();
+            log.info("Creating path {}", directory.getPath());
+            if(!directory.mkdirs()) {
+                log.error("The path {} cannot be created", directory.getPath());
+            }
         }
         if (!directory.isDirectory()) {
-            LOGGER.error("The path {} is not a directory", directory.getPath());
+            log.error("The path {} is not a directory", directory.getPath());
         }
 
         if (directoryPath != null && !directoryPath.isEmpty()) {
             directory = new File(storageFolder + File.separator + directoryPath.replaceAll("/", File.separator));
-            LOGGER.debug("Prepare directory {}", directory.getAbsolutePath());
+            log.debug("Prepare directory {}", directory.getAbsolutePath());
             if (!directory.exists()) {
-                LOGGER.info("Creating path {}", directory.getPath());
+                log.info("Creating path {}", directory.getPath());
                 if(!directory.mkdirs()) {
-                    LOGGER.error("Cannot create directory {}", directory.getAbsolutePath());
+                    log.error("Cannot create directory {}", directory.getAbsolutePath());
                 }
             }
             if (!directory.isDirectory()) {
-                LOGGER.error("The path {} is not a directory", directory.getPath());
+                log.error("The path {} is not a directory", directory.getPath());
             }
         }
     }

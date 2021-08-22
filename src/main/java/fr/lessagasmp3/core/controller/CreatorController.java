@@ -7,8 +7,7 @@ import fr.lessagasmp3.core.exception.BadRequestException;
 import fr.lessagasmp3.core.exception.NotFoundException;
 import fr.lessagasmp3.core.model.CreatorModel;
 import fr.lessagasmp3.core.repository.CreatorRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,11 +16,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+@Slf4j
 @RestController
 @RequestMapping("/api")
 public class CreatorController {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(CreatorController.class);
 
     @Autowired
     private CreatorRepository creatorRepository;
@@ -35,7 +33,7 @@ public class CreatorController {
         for(Long id : ids) {
             Creator entity = creatorRepository.findById(id).orElse(null);
             if(entity == null) {
-                LOGGER.error("Impossible to get creator {} : it doesn't exist", id);
+                log.error("Impossible to get creator {} : it doesn't exist", id);
                 continue;
             }
             models.add(CreatorModel.fromEntity(entity));
@@ -61,7 +59,7 @@ public class CreatorController {
         // Verify that body is complete
         if(creatorModel == null ||
                 creatorModel.getName() == null || creatorModel.getName().isEmpty()) {
-            LOGGER.error("Impossible to create creator : body is incomplete");
+            log.error("Impossible to create creator : body is incomplete");
             throw new BadRequestException();
         }
 
@@ -82,14 +80,14 @@ public class CreatorController {
         if(creatorModel == null ||
                 creatorModel.getId() <= 0 ||
                 creatorModel.getName() == null || creatorModel.getName().isEmpty()) {
-            LOGGER.error("Impossible to create creator : body is incomplete");
+            log.error("Impossible to create creator : body is incomplete");
             throw new BadRequestException();
         }
 
         // Verify that author exists
         Creator creator = creatorRepository.findById(creatorModel.getId()).orElse(null);
         if(creator == null) {
-            LOGGER.error("Impossible to update creator : creator {} not found", creatorModel.getId());
+            log.error("Impossible to update creator : creator {} not found", creatorModel.getId());
             throw new NotFoundException();
         }
 

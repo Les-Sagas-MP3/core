@@ -1,19 +1,18 @@
 package fr.lessagasmp3.core.controller;
 
 import fr.lessagasmp3.core.constant.AuthorityName;
-import fr.lessagasmp3.core.entity.Creator;
 import fr.lessagasmp3.core.entity.Authority;
+import fr.lessagasmp3.core.entity.Creator;
 import fr.lessagasmp3.core.entity.User;
 import fr.lessagasmp3.core.exception.BadRequestException;
 import fr.lessagasmp3.core.exception.ForbiddenException;
 import fr.lessagasmp3.core.exception.NotFoundException;
 import fr.lessagasmp3.core.model.UserModel;
-import fr.lessagasmp3.core.repository.CreatorRepository;
 import fr.lessagasmp3.core.repository.AuthorityRepository;
+import fr.lessagasmp3.core.repository.CreatorRepository;
 import fr.lessagasmp3.core.repository.UserRepository;
 import fr.lessagasmp3.core.service.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,11 +23,10 @@ import java.security.Principal;
 import java.util.Date;
 import java.util.Set;
 
+@Slf4j
 @RestController
 @RequestMapping("/api")
 public class UserController {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
     private UserService userService;
@@ -48,21 +46,21 @@ public class UserController {
 
         // Verify that ID is correct
         if(id <= 0) {
-            LOGGER.error("Impossible to get user by ID : ID is incorrect");
+            log.error("Impossible to get user by ID : ID is incorrect");
             throw new BadRequestException();
         }
 
         // Verify that principal is the user requested
         Long userLoggedInId = userService.get(principal).getId();
         if(!userLoggedInId.equals(id) && userService.isNotAdmin(userLoggedInId)) {
-            LOGGER.error("Impossible to get user {} : principal {} does not match", id, userLoggedInId);
+            log.error("Impossible to get user {} : principal {} does not match", id, userLoggedInId);
             throw new ForbiddenException();
         }
 
         // Verify that entity exists
         User entity = userRepository.findById(id).orElse(null);
         if(entity == null) {
-            LOGGER.error("Impossible to get user by ID : user not found");
+            log.error("Impossible to get user by ID : user not found");
             throw new NotFoundException();
         }
 
@@ -77,7 +75,7 @@ public class UserController {
         if(userModel == null ||
                 userModel.getEmail() == null || userModel.getEmail().isEmpty() ||
                 userModel.getPassword() == null || userModel.getPassword().isEmpty()) {
-            LOGGER.error("Impossible to update user : body is incomplete");
+            log.error("Impossible to update user : body is incomplete");
             throw new BadRequestException();
         }
 
@@ -100,7 +98,7 @@ public class UserController {
         if(userModel == null ||
                 userModel.getId() <= 0 ||
                 userModel.getEmail() == null || userModel.getEmail().isEmpty()) {
-            LOGGER.error("Impossible to update user : body is incomplete");
+            log.error("Impossible to update user : body is incomplete");
             throw new BadRequestException();
         }
 
@@ -108,14 +106,14 @@ public class UserController {
         // Principal is the contributor OR Principal is admin
         Long userLoggedInId = userService.get(principal).getId();
         if(!userLoggedInId.equals(userModel.getId()) && userService.isNotAdmin(userLoggedInId)) {
-            LOGGER.error("Impossible to update user : user {} has not enough privileges", userLoggedInId);
+            log.error("Impossible to update user : user {} has not enough privileges", userLoggedInId);
             throw new ForbiddenException();
         }
 
         // Verify that user exists
         User user = userRepository.findById(userModel.getId()).orElse(null);
         if(user == null) {
-            LOGGER.error("Impossible to update user : user {} not found", userModel.getId());
+            log.error("Impossible to update user : user {} not found", userModel.getId());
             throw new NotFoundException();
         }
 
@@ -136,7 +134,7 @@ public class UserController {
 
         // Verify that ID is correct
         if(id <= 0) {
-            LOGGER.error("Impossible to delete user : ID is incorrect");
+            log.error("Impossible to delete user : ID is incorrect");
             throw new BadRequestException();
         }
 
@@ -144,14 +142,14 @@ public class UserController {
         // Principal is the contributor OR Principal is admin
         Long userLoggedInId = userService.get(principal).getId();
         if(!userLoggedInId.equals(id) && userService.isNotAdmin(userLoggedInId)) {
-            LOGGER.error("Impossible to delete user : user {} has not enough privileges", userLoggedInId);
+            log.error("Impossible to delete user : user {} has not enough privileges", userLoggedInId);
             throw new ForbiddenException();
         }
 
         // Verify that user exists
         User user = userRepository.findById(id).orElse(null);
         if(user == null) {
-            LOGGER.error("Impossible to update user : user {} not found", id);
+            log.error("Impossible to update user : user {} not found", id);
             throw new NotFoundException();
         }
 

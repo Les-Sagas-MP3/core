@@ -3,14 +3,12 @@ package fr.lessagasmp3.core.service;
 import fr.lessagasmp3.core.constant.AuthorityName;
 import fr.lessagasmp3.core.entity.Authority;
 import fr.lessagasmp3.core.entity.User;
-import fr.lessagasmp3.core.exception.BadRequestException;
 import fr.lessagasmp3.core.exception.EntityAlreadyExistsException;
 import fr.lessagasmp3.core.repository.AuthorityRepository;
 import fr.lessagasmp3.core.repository.UserRepository;
 import fr.lessagasmp3.core.security.JwtRequest;
 import fr.lessagasmp3.core.security.JwtUser;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -26,10 +24,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class UserService implements UserDetailsService {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
 
     @Autowired
     private AuthorityRepository authorityRepository;
@@ -65,9 +62,9 @@ public class UserService implements UserDetailsService {
 
     public List<GrantedAuthority> getAuthorities(Long userId) {
         Set<Authority> userAuthorities = authorityRepository.findAllByUsers_Id(userId);
-        LOGGER.debug("Authorities for user {} :", userId);
+        log.debug("Authorities for user {} :", userId);
         return userAuthorities.stream().map(r -> {
-            LOGGER.debug("{}", r.getName().name());
+            log.debug("{}", r.getName().name());
             return new SimpleGrantedAuthority(r.getAuthority());
         }).collect(Collectors.toList());
     }
