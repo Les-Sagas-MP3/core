@@ -9,8 +9,7 @@ import fr.lessagasmp3.core.exception.NotFoundException;
 import fr.lessagasmp3.core.model.AnecdoteModel;
 import fr.lessagasmp3.core.repository.AnecdoteRepository;
 import fr.lessagasmp3.core.repository.SagaRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,11 +18,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+@Slf4j
 @RestController
 @RequestMapping("/api")
 public class AnecdoteController {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(AnecdoteController.class);
 
     @Autowired
     private AnecdoteRepository anecdoteRepository;
@@ -40,7 +38,7 @@ public class AnecdoteController {
         for(Long id : ids) {
             Anecdote entity = anecdoteRepository.findById(id).orElse(null);
             if(entity == null) {
-                LOGGER.error("Impossible to get anecdote {} : it doesn't exist", id);
+                log.error("Impossible to get anecdote {} : it doesn't exist", id);
                 continue;
             }
             models.add(AnecdoteModel.fromEntity(entity));
@@ -65,14 +63,14 @@ public class AnecdoteController {
 
         // Verify that body is complete
         if(model == null) {
-            LOGGER.error("Impossible to create anecdote : body is incomplete");
+            log.error("Impossible to create anecdote : body is incomplete");
             throw new BadRequestException();
         }
 
         // Verify that entities exists
         Saga saga = sagaRepository.findById(model.getSagaRef()).orElse(null);
         if(saga == null) {
-            LOGGER.error("Impossible to create season : saga {} not found", model.getSagaRef());
+            log.error("Impossible to create season : saga {} not found", model.getSagaRef());
             throw new NotFoundException();
         }
 
@@ -90,14 +88,14 @@ public class AnecdoteController {
 
         // Verify that body is complete
         if(model == null || model.getId() <= 0) {
-            LOGGER.error("Impossible to create anecdote : body is incomplete");
+            log.error("Impossible to create anecdote : body is incomplete");
             throw new BadRequestException();
         }
 
         // Verify that entities exists
         Anecdote anecdote = anecdoteRepository.findById(model.getId()).orElse(null);
         if(anecdote == null) {
-            LOGGER.error("Impossible to update anecdote : anecdote {} not found", model.getId());
+            log.error("Impossible to update anecdote : anecdote {} not found", model.getId());
             throw new NotFoundException();
         }
 

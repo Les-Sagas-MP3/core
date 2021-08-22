@@ -4,6 +4,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.Notification;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Locale;
 
+@Slf4j
 @RestController
 @RequestMapping("/api")
 public class MainController {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(MainController.class);
 
     @Autowired
     private MessageSource messageSource;
@@ -43,9 +43,9 @@ public class MainController {
         try {
             response = FirebaseMessaging.getInstance().send(firebaseNotification);
         } catch (FirebaseMessagingException e) {
-            LOGGER.error("Error while sending notification to Firebase", e);
+            log.error("Error while sending notification to Firebase", e);
         }
-        LOGGER.info("Successfully sent notification to Firebase: {}", response);
+        log.info("Successfully sent notification to Firebase: {}", response);
     }
 
 }

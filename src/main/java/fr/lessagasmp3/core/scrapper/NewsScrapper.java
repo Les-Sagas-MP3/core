@@ -11,8 +11,7 @@ import fr.lessagasmp3.core.repository.EventLogRepository;
 import fr.lessagasmp3.core.repository.RssMessageRepository;
 import fr.lessagasmp3.core.rss.Feed;
 import fr.lessagasmp3.core.rss.FeedParser;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
@@ -23,10 +22,9 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Slf4j
 @Component
 public class NewsScrapper {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(NewsScrapper.class);
 
     private static final String TITLE_SEPARATOR = " :: ";
 
@@ -46,11 +44,11 @@ public class NewsScrapper {
     private RssMessageRepository rssMessageRepository;
 
     public void scrap() {
-        LOGGER.info("Download RSS feed : {}", rssUrl);
+        log.info("Download RSS feed : {}", rssUrl);
         eventLogRepository.save(new EventLog(EventLogName.SYNC_NEWS_START));
         FeedParser parser = new FeedParser(rssUrl);
         Feed feed = parser.readFeed();
-        LOGGER.debug("{} entries found", feed.getEntries().size());
+        log.debug("{} entries found", feed.getEntries().size());
         boolean newRssMessage = false;
         for (RssMessage message : feed.getEntries()) {
             message.setFeedTitle(rssTitle);
@@ -75,7 +73,7 @@ public class NewsScrapper {
                 messageInDb.setGuid(message.getGuid());
                 rssMessageRepository.save(messageInDb);
             } else {
-                LOGGER.error("There are more than 1 RSS messages \"{}\" written by {} published on {}", message.getTitle(), message.getAuthor(), message.getPubdate());
+                log.error("There are more than 1 RSS messages \"{}\" written by {} published on {}", message.getTitle(), message.getAuthor(), message.getPubdate());
             }
         }
 
@@ -92,12 +90,12 @@ public class NewsScrapper {
             try {
                 response = FirebaseMessaging.getInstance().send(firebaseNotification);
             } catch (FirebaseMessagingException e) {
-                LOGGER.error("Error while sending notification to Firebase", e);
+                log.error("Error while sending notification to Firebase", e);
             }
-            LOGGER.info("Successfully sent notification to Firebase: " + response);
+            log.info("Successfully sent notification to Firebase: " + response);
         }
         eventLogRepository.save(new EventLog(EventLogName.SYNC_NEWS_STOP));
-        LOGGER.info("Download RSS feed ended");
+        log.info("Download RSS feed ended");
     }
 
 }
