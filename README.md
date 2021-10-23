@@ -1,13 +1,13 @@
 # Les Sagas MP3 - core
 [![Release](https://github.com/les-sagas-mp3/core/workflows/Release/badge.svg)](https://github.com/les-sagas-mp3/core/actions?query=workflow%3ARelease)
-[![Integration](https://github.com/les-sagas-mp3/core/workflows/Integration/badge.svg)](https://github.com/les-sagas-mp3/core/actions?query=workflow%3AIntegration)
+[![Build](https://github.com/Les-Sagas-MP3/core/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/Les-Sagas-MP3/core/actions/workflows/build.yml)
 
 ## Prerequisites
 
-- Java 16 - [Download here](https://jdk.java.net/16/)
+- Java 17 - [Download here](https://jdk.java.net/17/)
 - PostgreSQL 12 - [Download here](https://www.postgresql.org/download/)
-- A PostgreSQL Client - [Download DBeaver here](https://dbeaver.io/download/)
 - Maven 3 - [Download here](https://maven.apache.org/download.cgi)
+- (Optional) A PostgreSQL Client - [Download DBeaver here](https://dbeaver.io/download/)
 
 ## Getting Started
 
