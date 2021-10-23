@@ -26,6 +26,7 @@ import java.util.regex.Pattern;
 @Component
 public class NewsScrapper {
 
+    private static final String FIREBASE_URL = System.getenv("FIREBASE_URL");
     private static final String TITLE_SEPARATOR = " :: ";
 
     @Value("${fr.lessagasmp3.core.news.rss.title}")
@@ -77,7 +78,8 @@ public class NewsScrapper {
             }
         }
 
-        if (newRssMessage) {
+        // Send Firebase notification
+        if (FIREBASE_URL != null && newRssMessage) {
             Message firebaseNotification = Message.builder()
                     .setNotification(Notification.builder()
                             .setTitle(messageSource.getMessage("notification.news.title", null, Locale.getDefault()))
