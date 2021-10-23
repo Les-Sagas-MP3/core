@@ -121,27 +121,3 @@ jobs:
         run: docker push lessagasmp3/api:latest
       - name: Publish version to Docker Hub
         run: docker push lessagasmp3/api:${{ steps.get_version.outputs.VERSION }}
-
-  deploy-production:
-    needs: [verify-version, release]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          ref: '${{ needs.verify-version.outputs.version }}'
-      - name: Set up JDK
-        uses: actions/setup-java@v2
-        with:
-          distribution: 'adopt'
-          java-version: '17'
-      - name: Get the version
-        id: get_version
-        run: echo ::set-output name=VERSION::$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
-      - name: Execute deployment remotely
-        uses: appleboy/ssh-action@v0.0.7
-        with:
-          host: ${{ secrets.PRODUCTION_HOST }}
-          username: ${{ secrets.PRODUCTION_USER }}
-          key : ${{ secrets.PRODUCTION_KEY }}
-          port: ${{ secrets.PRODUCTION_PORT }}
-          script: (nohup /opt/les-sagas-mp3/deploy/core.sh ${{ steps.get_version.outputs.VERSION }} &> /opt/les-sagas-mp3/deploy/core.log < /dev/null &) && exit 0
