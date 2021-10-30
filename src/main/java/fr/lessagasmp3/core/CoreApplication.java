@@ -1,9 +1,12 @@
 package fr.lessagasmp3.core;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import fr.lessagasmp3.core.constant.AuthorityName;
+import fr.lessagasmp3.core.constant.Urls;
 import fr.lessagasmp3.core.controller.FileController;
 import fr.lessagasmp3.core.entity.Authority;
 import fr.lessagasmp3.core.entity.User;
@@ -12,6 +15,7 @@ import fr.lessagasmp3.core.repository.FileRepository;
 import fr.lessagasmp3.core.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -24,6 +28,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @EnableScheduling
@@ -32,6 +37,9 @@ public class CoreApplication {
 
 	private static final String GOOGLE_APPLICATION_CREDENTIALS = System.getenv("GOOGLE_APPLICATION_CREDENTIALS");
 	private static final String FIREBASE_URL = System.getenv("FIREBASE_URL");
+
+	@Value("${cloudinary.url}")
+	private String cloudinaryUrl;
 
 	@Autowired
 	private FileController fileController;
@@ -106,6 +114,15 @@ public class CoreApplication {
 			} else {
 				loadGoogleApplicationCredentialsFromDb();
 			}
+		}
+
+		if(cloudinaryUrl != null) {
+			Map<String, String> urlSplit = Urls.splitUrl(cloudinaryUrl);
+			Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
+					"cloud_name", urlSplit.get(Urls.HOST),
+					"api_key", urlSplit.get(Urls.USERNAME),
+					"api_secret", urlSplit.get(Urls.PASSWORD),
+					"secure", true));
 		}
 	}
 
