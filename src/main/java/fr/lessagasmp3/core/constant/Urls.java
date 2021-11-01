@@ -18,10 +18,10 @@ public class Urls {
         Matcher m = r.matcher(url);
         Map<String, String> split = new HashMap<>();
         if (m.find( )) {
-            split.put(PROTOCOL, m.group(0));
-            split.put(USERNAME, m.group(1));
-            split.put(PASSWORD, m.group(2));
-            split.put(HOST, m.group(3));
+            split.put(PROTOCOL, m.group(1));
+            split.put(USERNAME, m.group(2));
+            split.put(PASSWORD, m.group(3));
+            split.put(HOST, m.group(4));
         } else {
             throw new IllegalArgumentException("No match");
         }

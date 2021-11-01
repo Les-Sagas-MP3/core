@@ -1,9 +1,10 @@
 package fr.lessagasmp3.core.controller.saga;
 
-import fr.lessagasmp3.core.controller.FileController;
+import fr.lessagasmp3.core.file.controller.FileController;
 import fr.lessagasmp3.core.entity.Saga;
 import fr.lessagasmp3.core.exception.BadRequestException;
 import fr.lessagasmp3.core.exception.NotFoundException;
+import fr.lessagasmp3.core.file.model.FileModel;
 import fr.lessagasmp3.core.repository.SagaRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,10 +36,10 @@ public class SagaImgController {
         Saga entity = initUpload(sagaId, multipartFile);
 
         // Save File locally in a temporary folder
-        String path = fileController.upload(multipartFile, "img" + File.separator + sagaId, "cover", false);
+        FileModel fileModel = fileController.upload(multipartFile, "img" + File.separator + sagaId, "cover", false);
 
         // Set relative file URL
-        entity.setCoverUrl("/img/" + sagaId + "/" + new File(path).getName());
+        entity.setCoverUrl(fileModel.getUrl());
         LOGGER.debug(entity.getCoverUrl());
         sagaRepository.save(entity);
     }
@@ -51,10 +52,10 @@ public class SagaImgController {
         Saga entity = initUpload(sagaId, multipartFile);
 
         // Save File locally in a temporary folder
-        String path = fileController.upload(multipartFile, "img" + File.separator + sagaId, "banner", false);
+        FileModel fileModel = fileController.upload(multipartFile, "img" + File.separator + sagaId, "banner", false);
 
         // Set relative file URL
-        entity.setBannerUrl("/img/" + sagaId + "/" + new File(path).getName());
+        entity.setBannerUrl(fileModel.getUrl());
         LOGGER.debug(entity.getBannerUrl());
         sagaRepository.save(entity);
     }

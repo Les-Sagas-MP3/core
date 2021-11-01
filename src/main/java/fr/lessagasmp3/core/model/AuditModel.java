@@ -18,6 +18,7 @@ import java.util.Date;
 @EntityListeners(AuditingEntityListener.class)
 @Getter(AccessLevel.PUBLIC)
 @Setter(AccessLevel.PUBLIC)
+public
 class AuditModel<U> extends IdentityModel {
 
     @CreatedDate
