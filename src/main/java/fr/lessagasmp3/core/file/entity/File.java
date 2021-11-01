@@ -1,6 +1,6 @@
-package fr.lessagasmp3.core.entity;
+package fr.lessagasmp3.core.file.entity;
 
-import fr.lessagasmp3.core.model.FileModel;
+import fr.lessagasmp3.core.file.model.FileModel;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,7 +23,6 @@ public class File extends FileModel {
         entity.setId(model.getId());
         entity.setDirectory(model.getDirectory());
         entity.setName(model.getName());
-        entity.setPath(model.getPath());
         entity.setContent(model.getContent());
         return entity;
     }

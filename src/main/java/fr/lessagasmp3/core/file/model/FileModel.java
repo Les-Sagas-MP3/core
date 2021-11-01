@@ -1,6 +1,7 @@
-package fr.lessagasmp3.core.model;
+package fr.lessagasmp3.core.file.model;
 
-import fr.lessagasmp3.core.entity.File;
+import fr.lessagasmp3.core.file.entity.File;
+import fr.lessagasmp3.core.model.AuditModel;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,12 +22,12 @@ public class FileModel extends AuditModel<String> {
     @NotNull
     protected String name = "";
 
-    @NotNull
-    protected String path = "";
-
     @Column(columnDefinition = "TEXT")
     @NotNull
     protected String content;
+
+    @NotNull
+    protected String url = "";
 
     public static FileModel fromEntity(File entity) {
         Objects.requireNonNull(entity);
@@ -38,8 +39,8 @@ public class FileModel extends AuditModel<String> {
         model.setId(entity.getId());
         model.setDirectory(entity.getDirectory());
         model.setName(entity.getName());
-        model.setPath(entity.getPath());
         model.setContent(entity.getContent());
+        model.setUrl(entity.getUrl());
         return model;
     }
 

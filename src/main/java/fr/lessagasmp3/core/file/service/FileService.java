@@ -1,0 +1,112 @@
+package fr.lessagasmp3.core.file.service;
+
+import fr.lessagasmp3.core.constant.MimeTypes;
+import fr.lessagasmp3.core.file.entity.File;
+import fr.lessagasmp3.core.repository.FileRepository;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
+@Slf4j
+@Service
+public class FileService {
+
+    @Value("${fr.lessagasmp3.core.storage}")
+    private String storageFolder;
+
+    @Autowired
+    private FileRepository fileRepository;
+
+    @Autowired
+    private CloudinaryService cloudinaryService;
+
+    public File saveOnFilesystem(MultipartFile multipartFile, String directory, String name, boolean saveContentInDb) throws IOException {
+
+        String fullPath;
+        String finalFileName;
+
+        InputStream inputStream = multipartFile.getInputStream();
+        log.debug("inputStream: " + inputStream);
+        String originalName = multipartFile.getOriginalFilename();
+        log.debug("originalName: " + originalName);
+        String contentType = multipartFile.getContentType();
+        log.debug("contentType: " + contentType);
+        long size = multipartFile.getSize();
+        log.debug("size: " + size);
+        String extension = "." + MimeTypes.getDefaultExt(contentType);
+        log.debug("extension: " + extension);
+        finalFileName = name + extension;
+        log.debug("saved filename: " + finalFileName);
+
+        prepareDirectories(directory);
+
+        fullPath = storageFolder + java.io.File.separator + directory + java.io.File.separator + finalFileName;
+        java.io.File file = new java.io.File(fullPath);
+        try (OutputStream os = new FileOutputStream(file)) {
+            os.write(multipartFile.getBytes());
+        }
+
+        File entity = new File();
+        if (saveContentInDb) {
+            entity.setContent(Files.readString(Paths.get(file.getAbsolutePath())));
+        }
+        entity.setDirectory(directory);
+        entity.setName(finalFileName);
+        entity.setUrl("/" + directory + "/" + finalFileName);
+
+        return entity;
+    }
+
+    public fr.lessagasmp3.core.file.entity.File saveInDb(File newEntity) {
+        File entity = null;
+        if(newEntity.getId() > 0) {
+            entity = fileRepository.findById(newEntity.getId()).orElse(null);
+        }
+        if(entity == null) {
+            entity = new File();
+        }
+        entity.setDirectory(newEntity.getDirectory());
+        entity.setName(newEntity.getName());
+        return fileRepository.save(entity);
+    }
+
+    public void prepareDirectories(String directoryPath) {
+        java.io.File directory = new java.io.File(storageFolder);
+        if (!directory.exists()) {
+            log.info("Creating path {}", directory.getPath());
+            if (!directory.mkdirs()) {
+                log.error("The path {} cannot be created", directory.getPath());
+            }
+        }
+        if (!directory.isDirectory()) {
+            log.error("The path {} is not a directory", directory.getPath());
+        }
+
+        if (directoryPath != null && !directoryPath.isEmpty()) {
+            directory = new java.io.File(storageFolder + java.io.File.separator + directoryPath.replaceAll("//", java.io.File.separator));
+            log.debug("Prepare directory {}", directory.getAbsolutePath());
+            if (!directory.exists()) {
+                log.info("Creating path {}", directory.getPath());
+                if (!directory.mkdirs()) {
+                    log.error("Cannot create directory {}", directory.getAbsolutePath());
+                }
+            }
+            if (!directory.isDirectory()) {
+                log.error("The path {} is not a directory", directory.getPath());
+            }
+        }
+    }
+
+    public String getPath(File entity) {
+        return storageFolder + java.io.File.separator + entity.getDirectory() + java.io.File.separator + entity.getName();
+    }
+}
