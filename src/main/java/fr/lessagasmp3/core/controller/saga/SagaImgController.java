@@ -1,10 +1,10 @@
 package fr.lessagasmp3.core.controller.saga;
 
-import fr.lessagasmp3.core.file.controller.FileController;
+import fr.lessagasmp3.core.file.core.controller.FileController;
 import fr.lessagasmp3.core.entity.Saga;
 import fr.lessagasmp3.core.exception.BadRequestException;
 import fr.lessagasmp3.core.exception.NotFoundException;
-import fr.lessagasmp3.core.file.model.FileModel;
+import fr.lessagasmp3.core.file.core.model.FileModel;
 import fr.lessagasmp3.core.repository.SagaRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

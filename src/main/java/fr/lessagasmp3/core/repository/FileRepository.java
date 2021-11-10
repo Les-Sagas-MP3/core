@@ -1,6 +1,6 @@
 package fr.lessagasmp3.core.repository;
 
-import fr.lessagasmp3.core.file.entity.File;
+import fr.lessagasmp3.core.file.core.entity.File;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface FileRepository extends JpaRepository<File, Long> {

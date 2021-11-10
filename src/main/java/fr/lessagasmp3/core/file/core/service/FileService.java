@@ -1,7 +1,11 @@
-package fr.lessagasmp3.core.file.service;
+package fr.lessagasmp3.core.file.core.service;
 
 import fr.lessagasmp3.core.constant.MimeTypes;
-import fr.lessagasmp3.core.file.entity.File;
+import fr.lessagasmp3.core.exception.BadRequestException;
+import fr.lessagasmp3.core.exception.NotFoundException;
+import fr.lessagasmp3.core.file.cloudinary.model.CloudinaryResource;
+import fr.lessagasmp3.core.file.cloudinary.service.CloudinaryService;
+import fr.lessagasmp3.core.file.core.entity.File;
 import fr.lessagasmp3.core.repository.FileRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +33,10 @@ public class FileService {
     @Autowired
     private CloudinaryService cloudinaryService;
 
+    public File findInDbById(Long id) {
+        return fileRepository.findById(id).orElse(null);
+    }
+
     public File saveOnFilesystem(MultipartFile multipartFile, String directory, String name, boolean saveContentInDb) throws IOException {
 
         String fullPath;
@@ -42,9 +50,9 @@ public class FileService {
         log.debug("contentType: " + contentType);
         long size = multipartFile.getSize();
         log.debug("size: " + size);
-        String extension = "." + MimeTypes.getDefaultExt(contentType);
-        log.debug("extension: " + extension);
-        finalFileName = name + extension;
+        String format = MimeTypes.getDefaultExt(contentType);
+        log.debug("format: " + format);
+        finalFileName = name + "." + format;
         log.debug("saved filename: " + finalFileName);
 
         prepareDirectories(directory);
@@ -60,13 +68,14 @@ public class FileService {
             entity.setContent(Files.readString(Paths.get(file.getAbsolutePath())));
         }
         entity.setDirectory(directory);
-        entity.setName(finalFileName);
+        entity.setName(name);
+        entity.setFormat(format);
         entity.setUrl("/" + directory + "/" + finalFileName);
 
         return entity;
     }
 
-    public fr.lessagasmp3.core.file.entity.File saveInDb(File newEntity) {
+    public fr.lessagasmp3.core.file.core.entity.File saveInDb(File newEntity) {
         File entity = null;
         if(newEntity.getId() > 0) {
             entity = fileRepository.findById(newEntity.getId()).orElse(null);
@@ -76,7 +85,50 @@ public class FileService {
         }
         entity.setDirectory(newEntity.getDirectory());
         entity.setName(newEntity.getName());
+        entity.setFormat(newEntity.getFormat());
+        entity.setUrl(newEntity.getUrl());
         return fileRepository.save(entity);
+    }
+
+    public Boolean delete(Long fileId) {
+
+        // Check if ID is correct
+        if(fileId <= 0) {
+            log.error("Impossible to delete file : ID is missing");
+            throw new BadRequestException();
+        }
+
+        // Check if file is registered in DB
+        File entity = fileRepository.findById(fileId).orElse(null);
+        if(entity == null) {
+            log.error("Impossible to delete file : file {} does not exist in DB", fileId);
+            throw new NotFoundException();
+        }
+
+        // Manage third parties
+        if(cloudinaryService.isEnabled()) {
+            CloudinaryResource resource = cloudinaryService.find(entity);
+            if(resource == null) {
+                log.error("Impossible to delete file : file {} does not exist in Cloudinary", entity.getDirectory() + "/" + entity.getName());
+            } else {
+                cloudinaryService.delete(resource);
+            }
+        }
+
+        // Delete file in filesystem
+        java.io.File file = new java.io.File(getPath(entity));
+        if(file.exists()) {
+            if(!file.delete()) {
+                log.error("Impossible to delete file : unknown error");
+            }
+        } else {
+            log.error("Impossible to delete file : file {} does not exist in filesystem", fileId);
+        }
+
+        // Delete file in DB
+        fileRepository.delete(entity);
+
+        return Boolean.TRUE;
     }
 
     public void prepareDirectories(String directoryPath) {
@@ -107,6 +159,6 @@ public class FileService {
     }
 
     public String getPath(File entity) {
-        return storageFolder + java.io.File.separator + entity.getDirectory() + java.io.File.separator + entity.getName();
+        return storageFolder + java.io.File.separator + entity.getDirectory() + java.io.File.separator + entity.getFullname();
     }
 }

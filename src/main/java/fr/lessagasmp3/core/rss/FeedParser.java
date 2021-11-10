@@ -1,5 +1,6 @@
 package fr.lessagasmp3.core.rss;
 
+import fr.lessagasmp3.core.constant.HttpProxy;
 import fr.lessagasmp3.core.constant.Strings;
 import fr.lessagasmp3.core.entity.RssMessage;
 import org.slf4j.Logger;
@@ -12,9 +13,7 @@ import javax.xml.stream.events.Characters;
 import javax.xml.stream.events.XMLEvent;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
+import java.net.*;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -68,7 +67,12 @@ public class FeedParser {
             URLConnection openConnection;
             InputStream in;
             try {
-                openConnection = url.openConnection();
+                if(HttpProxy.HTTPS_HOST.equals(Strings.EMPTY)) {
+                    openConnection = url.openConnection();
+                } else {
+                    Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(HttpProxy.HTTPS_HOST, HttpProxy.HTTPS_PORT));
+                    openConnection = url.openConnection(proxy);
+                }
                 in = openConnection.getInputStream();
             } catch (IOException e) {
                 throw new RuntimeException(e);
