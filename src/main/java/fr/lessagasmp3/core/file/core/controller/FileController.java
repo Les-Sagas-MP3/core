@@ -1,16 +1,13 @@
-package fr.lessagasmp3.core.file.controller;
+package fr.lessagasmp3.core.file.core.controller;
 
-import fr.lessagasmp3.core.file.entity.File;
-import fr.lessagasmp3.core.file.model.FileModel;
-import fr.lessagasmp3.core.file.service.CloudinaryService;
-import fr.lessagasmp3.core.file.service.FileService;
+import fr.lessagasmp3.core.file.core.entity.File;
+import fr.lessagasmp3.core.file.core.model.FileModel;
+import fr.lessagasmp3.core.file.cloudinary.service.CloudinaryService;
+import fr.lessagasmp3.core.file.core.service.FileService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -48,6 +45,11 @@ public class FileController {
         }
 
         return FileModel.fromEntity(entity);
+    }
+
+    @DeleteMapping(value = "/file/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Boolean delete(@PathVariable("id") Long id) {
+        return fileService.delete(id);
     }
 
 
