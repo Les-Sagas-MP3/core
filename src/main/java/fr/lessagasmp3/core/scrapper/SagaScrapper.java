@@ -8,9 +8,9 @@ import fr.lessagasmp3.core.entity.Category;
 import fr.lessagasmp3.core.entity.Creator;
 import fr.lessagasmp3.core.entity.EventLog;
 import fr.lessagasmp3.core.entity.Saga;
+import fr.lessagasmp3.core.eventlog.service.EventLogService;
 import fr.lessagasmp3.core.repository.CategoryRepository;
 import fr.lessagasmp3.core.repository.CreatorRepository;
-import fr.lessagasmp3.core.repository.EventLogRepository;
 import fr.lessagasmp3.core.repository.SagaRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.validator.routines.UrlValidator;
@@ -44,20 +44,21 @@ public class SagaScrapper {
     private static final short COLUMN_BRAVOS_INDEX = 6;
 
     @Autowired
+    private EventLogService eventLogService;
+
+    @Autowired
     private CreatorRepository creatorRepository;
 
     @Autowired
     private CategoryRepository categoryRepository;
 
     @Autowired
-    private EventLogRepository eventLogRepository;
-
-    @Autowired
     private SagaRepository sagaRepository;
 
     public void scrap() {
         log.info("Scrap sagas started");
-        eventLogRepository.save(new EventLog(EventLogName.SYNC_SAGAS_START));
+        eventLogService.insert(new EventLog(EventLogName.SYNC_SAGAS_START));
+        eventLogService.rotate(EventLogName.SYNC_SAGAS_START);
         int nbRows = 50;
         short nbPage = 0;
 
@@ -202,7 +203,8 @@ public class SagaScrapper {
             nbPage+= nbRows;
         }
         log.info("Scrap sagas ended");
-        eventLogRepository.save(new EventLog(EventLogName.SYNC_SAGAS_STOP));
+        eventLogService.insert(new EventLog(EventLogName.SYNC_SAGAS_STOP));
+        eventLogService.rotate(EventLogName.SYNC_SAGAS_STOP);
     }
 
     private String cleanString(String str) {

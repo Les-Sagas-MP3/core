@@ -7,7 +7,7 @@ import com.google.firebase.messaging.Notification;
 import fr.lessagasmp3.core.constant.EventLogName;
 import fr.lessagasmp3.core.entity.EventLog;
 import fr.lessagasmp3.core.entity.RssMessage;
-import fr.lessagasmp3.core.repository.EventLogRepository;
+import fr.lessagasmp3.core.eventlog.service.EventLogService;
 import fr.lessagasmp3.core.repository.RssMessageRepository;
 import fr.lessagasmp3.core.rss.Feed;
 import fr.lessagasmp3.core.rss.FeedParser;
@@ -36,7 +36,7 @@ public class NewsScrapper {
     private String rssUrl;
 
     @Autowired
-    private EventLogRepository eventLogRepository;
+    private EventLogService eventLogService;
 
     @Autowired
     private MessageSource messageSource;
@@ -46,7 +46,8 @@ public class NewsScrapper {
 
     public void scrap() {
         log.info("Download RSS feed : {}", rssUrl);
-        eventLogRepository.save(new EventLog(EventLogName.SYNC_NEWS_START));
+        eventLogService.insert(new EventLog(EventLogName.SYNC_NEWS_START));
+        eventLogService.rotate(EventLogName.SYNC_NEWS_START);
         FeedParser parser = new FeedParser(rssUrl);
         Feed feed = parser.readFeed();
         log.debug("{} entries found", feed.getEntries().size());
@@ -96,7 +97,8 @@ public class NewsScrapper {
             }
             log.info("Successfully sent notification to Firebase: " + response);
         }
-        eventLogRepository.save(new EventLog(EventLogName.SYNC_NEWS_STOP));
+        eventLogService.insert(new EventLog(EventLogName.SYNC_NEWS_STOP));
+        eventLogService.rotate(EventLogName.SYNC_NEWS_STOP);
         log.info("Download RSS feed ended");
     }
 

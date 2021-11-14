@@ -1,4 +1,4 @@
-package fr.lessagasmp3.core.controller;
+package fr.lessagasmp3.core.eventlog.controller;
 
 import fr.lessagasmp3.core.constant.EventLogName;
 import fr.lessagasmp3.core.entity.EventLog;
