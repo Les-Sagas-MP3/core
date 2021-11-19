@@ -2,6 +2,7 @@ package fr.lessagasmp3.core.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import fr.lessagasmp3.core.model.DistributionEntryModel;
+import fr.lessagasmp3.core.saga.entity.Saga;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;

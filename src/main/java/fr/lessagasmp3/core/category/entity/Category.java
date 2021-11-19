@@ -1,15 +1,14 @@
-package fr.lessagasmp3.core.entity;
+package fr.lessagasmp3.core.category.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import fr.lessagasmp3.core.model.SeasonModel;
 import fr.lessagasmp3.core.saga.entity.Saga;
+import fr.lessagasmp3.core.category.model.CategoryModel;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -18,29 +17,22 @@ import java.util.Set;
 @Table
 @Getter(AccessLevel.PUBLIC)
 @Setter(AccessLevel.PUBLIC)
-public class Season extends SeasonModel {
+public class Category extends CategoryModel {
 
-    @ManyToOne
+    @ManyToMany(mappedBy="categories")
     @JsonIgnoreProperties(value = {"authors", "composers", "categories", "seasons", "distributionEntries", "anecdotes"})
-    private Saga saga = new Saga();
+    private Set<Saga> sagas = new LinkedHashSet<>();
 
-    @OneToMany(
-            mappedBy = "season",
-            orphanRemoval = true)
-    @JsonIgnoreProperties(value = {"season"})
-    private Set<Episode> episodes = new LinkedHashSet<>();
-
-    public static Season fromModel(SeasonModel model) {
-        Season entity = new Season();
+    public static Category fromModel(CategoryModel model) {
+        Category entity = new Category();
         entity.setCreatedAt(model.getCreatedAt());
         entity.setCreatedBy(model.getCreatedBy());
         entity.setUpdatedAt(model.getUpdatedAt());
         entity.setUpdatedBy(model.getUpdatedBy());
         entity.setId(model.getId());
-        entity.setNumber(model.getNumber());
         entity.setName(model.getName());
-        entity.setSagaRef(model.getSagaRef());
-        entity.setEpisodesRef(model.getEpisodesRef());
+        entity.setNbSagas(model.getNbSagas());
+        entity.setSagasRef(model.getSagasRef());
         return entity;
     }
 }

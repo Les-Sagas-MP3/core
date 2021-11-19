@@ -7,7 +7,7 @@ import fr.lessagasmp3.core.constant.AuthorityName;
 import fr.lessagasmp3.core.entity.Authority;
 import fr.lessagasmp3.core.entity.User;
 import fr.lessagasmp3.core.file.cloudinary.service.CloudinaryService;
-import fr.lessagasmp3.core.file.core.service.FileService;
+import fr.lessagasmp3.core.file.service.FileService;
 import fr.lessagasmp3.core.repository.AuthorityRepository;
 import fr.lessagasmp3.core.repository.FileRepository;
 import fr.lessagasmp3.core.repository.UserRepository;
@@ -125,7 +125,7 @@ public class CoreApplication {
 
     public void loadGoogleApplicationCredentialsFromDb() {
         log.info("Loading Firebase key from database");
-        fr.lessagasmp3.core.file.core.entity.File file = fileRepository.findByDirectoryAndName("config", "GOOGLE_APPLICATION_CREDENTIALS");
+        fr.lessagasmp3.core.file.entity.File file = fileRepository.findByDirectoryAndName("config", "GOOGLE_APPLICATION_CREDENTIALS");
         if (file == null) {
             log.error("No Firebase key stored in database");
         } else {

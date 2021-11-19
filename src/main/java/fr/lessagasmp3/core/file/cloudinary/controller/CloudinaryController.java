@@ -1,8 +1,8 @@
 package fr.lessagasmp3.core.file.cloudinary.controller;
 
-import fr.lessagasmp3.core.file.core.entity.File;
+import fr.lessagasmp3.core.file.entity.File;
 import fr.lessagasmp3.core.file.cloudinary.model.CloudinaryNotification;
-import fr.lessagasmp3.core.file.core.service.FileService;
+import fr.lessagasmp3.core.file.service.FileService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;

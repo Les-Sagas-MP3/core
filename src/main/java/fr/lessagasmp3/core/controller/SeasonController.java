@@ -2,12 +2,12 @@ package fr.lessagasmp3.core.controller;
 
 import com.google.gson.Gson;
 import fr.lessagasmp3.core.constant.Strings;
-import fr.lessagasmp3.core.entity.Saga;
+import fr.lessagasmp3.core.saga.entity.Saga;
 import fr.lessagasmp3.core.entity.Season;
 import fr.lessagasmp3.core.exception.BadRequestException;
 import fr.lessagasmp3.core.exception.NotFoundException;
 import fr.lessagasmp3.core.model.SeasonModel;
-import fr.lessagasmp3.core.repository.SagaRepository;
+import fr.lessagasmp3.core.saga.repository.SagaRepository;
 import fr.lessagasmp3.core.repository.SeasonRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
