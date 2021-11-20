@@ -1,8 +1,8 @@
 package fr.lessagasmp3.core.pdf.parser;
 
 import fr.lessagasmp3.core.category.model.CategoryModel;
-import fr.lessagasmp3.importpdf.extractor.LinesExtractor;
-import fr.lessagasmp3.importpdf.service.CategoryService;
+import fr.lessagasmp3.core.category.service.CategoryService;
+import fr.lessagasmp3.core.pdf.extractor.LinesExtractor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

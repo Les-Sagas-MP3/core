@@ -1,19 +1,17 @@
 package fr.lessagasmp3.core.pdf.parser;
 
-import fr.lessagasmp3.core.model.EpisodeModel;
-import fr.lessagasmp3.core.model.SeasonModel;
-import fr.lessagasmp3.importpdf.extractor.LinesExtractor;
-import fr.lessagasmp3.importpdf.service.EpisodeService;
-import fr.lessagasmp3.importpdf.service.SeasonService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import fr.lessagasmp3.core.episode.model.EpisodeModel;
+import fr.lessagasmp3.core.episode.service.EpisodeService;
+import fr.lessagasmp3.core.pdf.extractor.LinesExtractor;
+import fr.lessagasmp3.core.season.model.SeasonModel;
+import fr.lessagasmp3.core.season.service.SeasonService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 public class EpisodeParser {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(EpisodeParser.class);
 
     @Autowired
     private EpisodeService episodeService;
@@ -39,7 +37,7 @@ public class EpisodeParser {
                     splitHyphen = splitHyphen1;
                 }
                 if(splitHyphen2.length > 1) {
-                    LOGGER.debug(lines[lineNumber]);
+                    log.debug(lines[lineNumber]);
                     seasonName =splitHyphen2[1];
                     splitHyphen = splitHyphen2;
                 }
@@ -89,7 +87,7 @@ public class EpisodeParser {
                     episodeService.update(episode);
                     episodeNumber++;
                 }
-                LOGGER.debug(lines[lineNumber]);
+                log.debug(lines[lineNumber]);
             }
         }
     }

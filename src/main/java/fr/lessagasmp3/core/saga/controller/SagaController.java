@@ -1,13 +1,11 @@
 package fr.lessagasmp3.core.saga.controller;
 
 import com.google.gson.Gson;
-import fr.lessagasmp3.core.constant.Strings;
-import fr.lessagasmp3.core.saga.entity.Saga;
+import fr.lessagasmp3.core.common.constant.Strings;
 import fr.lessagasmp3.core.exception.BadRequestException;
+import fr.lessagasmp3.core.common.pagination.DataPage;
+import fr.lessagasmp3.core.saga.entity.Saga;
 import fr.lessagasmp3.core.saga.model.SagaModel;
-import fr.lessagasmp3.core.pagination.DataPage;
-import fr.lessagasmp3.core.category.repository.CategoryRepository;
-import fr.lessagasmp3.core.repository.CreatorRepository;
 import fr.lessagasmp3.core.saga.repository.SagaRepository;
 import fr.lessagasmp3.core.saga.service.SagaService;
 import lombok.extern.slf4j.Slf4j;
@@ -35,25 +33,16 @@ public class SagaController {
     private SagaService sagaService;
 
     @Autowired
-    private CategoryRepository categoryRepository;
-
-    @Autowired
-    private CreatorRepository creatorRepository;
-
-    @Autowired
     private SagaRepository sagaRepository;
 
     @RequestMapping(value = "/saga", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public Set<SagaModel> getAll() {
-        Set<Saga> entities = sagaRepository.findAllByOrderByTitleAsc();
-        Set<SagaModel> models = new LinkedHashSet<>();
-        entities.forEach(entity -> models.add(SagaModel.fromEntity(entity)));
-        return models;
+        return sagaService.getAll();
     }
 
     @RequestMapping(value = "/saga/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public SagaModel getById(@PathVariable Long id) {
-        return SagaModel.fromEntity(sagaRepository.findById(id).orElse(null));
+        return sagaService.getById(id);
     }
 
     @RequestMapping(value = "/saga", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE, params = {"title"})

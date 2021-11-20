@@ -1,6 +1,6 @@
 package fr.lessagasmp3.core.pdf.parser;
 
-import fr.lessagasmp3.core.constant.SagaStatus;
+import fr.lessagasmp3.core.common.constant.SagaStatus;
 import org.springframework.stereotype.Service;
 
 @Service

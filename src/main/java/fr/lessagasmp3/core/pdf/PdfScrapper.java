@@ -1,19 +1,20 @@
 package fr.lessagasmp3.core.pdf;
 
 import fr.lessagasmp3.core.anecdote.entity.Anecdote;
-import fr.lessagasmp3.core.entity.DistributionEntry;
+import fr.lessagasmp3.core.distribution.entity.DistributionEntry;
 import fr.lessagasmp3.core.file.model.FileModel;
 import fr.lessagasmp3.core.category.model.CategoryModel;
-import fr.lessagasmp3.core.model.CreatorModel;
+import fr.lessagasmp3.core.creator.model.CreatorModel;
+import fr.lessagasmp3.core.pdf.parser.*;
 import fr.lessagasmp3.core.saga.model.SagaModel;
 import fr.lessagasmp3.core.pdf.extractor.*;
-import fr.lessagasmp3.core.pdf.parser.AnecdoteParser;
 import fr.lessagasmp3.core.saga.service.SagaService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.apache.pdfbox.text.PDFTextStripperByArea;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -29,6 +30,9 @@ public class PdfScrapper {
     private static final String EPISODE = LinesExtractor.convertToUtf8("ÉPISODE");
     private static final String GENESE = LinesExtractor.convertToUtf8("GENÈSE");
     private static final String RECOMPENSE = LinesExtractor.convertToUtf8("RÉCOMPENSE");
+
+    @Value("${fr.lessagasmp3.core.storage}")
+    private String storageFolder;
 
     @Autowired
     private SagaService sagaService;
@@ -51,11 +55,35 @@ public class PdfScrapper {
     @Autowired
     private AnecdoteParser anecdoteParser;
 
-    public void scrap(FileModel fileModel) {
-        log.info("Scrap pdf of {} started", fileModel.getName());
+    @Autowired
+    private CategoryParser categoryParser;
+
+    @Autowired
+    private CreationParser creationParser;
+
+    @Autowired
+    private CreatorParser creatorParser;
+
+    @Autowired
+    private DistributionParser distributionParser;
+
+    @Autowired
+    private DurationParser durationParser;
+
+    @Autowired
+    private EpisodeParser episodeParser;
+
+    @Autowired
+    private StatusParser statusParser;
+
+    @Autowired
+    private TextParser textParser;
+
+    public SagaModel scrap(FileModel fileModel) {
+        return this.parseFile(storageFolder + File.separator + fileModel.getDirectory(), fileModel.getFullname());
     }
 
-    private String parseFile(String folderPath, String content) {
+    private SagaModel parseFile(String folderPath, String content) {
 
         // Output data
         String authors;
@@ -294,11 +322,11 @@ public class PdfScrapper {
                 }
 
             }
-        } catch (IOException | NumberFormatException | InterruptedException | IllegalStateException e) {
+        } catch (IOException | NumberFormatException | IllegalStateException e) {
             log.error(e.getMessage(), e);
         }
 
-        return saga.getTitle();
+        return saga;
     }
 
 }

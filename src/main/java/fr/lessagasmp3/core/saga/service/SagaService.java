@@ -1,17 +1,20 @@
 package fr.lessagasmp3.core.saga.service;
 
 import fr.lessagasmp3.core.category.entity.Category;
-import fr.lessagasmp3.core.entity.Creator;
+import fr.lessagasmp3.core.creator.entity.Creator;
 import fr.lessagasmp3.core.saga.entity.Saga;
 import fr.lessagasmp3.core.exception.BadRequestException;
 import fr.lessagasmp3.core.exception.NotFoundException;
 import fr.lessagasmp3.core.saga.model.SagaModel;
 import fr.lessagasmp3.core.category.repository.CategoryRepository;
-import fr.lessagasmp3.core.repository.CreatorRepository;
+import fr.lessagasmp3.core.creator.repository.CreatorRepository;
 import fr.lessagasmp3.core.saga.repository.SagaRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Slf4j
 @Service
@@ -25,6 +28,17 @@ public class SagaService {
 
     @Autowired
     private SagaRepository sagaRepository;
+
+    public Set<SagaModel> getAll() {
+        Set<Saga> entities = sagaRepository.findAllByOrderByTitleAsc();
+        Set<SagaModel> models = new LinkedHashSet<>();
+        entities.forEach(entity -> models.add(SagaModel.fromEntity(entity)));
+        return models;
+    }
+
+    public SagaModel getById(Long id) {
+        return SagaModel.fromEntity(sagaRepository.findById(id).orElse(null));
+    }
 
     public SagaModel findOrCreate(String title) {
         SagaModel saga = findByTitle(title);
