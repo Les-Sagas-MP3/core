@@ -1,8 +1,8 @@
 package fr.lessagasmp3.core.eventlog.service;
 
-import fr.lessagasmp3.core.constant.EventLogName;
-import fr.lessagasmp3.core.entity.EventLog;
-import fr.lessagasmp3.core.repository.EventLogRepository;
+import fr.lessagasmp3.core.common.constant.EventLogName;
+import fr.lessagasmp3.core.eventlog.entity.EventLog;
+import fr.lessagasmp3.core.eventlog.repository.EventLogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

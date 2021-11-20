@@ -1,12 +1,12 @@
 package fr.lessagasmp3.core.file.service;
 
-import fr.lessagasmp3.core.constant.MimeTypes;
+import fr.lessagasmp3.core.common.constant.MimeTypes;
 import fr.lessagasmp3.core.exception.BadRequestException;
 import fr.lessagasmp3.core.exception.NotFoundException;
 import fr.lessagasmp3.core.file.cloudinary.model.CloudinaryResource;
 import fr.lessagasmp3.core.file.cloudinary.service.CloudinaryService;
 import fr.lessagasmp3.core.file.entity.File;
-import fr.lessagasmp3.core.repository.FileRepository;
+import fr.lessagasmp3.core.file.repository.FileRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

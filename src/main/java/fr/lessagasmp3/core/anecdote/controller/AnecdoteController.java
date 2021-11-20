@@ -3,7 +3,7 @@ package fr.lessagasmp3.core.anecdote.controller;
 import com.google.gson.Gson;
 import fr.lessagasmp3.core.anecdote.model.AnecdoteModel;
 import fr.lessagasmp3.core.anecdote.service.AnecdoteService;
-import fr.lessagasmp3.core.constant.Strings;
+import fr.lessagasmp3.core.common.constant.Strings;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;

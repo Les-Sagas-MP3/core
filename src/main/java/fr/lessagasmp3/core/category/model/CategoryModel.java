@@ -1,7 +1,7 @@
 package fr.lessagasmp3.core.category.model;
 
 import fr.lessagasmp3.core.category.entity.Category;
-import fr.lessagasmp3.core.model.AuditModel;
+import fr.lessagasmp3.core.common.model.AuditModel;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;

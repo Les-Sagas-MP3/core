@@ -1,8 +1,8 @@
 package fr.lessagasmp3.core.saga.model;
 
-import fr.lessagasmp3.core.constant.SagaStatus;
-import fr.lessagasmp3.core.constant.Strings;
-import fr.lessagasmp3.core.model.AuditModel;
+import fr.lessagasmp3.core.common.constant.SagaStatus;
+import fr.lessagasmp3.core.common.constant.Strings;
+import fr.lessagasmp3.core.common.model.AuditModel;
 import fr.lessagasmp3.core.saga.entity.Saga;
 import lombok.AccessLevel;
 import lombok.Getter;

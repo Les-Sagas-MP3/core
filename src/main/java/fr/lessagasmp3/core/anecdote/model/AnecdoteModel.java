@@ -1,8 +1,8 @@
 package fr.lessagasmp3.core.anecdote.model;
 
-import fr.lessagasmp3.core.constant.Strings;
+import fr.lessagasmp3.core.common.constant.Strings;
 import fr.lessagasmp3.core.anecdote.entity.Anecdote;
-import fr.lessagasmp3.core.model.AuditModel;
+import fr.lessagasmp3.core.common.model.AuditModel;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;

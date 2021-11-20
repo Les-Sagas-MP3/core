@@ -1,11 +1,9 @@
 package fr.lessagasmp3.core.pdf.parser;
 
-import fr.lessagasmp3.core.entity.DistributionEntry;
-import fr.lessagasmp3.importpdf.extractor.LinesExtractor;
-import fr.lessagasmp3.importpdf.service.CreatorService;
-import fr.lessagasmp3.importpdf.service.DistributionEntryService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import fr.lessagasmp3.core.creator.service.CreatorService;
+import fr.lessagasmp3.core.distribution.entity.DistributionEntry;
+import fr.lessagasmp3.core.distribution.service.DistributionService;
+import fr.lessagasmp3.core.pdf.extractor.LinesExtractor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,13 +13,11 @@ import java.util.Set;
 @Service
 public class DistributionParser {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(DistributionParser.class);
-
     @Autowired
     private CreatorService creatorService;
 
     @Autowired
-    private DistributionEntryService distributionEntryService;
+    private DistributionService distributionService;
 
     public Set<DistributionEntry> parse(String distributionString, Long sagaId) {
         String[] lines = distributionString.split("\n");
@@ -45,7 +41,7 @@ public class DistributionParser {
                 }
                 distributionEntries.add(
                         DistributionEntry.fromModel(
-                                distributionEntryService.findOrCreate(
+                                distributionService.findOrCreate(
                                         creatorService.findOrCreate(lineSplit[0]).getId(),
                                         sagaId,
                                         LinesExtractor.removeLastSpaces(currentRoles.toString()))));

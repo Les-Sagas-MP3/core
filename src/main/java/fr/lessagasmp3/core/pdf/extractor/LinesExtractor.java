@@ -1,7 +1,6 @@
 package fr.lessagasmp3.core.pdf.extractor;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.nio.ByteBuffer;
@@ -12,15 +11,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
+@Slf4j
 @Service
 public class LinesExtractor {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(LinesExtractor.class);
 
     public String extractLines(String lineParsed, String enterringTag, String[] nextTags, String[] lines, int lineNumber) {
         String line = lines[lineNumber];
         if (lineParsed == null && line.toUpperCase().startsWith(enterringTag)) {
-            LOGGER.debug("{} recognized", enterringTag);
+            log.debug("{} recognized", enterringTag);
             StringBuilder separatedEntities = new StringBuilder();
             String[] lineSplitColon = line.split(": ");
             separatedEntities.append(lineSplitColon[1]);
@@ -32,7 +30,7 @@ public class LinesExtractor {
             while (!reachedNextTag) {
                 lineNumber++;
                 separatedEntities.append(lines[lineNumber]);
-                LOGGER.debug(lines[lineNumber]);
+                log.debug(lines[lineNumber]);
                 if (lineNumber + 1 < lines.length) {
                     nextLine = lines[lineNumber + 1].toUpperCase();
                     for (String nextTag : nextTags) {
@@ -43,14 +41,14 @@ public class LinesExtractor {
                 }
             }
             lineParsed = separatedEntities.toString();
-            LOGGER.debug("{} : {}", enterringTag, lineParsed);
+            log.debug("{} : {}", enterringTag, lineParsed);
         }
         return lineParsed;
     }
 
     public String extractMultilines(String lineParsed, String enterringTag, String[] nextTags, String[] lines, int lineNumber) {
         if (lineParsed == null && lines[lineNumber].toUpperCase().startsWith(enterringTag)) {
-            LOGGER.debug("{} recognized", enterringTag);
+            log.debug("{} recognized", enterringTag);
             StringBuilder separatedEntities = new StringBuilder();
             String nextLine = lines[lineNumber + 1].toUpperCase();
             boolean reachedNextTag = lineNumber + 1 >= lines.length;
@@ -61,19 +59,19 @@ public class LinesExtractor {
                 lineNumber++;
                 separatedEntities.append(lines[lineNumber]);
                 separatedEntities.append("\n");
-                LOGGER.debug(lines[lineNumber]);
+                log.debug(lines[lineNumber]);
                 if (lineNumber + 1 < lines.length) {
                     nextLine = lines[lineNumber + 1].toUpperCase();
                     for (String nextTag : nextTags) {
                         reachedNextTag |= nextLine.startsWith(nextTag);
-                        LOGGER.debug("nextLine : {} starts with {} ? {}", nextLine, nextTag, reachedNextTag);
+                        log.debug("nextLine : {} starts with {} ? {}", nextLine, nextTag, reachedNextTag);
                     }
                 } else {
                     reachedNextTag = true;
                 }
             }
             lineParsed = separatedEntities.toString();
-            LOGGER.debug("{} : {}", enterringTag, lineParsed);
+            log.debug("{} : {}", enterringTag, lineParsed);
         }
         return lineParsed;
     }
@@ -82,7 +80,7 @@ public class LinesExtractor {
         if(str == null || str.isEmpty()) {
             return "";
         }
-        LOGGER.debug("Convert {} to UTF-8", str);
+        log.debug("Convert {} to UTF-8", str);
         ByteBuffer byteBuff = ByteBuffer.wrap(str.getBytes());
         CharBuffer cb = Charset.forName("windows-1252").decode(byteBuff);
         ByteBuffer bb = StandardCharsets.UTF_8.encode(cb);
@@ -101,9 +99,9 @@ public class LinesExtractor {
                     finalBytes[index] = bytesWithoutZeroes.get(index);
                     byteStr.append(finalBytes[index]).append(" ");
                 });
-        LOGGER.debug("Bytes : {}", byteStr.toString());
+        log.debug("Bytes : {}", byteStr);
         String utf8Str = new String(finalBytes);
-        LOGGER.debug("Result : {}", utf8Str);
+        log.debug("Result : {}", utf8Str);
         //return utf8Str;
         return str;
     }
