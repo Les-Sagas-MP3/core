@@ -8,9 +8,7 @@ import fr.lessagasmp3.core.common.constant.Strings;
 import fr.lessagasmp3.core.common.constant.Urls;
 import fr.lessagasmp3.core.file.cloudinary.model.CloudinaryResource;
 import fr.lessagasmp3.core.file.entity.File;
-import fr.lessagasmp3.core.file.service.FileService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -34,8 +32,8 @@ public class CloudinaryService {
     @Value("${cloudinary.notification_endpoint}")
     private String notificationEndpoint;
 
-    @Autowired
-    private FileService fileService;
+    @Value("${fr.lessagasmp3.core.storage}")
+    private String storageFolder;
 
     public void init(String cloudinaryUrl) {
         Map<String, String> urlSplit = Urls.splitUrl(cloudinaryUrl);
@@ -62,7 +60,7 @@ public class CloudinaryService {
                 "overwrite", true,
                 "notification_url", apiUrl + notificationEndpoint + "?id=" + entity.getId()
         );
-        Map uploadResult = connector.uploader().upload(new java.io.File(fileService.getPath(entity)), params);
+        Map uploadResult = connector.uploader().upload(new java.io.File(getPath(entity)), params);
         return CompletableFuture.completedFuture(null);
     }
 
@@ -96,4 +94,7 @@ public class CloudinaryService {
         return connector != null;
     }
 
+    public String getPath(File entity) {
+        return storageFolder + java.io.File.separator + entity.getDirectory() + java.io.File.separator + entity.getFullname();
+    }
 }
