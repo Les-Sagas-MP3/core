@@ -28,6 +28,11 @@ public class EpisodeController {
     @Autowired
     private SeasonRepository seasonRepository;
 
+    @RequestMapping(value = "/episode/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public EpisodeModel getById(@PathVariable Long id) {
+        return episodeService.getById(id);
+    }
+
     @RequestMapping(value = "/episode", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE, params = {"ids"})
     public List<EpisodeModel> getAllByIds(@RequestParam("ids") Set<Long> ids) {
         return episodeService.getAllByIds(ids);

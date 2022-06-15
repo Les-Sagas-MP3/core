@@ -1,11 +1,11 @@
 package fr.lessagasmp3.core.episode.service;
 
-import fr.lessagasmp3.core.season.entity.Season;
 import fr.lessagasmp3.core.episode.entity.Episode;
 import fr.lessagasmp3.core.episode.model.EpisodeModel;
 import fr.lessagasmp3.core.episode.repository.EpisodeRepository;
 import fr.lessagasmp3.core.exception.BadRequestException;
 import fr.lessagasmp3.core.exception.NotFoundException;
+import fr.lessagasmp3.core.season.entity.Season;
 import fr.lessagasmp3.core.season.repository.SeasonRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +25,10 @@ public class EpisodeService {
 
     @Autowired
     private SeasonRepository seasonRepository;
+
+    public EpisodeModel getById(Long id) {
+        return EpisodeModel.fromEntity(episodeRepository.findById(id).orElse(null));
+    }
 
     public List<EpisodeModel> getAllByIds(Set<Long> ids) {
         List<Episode> entities = episodeRepository.findAllById(ids);
