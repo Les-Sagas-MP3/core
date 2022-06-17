@@ -31,6 +31,9 @@ public class EpisodeModel extends AuditModel<String> implements Comparable<Episo
     @Transient
     protected Long seasonRef = 0L;
 
+    @Transient
+    protected Long fileRef = 0L;
+
     public static EpisodeModel fromEntity(Episode entity) {
         Objects.requireNonNull(entity);
         EpisodeModel model = new EpisodeModel();
