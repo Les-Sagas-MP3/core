@@ -1,6 +1,7 @@
 package fr.lessagasmp3.core.episode.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import fr.lessagasmp3.core.file.entity.File;
 import fr.lessagasmp3.core.season.entity.Season;
 import fr.lessagasmp3.core.episode.model.EpisodeModel;
 import lombok.AccessLevel;
@@ -9,6 +10,7 @@ import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -20,6 +22,10 @@ public class Episode extends EpisodeModel {
     @ManyToOne
     @JsonIgnoreProperties(value = {"sagas", "episodes"})
     private Season season = new Season();
+
+    @OneToOne
+    @JsonIgnoreProperties(value = {"sagas", "episodes"})
+    private File file = null;
 
     public static Episode fromModel(EpisodeModel model) {
         Episode entity = new Episode();
@@ -33,6 +39,7 @@ public class Episode extends EpisodeModel {
         entity.setTitle(model.getTitle());
         entity.setInfos(model.getInfos());
         entity.setSeasonRef(model.getSeasonRef());
+        entity.setFileRef(model.getFileRef());
         return entity;
     }
 }

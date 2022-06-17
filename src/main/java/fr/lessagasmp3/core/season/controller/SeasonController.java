@@ -24,6 +24,11 @@ public class SeasonController {
     @Autowired
     private Gson gson;
 
+    @RequestMapping(value = "/season/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public SeasonModel getById(@PathVariable Long id) {
+        return seasonService.getById(id);
+    }
+
     @RequestMapping(value = "/season", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE, params = {"ids"})
     public List<SeasonModel> getAllByIds(@RequestParam("ids") Set<Long> ids) {
         return seasonService.getAllByIds(ids);
