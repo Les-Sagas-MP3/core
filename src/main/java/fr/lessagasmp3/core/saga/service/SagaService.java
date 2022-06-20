@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -44,6 +45,7 @@ public class SagaService {
         SagaModel saga = findByTitle(title);
         if (saga == null) {
             saga = new SagaModel();
+            saga.setWorkspace(UUID.randomUUID().toString());
             saga.setTitle(title);
             saga = create(saga);
             if(saga != null) {

@@ -8,17 +8,19 @@ import fr.lessagasmp3.core.file.cloudinary.service.CloudinaryService;
 import fr.lessagasmp3.core.file.entity.File;
 import fr.lessagasmp3.core.file.repository.FileRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.HandlerMapping;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import javax.servlet.http.HttpServletRequest;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.regex.Matcher;
 
 @Slf4j
 @Service
@@ -35,6 +37,19 @@ public class FileService {
 
     public File findInDbById(Long id) {
         return fileRepository.findById(id).orElse(null);
+    }
+
+    public byte[] readOnFilesystem(HttpServletRequest request) throws IOException {
+        String path = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
+        String matchPattern = (String) request.getAttribute(HandlerMapping.BEST_MATCHING_PATTERN_ATTRIBUTE);
+        String pathFile = new AntPathMatcher().extractPathWithinPattern(matchPattern, path);
+        pathFile = pathFile.replaceAll("/files/audio", "");
+        pathFile = pathFile.replaceAll("/", Matcher.quoteReplacement(java.io.File.separator));
+        InputStream in = new FileInputStream(storageFolder + java.io.File.separator + pathFile);
+        log.debug("Getting image {}", storageFolder + java.io.File.separator + pathFile);
+        byte[] fileContent = IOUtils.toByteArray(in);
+        in.close();
+        return fileContent;
     }
 
     public File saveOnFilesystem(MultipartFile multipartFile, String directory, String name, boolean saveContentInDb) throws IOException {

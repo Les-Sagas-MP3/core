@@ -2,16 +2,17 @@ package fr.lessagasmp3.core.common.scrapper;
 
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.*;
+import fr.lessagasmp3.core.category.entity.Category;
+import fr.lessagasmp3.core.category.repository.CategoryRepository;
 import fr.lessagasmp3.core.common.constant.EventLogName;
 import fr.lessagasmp3.core.common.constant.HttpProxy;
-import fr.lessagasmp3.core.category.entity.Category;
 import fr.lessagasmp3.core.creator.entity.Creator;
+import fr.lessagasmp3.core.creator.repository.CreatorRepository;
 import fr.lessagasmp3.core.eventlog.entity.EventLog;
 import fr.lessagasmp3.core.eventlog.service.EventLogService;
 import fr.lessagasmp3.core.saga.entity.Saga;
-import fr.lessagasmp3.core.category.repository.CategoryRepository;
-import fr.lessagasmp3.core.creator.repository.CreatorRepository;
 import fr.lessagasmp3.core.saga.repository.SagaRepository;
+import fr.lessagasmp3.core.saga.service.SagaService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.apache.http.NameValuePair;
@@ -54,6 +55,9 @@ public class SagaScrapper {
 
     @Autowired
     private SagaRepository sagaRepository;
+
+    @Autowired
+    private SagaService sagaService;
 
     public void scrap() {
         log.info("Scrap sagas started");
@@ -102,7 +106,7 @@ public class SagaScrapper {
                         if (elements.size() == 1) {
                             anchor = (HtmlAnchor) elements.get(0);
                             saga.setTitle(cleanString(anchor.getFirstChild().getTextContent()));
-
+                            saga = Saga.fromModel(sagaService.findOrCreate(saga.getTitle()));
 
                             RestTemplate restTemplate = new RestTemplate();
                             String result = null;

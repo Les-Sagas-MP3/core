@@ -1,7 +1,8 @@
 package fr.lessagasmp3.core.episode.model;
 
-import fr.lessagasmp3.core.episode.entity.Episode;
+import fr.lessagasmp3.core.common.constant.Strings;
 import fr.lessagasmp3.core.common.model.AuditModel;
+import fr.lessagasmp3.core.episode.entity.Episode;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,6 +29,9 @@ public class EpisodeModel extends AuditModel<String> implements Comparable<Episo
     @NotNull
     protected String infos;
 
+    @NotNull
+    protected String workspace = Strings.EMPTY;
+
     @Transient
     protected Long seasonRef = 0L;
 
@@ -46,8 +50,12 @@ public class EpisodeModel extends AuditModel<String> implements Comparable<Episo
         model.setDisplayedNumber(entity.getDisplayedNumber());
         model.setTitle(entity.getTitle());
         model.setInfos(entity.getInfos());
+        model.setWorkspace(entity.getWorkspace());
         if(entity.getSeason() != null) {
             model.setSeasonRef(entity.getSeason().getId());
+        }
+        if(entity.getFile() != null) {
+            model.setFileRef(entity.getFile().getId());
         }
         return model;
     }

@@ -1,6 +1,6 @@
 --liquibase formatted sql
 
---changeset lesprojetscagnottes:create-sequence-hibernate_sequence
+--changeset lessagasmp3:create-sequence-hibernate_sequence
 CREATE SEQUENCE IF NOT EXISTS hibernate_sequence
     START WITH 1
     INCREMENT BY 1
@@ -9,7 +9,7 @@ CREATE SEQUENCE IF NOT EXISTS hibernate_sequence
     CACHE 1;
 --rollback drop sequence hibernate_sequence;
 
---changeset lesprojetscagnottes:create-table-anecdote
+--changeset lessagasmp3:create-table-anecdote
 CREATE TABLE IF NOT EXISTS anecdote (
     id bigint primary key,
     created_at timestamp without time zone DEFAULT now(),
@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS anecdote (
 );
 --rollback drop table anecdote;
 
---changeset lesprojetscagnottes:create-table-authority
+--changeset lessagasmp3:create-table-authority
 CREATE TABLE IF NOT EXISTS authority (
     id bigint primary key,
     created_at timestamp without time zone DEFAULT now(),
@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS authority (
 );
 --rollback drop table authority;
 
---changeset lesprojetscagnottes:create-table-category
+--changeset lessagasmp3:create-table-category
 CREATE TABLE IF NOT EXISTS category (
     id bigint primary key,
     created_at timestamp without time zone DEFAULT now(),
@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS category (
 );
 --rollback drop table category;
 
---changeset lesprojetscagnottes:create-table-creator
+--changeset lessagasmp3:create-table-creator
 CREATE TABLE IF NOT EXISTS creator (
     id bigint primary key,
     created_at timestamp without time zone DEFAULT now(),
@@ -57,7 +57,7 @@ CREATE TABLE IF NOT EXISTS creator (
 );
 --rollback drop table creator;
 
---changeset lesprojetscagnottes:create-table-distribution_entry
+--changeset lessagasmp3:create-table-distribution_entry
 CREATE TABLE IF NOT EXISTS distribution_entry (
     id bigint primary key,
     created_at timestamp without time zone DEFAULT now(),
@@ -70,7 +70,7 @@ CREATE TABLE IF NOT EXISTS distribution_entry (
 );
 --rollback drop table distribution_entry;
 
---changeset lesprojetscagnottes:create-table-episode
+--changeset lessagasmp3:create-table-episode
 CREATE TABLE IF NOT EXISTS episode (
     id bigint primary key,
     created_at timestamp without time zone DEFAULT now(),
@@ -85,7 +85,7 @@ CREATE TABLE IF NOT EXISTS episode (
 );
 --rollback drop table episode;
 
---changeset lesprojetscagnottes:create-table-event_log
+--changeset lessagasmp3:create-table-event_log
 CREATE TABLE IF NOT EXISTS event_log (
     id bigint primary key,
     created_at timestamp without time zone DEFAULT now(),
@@ -96,7 +96,7 @@ CREATE TABLE IF NOT EXISTS event_log (
 );
 --rollback drop table event_log;
 
---changeset lesprojetscagnottes:create-table-file
+--changeset lessagasmp3:create-table-file
 CREATE TABLE IF NOT EXISTS file (
     id bigint primary key,
     created_at timestamp without time zone DEFAULT now(),
@@ -112,7 +112,7 @@ CREATE TABLE IF NOT EXISTS file (
 );
 --rollback drop table file;
 
---changeset lesprojetscagnottes:create-table-rss_message
+--changeset lessagasmp3:create-table-rss_message
 CREATE TABLE IF NOT EXISTS rss_message (
     id bigint primary key,
     created_at timestamp without time zone DEFAULT now(),
@@ -129,7 +129,7 @@ CREATE TABLE IF NOT EXISTS rss_message (
 );
 --rollback drop table rss_message;
 
---changeset lesprojetscagnottes:create-table-saga
+--changeset lessagasmp3:create-table-saga
 CREATE TABLE IF NOT EXISTS saga (
     id bigint primary key,
     created_at timestamp without time zone DEFAULT now(),
@@ -156,7 +156,7 @@ CREATE TABLE IF NOT EXISTS saga (
 );
 --rollback drop table saga;
 
---changeset lesprojetscagnottes:create-table-saga_authors
+--changeset lessagasmp3:create-table-saga_authors
 CREATE TABLE IF NOT EXISTS saga_authors (
     sagas_written_id bigint NOT NULL,
     authors_id bigint NOT NULL,
@@ -164,7 +164,7 @@ CREATE TABLE IF NOT EXISTS saga_authors (
 );
 --rollback drop table saga_authors;
 
---changeset lesprojetscagnottes:create-table-saga_categories
+--changeset lessagasmp3:create-table-saga_categories
 CREATE TABLE IF NOT EXISTS saga_categories (
     sagas_id bigint NOT NULL,
     categories_id bigint NOT NULL,
@@ -172,7 +172,7 @@ CREATE TABLE IF NOT EXISTS saga_categories (
 );
 --rollback drop table saga_categories;
 
---changeset lesprojetscagnottes:create-table-saga_composers
+--changeset lessagasmp3:create-table-saga_composers
 CREATE TABLE IF NOT EXISTS saga_composers (
     sagas_composed_id bigint NOT NULL,
     composers_id bigint NOT NULL,
@@ -180,7 +180,7 @@ CREATE TABLE IF NOT EXISTS saga_composers (
 );
 --rollback drop table saga_composers;
 
---changeset lesprojetscagnottes:create-table-season
+--changeset lessagasmp3:create-table-season
 CREATE TABLE IF NOT EXISTS season (
     id bigint primary key,
     created_at timestamp without time zone DEFAULT now(),
@@ -193,7 +193,7 @@ CREATE TABLE IF NOT EXISTS season (
 );
 --rollback drop table season;
 
---changeset lesprojetscagnottes:create-table-user_authority
+--changeset lessagasmp3:create-table-user_authority
 CREATE TABLE IF NOT EXISTS user_authority (
     user_id bigint NOT NULL,
     authority_id bigint NOT NULL,
@@ -201,7 +201,7 @@ CREATE TABLE IF NOT EXISTS user_authority (
 );
 --rollback drop table user_authority;
 
---changeset lesprojetscagnottes:create-table-users
+--changeset lessagasmp3:create-table-users
 CREATE TABLE IF NOT EXISTS users (
     id bigint primary key,
     created_at timestamp without time zone DEFAULT now(),
@@ -216,48 +216,48 @@ CREATE TABLE IF NOT EXISTS users (
 );
 --rollback drop table users;
 
---changeset lesprojetscagnottes:add-fk-anecdote
+--changeset lessagasmp3:add-fk-anecdote
 ALTER TABLE ONLY anecdote
     ADD CONSTRAINT fk_saga FOREIGN KEY (saga_id) REFERENCES saga(id);
 --rollback alter table anecdote drop constraint fk_saga;
 
---changeset lesprojetscagnottes:add-fk-creator
+--changeset lessagasmp3:add-fk-creator
 ALTER TABLE ONLY creator
     ADD CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(id);
 --rollback alter table creator drop constraint fk_user;
 
---changeset lesprojetscagnottes:add-fk-episode
+--changeset lessagasmp3:add-fk-episode
 ALTER TABLE ONLY episode
     ADD CONSTRAINT fk_season FOREIGN KEY (season_id) REFERENCES season(id);
 --rollback alter table episode drop constraint fk_season;
 
---changeset lesprojetscagnottes:add-fk-saga_authors
+--changeset lessagasmp3:add-fk-saga_authors
 ALTER TABLE ONLY saga_authors
     ADD CONSTRAINT fk_author FOREIGN KEY (authors_id) REFERENCES creator(id),
     ADD CONSTRAINT fk_saga FOREIGN KEY (sagas_written_id) REFERENCES saga(id);
 --rollback alter table saga_authors drop constraint fk_saga;
 --rollback alter table saga_authors drop constraint fk_author;
 
---changeset lesprojetscagnottes:add-fk-saga_categories
+--changeset lessagasmp3:add-fk-saga_categories
 ALTER TABLE ONLY saga_categories
     ADD CONSTRAINT fk_category FOREIGN KEY (categories_id) REFERENCES category(id),
     ADD CONSTRAINT fk_saga FOREIGN KEY (sagas_id) REFERENCES saga(id);
 --rollback alter table saga_categories drop constraint fk_saga;
 --rollback alter table saga_categories drop constraint fk_category;
 
---changeset lesprojetscagnottes:add-fk-saga_composers
+--changeset lessagasmp3:add-fk-saga_composers
 ALTER TABLE ONLY saga_composers
     ADD CONSTRAINT fk_composer FOREIGN KEY (composers_id) REFERENCES creator(id),
     ADD CONSTRAINT fk_saga FOREIGN KEY (sagas_composed_id) REFERENCES saga(id);
 --rollback alter table saga_composers drop constraint fk_saga;
 --rollback alter table saga_composers drop constraint fk_composer;
 
---changeset lesprojetscagnottes:add-fk-season
+--changeset lessagasmp3:add-fk-season
 ALTER TABLE ONLY season
     ADD CONSTRAINT fk_saga FOREIGN KEY (saga_id) REFERENCES saga(id);
 --rollback alter table season drop constraint fk_saga;
 
---changeset lesprojetscagnottes:add-fk-user_authority
+--changeset lessagasmp3:add-fk-user_authority
 ALTER TABLE ONLY user_authority
     ADD CONSTRAINT fk_authority FOREIGN KEY (authority_id) REFERENCES authority(id),
     ADD CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(id);
