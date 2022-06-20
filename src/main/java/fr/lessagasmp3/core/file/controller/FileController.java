@@ -10,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 @Slf4j
@@ -22,6 +23,16 @@ public class FileController {
 
     @Autowired
     private FileService fileService;
+
+    @RequestMapping(value = "/files/audio/**", method = RequestMethod.GET, produces = {"audio/mpeg", "audio/mpeg3"})
+    public @ResponseBody byte[] getFile(HttpServletRequest request) throws IOException {
+        return fileService.readOnFilesystem(request);
+    }
+
+    @RequestMapping(value = "/file/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public FileModel getById(@PathVariable Long id) {
+        return fileService.findInDbById(id);
+    }
 
     @PostMapping(value = "/file/upload", produces = MediaType.APPLICATION_JSON_VALUE)
     public FileModel upload(@RequestParam(name = "file") MultipartFile multipartFile,

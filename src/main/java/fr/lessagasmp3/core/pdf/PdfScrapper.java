@@ -1,13 +1,13 @@
 package fr.lessagasmp3.core.pdf;
 
 import fr.lessagasmp3.core.anecdote.entity.Anecdote;
-import fr.lessagasmp3.core.distribution.entity.DistributionEntry;
-import fr.lessagasmp3.core.file.model.FileModel;
 import fr.lessagasmp3.core.category.model.CategoryModel;
 import fr.lessagasmp3.core.creator.model.CreatorModel;
+import fr.lessagasmp3.core.distribution.entity.DistributionEntry;
+import fr.lessagasmp3.core.file.model.FileModel;
+import fr.lessagasmp3.core.pdf.extractor.*;
 import fr.lessagasmp3.core.pdf.parser.*;
 import fr.lessagasmp3.core.saga.model.SagaModel;
-import fr.lessagasmp3.core.pdf.extractor.*;
 import fr.lessagasmp3.core.saga.service.SagaService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.pdfbox.pdmodel.PDDocument;

@@ -10,10 +10,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
-import java.util.LinkedHashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @MappedSuperclass
 @Getter(AccessLevel.PUBLIC)
@@ -76,6 +73,9 @@ public class SagaModel extends AuditModel<String> {
     @NotNull
     protected Integer nbBravos = 0;
 
+    @NotNull
+    protected String workspace = Strings.EMPTY;
+
     @Transient
     private Set<Long> authorsRef = new LinkedHashSet<>();
 
@@ -119,6 +119,7 @@ public class SagaModel extends AuditModel<String> {
         model.setNbReviews(entity.getNbReviews());
         model.setUrlReviews(entity.getUrlReviews());
         model.setNbBravos(entity.getNbBravos());
+        model.setWorkspace(entity.getWorkspace());
         entity.getAuthors().forEach(author -> model.getAuthorsRef().add(author.getId()));
         entity.getComposers().forEach(composer -> model.getComposersRef().add(composer.getId()));
         entity.getCategories().forEach(category -> model.getCategoriesRef().add(category.getId()));

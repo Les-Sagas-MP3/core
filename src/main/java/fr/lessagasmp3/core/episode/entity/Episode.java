@@ -24,7 +24,6 @@ public class Episode extends EpisodeModel {
     private Season season = new Season();
 
     @OneToOne
-    @JsonIgnoreProperties(value = {"sagas", "episodes"})
     private File file = null;
 
     public static Episode fromModel(EpisodeModel model) {
@@ -38,6 +37,7 @@ public class Episode extends EpisodeModel {
         entity.setDisplayedNumber(model.getDisplayedNumber());
         entity.setTitle(model.getTitle());
         entity.setInfos(model.getInfos());
+        entity.setWorkspace(model.getWorkspace());
         entity.setSeasonRef(model.getSeasonRef());
         entity.setFileRef(model.getFileRef());
         return entity;

@@ -5,16 +5,15 @@ import fr.lessagasmp3.core.episode.model.EpisodeModel;
 import fr.lessagasmp3.core.episode.repository.EpisodeRepository;
 import fr.lessagasmp3.core.exception.BadRequestException;
 import fr.lessagasmp3.core.exception.NotFoundException;
+import fr.lessagasmp3.core.file.entity.File;
+import fr.lessagasmp3.core.file.repository.FileRepository;
 import fr.lessagasmp3.core.season.entity.Season;
 import fr.lessagasmp3.core.season.repository.SeasonRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -22,6 +21,9 @@ public class EpisodeService {
 
     @Autowired
     private EpisodeRepository episodeRepository;
+
+    @Autowired
+    private FileRepository fileRepository;
 
     @Autowired
     private SeasonRepository seasonRepository;
@@ -52,6 +54,7 @@ public class EpisodeService {
         EpisodeModel episode = findByNumberAndSeasonId(number, seasonId);
         if (episode == null) {
             episode = new EpisodeModel();
+            episode.setWorkspace(UUID.randomUUID().toString());
             episode.setNumber(number);
             episode.setSeasonRef(seasonId);
             episode = create(episode);
@@ -97,8 +100,10 @@ public class EpisodeService {
 
         // Verify that entity exists
         Episode episode = episodeRepository.findById(model.getId()).orElse(null);
-        if(episode == null) {
-            log.error("Impossible to update episode : episode {} not found", model.getId());
+        Season season = seasonRepository.findById(model.getSeasonRef()).orElse(null);
+        File file = fileRepository.findById(model.getFileRef()).orElse(null);
+        if(episode == null || season == null) {
+            log.error("Impossible to update episode : episode {} or season {} not found", model.getId(), model.getSeasonRef());
             throw new NotFoundException();
         }
 
@@ -107,6 +112,10 @@ public class EpisodeService {
         episode.setDisplayedNumber(model.getDisplayedNumber());
         episode.setTitle(model.getTitle());
         episode.setInfos(model.getInfos());
+        episode.setSeason(season);
+        if(file != null) {
+            episode.setFile(file);
+        }
         return EpisodeModel.fromEntity(episodeRepository.save(episode));
     }
 

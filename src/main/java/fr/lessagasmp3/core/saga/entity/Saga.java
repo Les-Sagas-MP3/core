@@ -78,6 +78,7 @@ public class Saga extends SagaModel {
         entity.setNbReviews(model.getNbReviews());
         entity.setUrlReviews(model.getUrlReviews());
         entity.setNbBravos(model.getNbBravos());
+        entity.setWorkspace(model.getWorkspace());
         entity.setAuthorsRef(model.getAuthorsRef());
         entity.setComposersRef(model.getComposersRef());
         entity.setCategoriesRef(model.getCategoriesRef());

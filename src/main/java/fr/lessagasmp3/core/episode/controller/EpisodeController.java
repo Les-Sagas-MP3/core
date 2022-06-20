@@ -51,7 +51,7 @@ public class EpisodeController {
     }
 
     @PreAuthorize("hasRole('USER')")
-    @RequestMapping(value = "/episode", method = RequestMethod.PUT, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    @RequestMapping(value = "/episode", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public EpisodeModel update(@RequestBody String modelStr) {
         EpisodeModel model = gson.fromJson(Strings.convertToUtf8(modelStr), EpisodeModel.class);
         return episodeService.update(model);
