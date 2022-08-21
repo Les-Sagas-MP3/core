@@ -47,7 +47,7 @@ public class SeasonController {
     }
 
     @PreAuthorize("hasRole('USER')")
-    @RequestMapping(value = "/season", method = RequestMethod.PUT, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    @RequestMapping(value = "/season", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public SeasonModel update(@RequestBody String modelStr) {
         SeasonModel model = gson.fromJson(Strings.convertToUtf8(modelStr), SeasonModel.class);
         return seasonService.update(model);
