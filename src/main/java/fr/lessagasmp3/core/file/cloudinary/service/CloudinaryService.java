@@ -56,10 +56,15 @@ public class CloudinaryService {
     @Async
     public CompletableFuture<Void> upload(File entity) throws IOException {
         Map params = ObjectUtils.asMap(
+                "resource_type", "auto",
                 "public_id", entity.getDirectory() + "/" + entity.getName(),
                 "overwrite", true,
                 "notification_url", apiUrl + notificationEndpoint + "?id=" + entity.getId()
         );
+        log.debug("Start upload to Cloudinary");
+        log.debug("entity : " + getPath(entity));
+        log.debug("public_id : " + params.get("public_id"));
+        log.debug("notification_url : " + params.get("notification_url"));
         Map uploadResult = connector.uploader().upload(new java.io.File(getPath(entity)), params);
         return CompletableFuture.completedFuture(null);
     }

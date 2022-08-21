@@ -13,8 +13,10 @@
 
 1. Create a PostgreSQL database matching the configuration in `src/main/resources/application.properties`
 2. Create the environment variables :
-  - `FIREBASE_URL` : the Firebase database URL
-  - `GOOGLE_APPLICATION_CREDENTIALS` : path to the Firebase admin SDK private key 
+   - `FR_LESSAGASMP3_CORE_URL` : URL of this app
+   - `CLOUDINARY_URL` : URL of Cloudinary account
+   - `FIREBASE_URL` : URL of Firebase database
+   - `GOOGLE_APPLICATION_CREDENTIALS` : Path to the Firebase admin SDK private key 
 3. Run the following command :
 ```bash
 mvn clean install spring-boot:run
