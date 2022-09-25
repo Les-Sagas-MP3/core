@@ -29,4 +29,4 @@ jobs:
         with:
           name: core
           path: |
-            ${{ github.workspace }}/target/core-${{ needs.verify-version.outputs.version }}-exec.jar
+            ${{ github.workspace }}/target/core-${{ steps.get_version.outputs.VERSION }}-exec.jar
