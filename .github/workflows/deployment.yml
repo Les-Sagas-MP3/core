@@ -1,9 +1,16 @@
-name: Build
+name: Deployment
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
 
 jobs:
   build:
+    if: github.actor!= 'dependabot'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -16,4 +23,10 @@ jobs:
         id: get_version
         run: echo ::set-output name=VERSION::$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
       - name: Build with Maven
-        run: ./mvnw -B clean spring-boot:build-image --file pom.xml
+        run: ./mvnw -B clean install --file pom.xml -P makeRelease
+      - name: Archive jar in artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: core
+          path: |
+            ${{ github.workspace }}/target/core-${{ needs.verify-version.outputs.version }}-exec.jar
