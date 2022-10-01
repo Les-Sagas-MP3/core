@@ -1,9 +1,6 @@
 name: Deployment
 
 on:
-  push:
-    branches:
-      - master
   pull_request:
     branches:
       - master
@@ -28,11 +25,17 @@ jobs:
       - name: Build with Maven
         run: ./mvnw -B clean install --file pom.xml -P makeRelease
       - name: Login to Google Cloud
-        uses: 'google-github-actions/auth@v0'
+        uses: google-github-actions/auth@v0
         with:
           credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
       - name: Upload jar in Cloud Storage
-        uses: 'google-github-actions/upload-cloud-storage@v0'
+        uses: google-github-actions/upload-cloud-storage@v0
         with:
           path: '${{ github.workspace }}/target/core-${{ steps.get_version.outputs.VERSION }}-exec.jar'
-          destination: 'les-sagas-mp3-build/${{ github.ref_name }}/core.jar'
+          destination: 'les-sagas-mp3-build/core/${{ github.event.number }}'
+      - name: Comment PR
+        uses: thollander/actions-comment-pull-request@v1
+        with:
+          message: 'Artifact has been uploaded : ${{ steps.upload-file.outputs.uploaded }}'
+          comment_includes: 'Artifact has been uploaded : '
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
