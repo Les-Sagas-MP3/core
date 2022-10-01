@@ -37,13 +37,9 @@ jobs:
         with:
           path: '${{ github.workspace }}/target/core-${{ steps.get_version.outputs.VERSION }}-exec.jar'
           destination: 'les-sagas-mp3-build/api-review-${{ github.event.number }}'
-      - name: Comment PR
-        uses: thollander/actions-comment-pull-request@v1
-        with:
-          message: |
-            Artifact has been uploaded to the following location : 
-            https://storage.cloud.google.com/les-sagas-mp3-build/${{ steps.upload_artifact.outputs.uploaded }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Get subnetwork CIDR
+        id: get_subnetwork_cidr
+        run: echo ::set-output name=CIDR::10.2.$(expr ${{ github.event.number }} % 255).0/24
       - name: Start Google Cloud Build trigger
         run: |
           curl --location --request POST 'https://content-cloudbuild.googleapis.com/v1/projects/les-sagas-mp3/triggers/e58d3067-a969-4a79-87ac-7e28b1fc53dc:run' \
@@ -55,6 +51,16 @@ jobs:
               "_API_VERSION": "${{ steps.get_version.outputs.VERSION }}",
               "_ENVIRONMENT_NAME": "api-review-${{ github.event.number }}",
               "_ENVIRONMENT_TEMPLATE": "review-api",
-              "_SUBNETWORK_CIDR": "10.2.$(expr ${{ github.event.number }} % 255).0/24"
+              "_SUBNETWORK_CIDR": "${{ steps.get_subnetwork_cidr.outputs.CIDR }}",
             }
             }'
+      - name: Comment PR
+        uses: thollander/actions-comment-pull-request@v1
+        with:
+          message: |
+            Artifact has been uploaded to the following location : 
+            https://storage.cloud.google.com/les-sagas-mp3-build/${{ steps.upload_artifact.outputs.uploaded }}
+            
+            The deployment to the following environment has begun :
+            https://api-review-${{ github.event.number }}.les-sagas-mp3.fr
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
