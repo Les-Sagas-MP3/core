@@ -34,7 +34,8 @@ jobs:
         with:
           message: 'Upload artifact...'
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Upload jar in Cloud Storage
+      - id: upload_artifact
+        name: Upload jar in Cloud Storage
         uses: google-github-actions/upload-cloud-storage@v0
         with:
           path: '${{ github.workspace }}/target/core-${{ steps.get_version.outputs.VERSION }}-exec.jar'
@@ -42,6 +43,6 @@ jobs:
       - name: Comment PR
         uses: thollander/actions-comment-pull-request@v1
         with:
-          message: 'Artifact has been uploaded : ${{ steps.upload-file.outputs.uploaded }}'
+          message: 'Artifact has been uploaded : ${{ steps.upload_artifact.outputs.uploaded }}'
           comment_includes: 'Upload artifact...'
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
