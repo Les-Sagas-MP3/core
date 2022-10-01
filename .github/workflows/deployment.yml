@@ -54,6 +54,7 @@ jobs:
               "_API_ARCHIVE_URL": "https://storage.cloud.google.com/les-sagas-mp3-build/${{ steps.upload_artifact.outputs.uploaded }}",
               "_API_VERSION": "${{ steps.get_version.outputs.VERSION }}",
               "_ENVIRONMENT_NAME": "api-review-${{ github.event.number }}",
-              "_ENVIRONMENT_TEMPLATE": "review"
+              "_ENVIRONMENT_TEMPLATE": "review-api",
+              "_SUBNETWORK_CIDR": "10.2.$(expr ${{ github.event.number }} % 255).0/24"
             }
             }'
