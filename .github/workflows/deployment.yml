@@ -62,5 +62,6 @@ jobs:
             https://storage.cloud.google.com/les-sagas-mp3-build/${{ steps.upload_artifact.outputs.uploaded }}
             
             The deployment to the following environment has begun :
-            https://api-review-${{ github.event.number }}.les-sagas-mp3.fr
+            https://app-api-review-${{ github.event.number }}.les-sagas-mp3.fr
+            https://api-api-review-${{ github.event.number }}.les-sagas-mp3.fr/api
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
