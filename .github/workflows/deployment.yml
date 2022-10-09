@@ -43,7 +43,7 @@ jobs:
       - name: Start Google Cloud Build trigger
         id: trigger_deploy
         run: |
-          echo ::set-output name=DEPLOY_ID::curl --location --request POST 'https://content-cloudbuild.googleapis.com/v1/projects/les-sagas-mp3/triggers/e58d3067-a969-4a79-87ac-7e28b1fc53dc:run' \
+          echo ::set-output name=DEPLOY_ID::$(curl --location --request POST 'https://content-cloudbuild.googleapis.com/v1/projects/les-sagas-mp3/triggers/e58d3067-a969-4a79-87ac-7e28b1fc53dc:run' \
             --header 'Authorization: Bearer ${{ steps.auth_google.outputs.access_token }}' \
             --header 'Content-Type: application/json' \
               --data-raw '{
@@ -53,8 +53,9 @@ jobs:
               "_ENVIRONMENT_NAME": "review-api-${{ github.event.number }}",
               "_ENVIRONMENT_TEMPLATE": "review-api",
               "_SUBNETWORK_CIDR": "${{ steps.get_subnetwork_cidr.outputs.CIDR }}",
+              "_GITHUB_TOKEN": "${{ secrets.GITHUB_TOKEN }}"
             }
-            }' | jq '.metadata.build.id'
+            }' | jq '.metadata.build.id')
       - name: Comment PR
         uses: thollander/actions-comment-pull-request@v1
         with:
