@@ -36,7 +36,7 @@ jobs:
         uses: google-github-actions/upload-cloud-storage@v0
         with:
           path: '${{ github.workspace }}/target/core-${{ steps.get_version.outputs.VERSION }}-exec.jar'
-          destination: 'les-sagas-mp3-build/api-review-${{ github.event.number }}'
+          destination: 'les-sagas-mp3-build/review-api-${{ github.event.number }}'
       - name: Get subnetwork CIDR
         id: get_subnetwork_cidr
         run: echo ::set-output name=CIDR::10.2.$(expr ${{ github.event.number }} % 255).0/24
@@ -48,14 +48,14 @@ jobs:
             --header 'Content-Type: application/json' \
               --data-raw '{
             "substitutions": {
-              "_API_ARCHIVE_URL": "https://storage.cloud.google.com/les-sagas-mp3-build/${{ steps.upload_artifact.outputs.uploaded }}",
               "_API_VERSION": "${{ steps.get_version.outputs.VERSION }}",
               "_ENVIRONMENT_NAME": "review-api-${{ github.event.number }}",
               "_ENVIRONMENT_TEMPLATE": "review-api",
               "_SUBNETWORK_CIDR": "${{ steps.get_subnetwork_cidr.outputs.CIDR }}",
+              "_GITHUB_PR": "${{ github.event.number }}",
               "_GITHUB_TOKEN": "${{ secrets.GITHUB_TOKEN }}"
             }
-            }' | jq '.metadata.build.id')
+            }' | jq -r '.metadata.build.id')
       - name: Comment PR
         uses: thollander/actions-comment-pull-request@v1
         with:
