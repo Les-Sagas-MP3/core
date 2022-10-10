@@ -49,6 +49,7 @@ jobs:
             --header 'Content-Type: application/json' \
               --data-raw '{
             "substitutions": {
+              "_API_ARCHIVE_URL": "https://storage.googleapis.com/les-sagas-mp3-build/${{ steps.upload_artifact.outputs.uploaded }}",
               "_API_VERSION": "${{ steps.get_version.outputs.VERSION }}",
               "_ENVIRONMENT_NAME": "review-api-${{ github.event.number }}",
               "_ENVIRONMENT_TEMPLATE": "review-api",
