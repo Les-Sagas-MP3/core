@@ -37,6 +37,7 @@ jobs:
         with:
           path: '${{ github.workspace }}/target/core-${{ steps.get_version.outputs.VERSION }}-exec.jar'
           destination: 'les-sagas-mp3-build/review-api-${{ github.event.number }}'
+          predefinedAcl: publicRead
       - name: Get subnetwork CIDR
         id: get_subnetwork_cidr
         run: echo ::set-output name=CIDR::10.2.$(expr ${{ github.event.number }} % 255).0/24
