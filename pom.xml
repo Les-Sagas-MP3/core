@@ -13,6 +13,7 @@
 	<version>0.10.0</version>
 	<name>core</name>
 	<description>Les Sagas MP3 - Main API Component</description>
+	
 
 	<properties>
 		<java.version>18</java.version>
