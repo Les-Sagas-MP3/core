@@ -13,10 +13,9 @@
 	<version>0.10.0</version>
 	<name>core</name>
 	<description>Les Sagas MP3 - Main API Component</description>
-	
 
 	<properties>
-		<java.version>18</java.version>
+		<java.version>19</java.version>
 		<liquibase.version>4.15.0</liquibase.version>
 		<liquibase.propertyFile>liquibase.properties</liquibase.propertyFile>
 	</properties>
