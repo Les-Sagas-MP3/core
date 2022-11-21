@@ -16,7 +16,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           distribution: 'adopt'
-          java-version: '18'
+          java-version: '19'
       - name: Get the version
         id: get_version
         run: echo ::set-output name=VERSION::$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
@@ -37,7 +37,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           distribution: 'adopt'
-          java-version: '18'
+          java-version: '19'
       - name: Build with Maven
         run: ./mvnw -B clean install spring-boot:build-image --file pom.xml
 
@@ -54,7 +54,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           distribution: 'adopt'
-          java-version: '18'
+          java-version: '19'
       - name: Build with Maven
         run: ./mvnw -B clean install --file pom.xml -P makeRelease
       - name: Create Release
@@ -88,7 +88,7 @@ jobs:
       - uses: actions/setup-java@v2
         with:
           distribution: 'adopt'
-          java-version: '18'
+          java-version: '19'
       - name: Publish package
         run: mvn -B deploy
         env:
@@ -105,7 +105,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           distribution: 'adopt'
-          java-version: '18'
+          java-version: '19'
       - name: Build with Maven
         run: ./mvnw -B clean spring-boot:build-image --file pom.xml
       - name: Get the version
