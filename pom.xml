@@ -13,10 +13,20 @@
 	<version>0.11.0</version>
 	<name>core</name>
 	<description>Les Sagas MP3 - Main API Component</description>
+
 	<properties>
 		<java.version>19</java.version>
 		<testcontainers.version>1.17.6</testcontainers.version>
 	</properties>
+
+	<distributionManagement>
+		<repository>
+			<id>github</id>
+			<name>GitHub Apache Maven Packages</name>
+			<url>https://maven.pkg.github.com/les-sagas-mp3/core</url>
+		</repository>
+	</distributionManagement>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -115,6 +125,7 @@
 			<version>1.7</version>
 		</dependency>
 	</dependencies>
+
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
