@@ -3,13 +3,13 @@ package fr.lessagasmp3.core.creator.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import fr.lessagasmp3.core.creator.model.CreatorModel;
 import fr.lessagasmp3.core.distribution.entity.DistributionEntry;
-import fr.lessagasmp3.core.user.entity.User;
 import fr.lessagasmp3.core.saga.entity.Saga;
+import fr.lessagasmp3.core.user.entity.User;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.LinkedHashSet;
 import java.util.Set;
 

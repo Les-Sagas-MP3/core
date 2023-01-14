@@ -1,15 +1,15 @@
 package fr.lessagasmp3.core.user.controller;
 
-import fr.lessagasmp3.core.common.constant.AuthorityName;
 import fr.lessagasmp3.core.auth.entity.Authority;
+import fr.lessagasmp3.core.auth.repository.AuthorityRepository;
+import fr.lessagasmp3.core.common.constant.AuthorityName;
 import fr.lessagasmp3.core.creator.entity.Creator;
-import fr.lessagasmp3.core.user.entity.User;
+import fr.lessagasmp3.core.creator.repository.CreatorRepository;
 import fr.lessagasmp3.core.exception.BadRequestException;
 import fr.lessagasmp3.core.exception.ForbiddenException;
 import fr.lessagasmp3.core.exception.NotFoundException;
+import fr.lessagasmp3.core.user.entity.User;
 import fr.lessagasmp3.core.user.model.UserModel;
-import fr.lessagasmp3.core.auth.repository.AuthorityRepository;
-import fr.lessagasmp3.core.creator.repository.CreatorRepository;
 import fr.lessagasmp3.core.user.repository.UserRepository;
 import fr.lessagasmp3.core.user.service.UserService;
 import lombok.extern.slf4j.Slf4j;

@@ -1,16 +1,16 @@
 package fr.lessagasmp3.core.auth.model;
 
-import fr.lessagasmp3.core.common.constant.AuthorityName;
 import fr.lessagasmp3.core.auth.entity.Authority;
+import fr.lessagasmp3.core.common.constant.AuthorityName;
 import fr.lessagasmp3.core.common.model.AuditModel;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.MappedSuperclass;
+import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.MappedSuperclass;
 import javax.validation.constraints.NotNull;
 import java.util.Objects;
 

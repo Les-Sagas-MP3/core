@@ -1,15 +1,15 @@
 package fr.lessagasmp3.core.distribution.model;
 
 import fr.lessagasmp3.core.common.constant.Strings;
-import fr.lessagasmp3.core.distribution.entity.DistributionEntry;
 import fr.lessagasmp3.core.common.model.AuditModel;
+import fr.lessagasmp3.core.distribution.entity.DistributionEntry;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.Transient;
+import jakarta.persistence.Column;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import java.util.Objects;
 

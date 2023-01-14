@@ -5,16 +5,16 @@ import fr.lessagasmp3.core.anecdote.entity.Anecdote;
 import fr.lessagasmp3.core.category.entity.Category;
 import fr.lessagasmp3.core.creator.entity.Creator;
 import fr.lessagasmp3.core.distribution.entity.DistributionEntry;
-import fr.lessagasmp3.core.season.entity.Season;
 import fr.lessagasmp3.core.saga.model.SagaModel;
+import fr.lessagasmp3.core.season.entity.Season;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import java.util.LinkedHashSet;
 import java.util.Set;
 

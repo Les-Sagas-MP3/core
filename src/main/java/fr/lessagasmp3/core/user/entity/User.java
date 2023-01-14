@@ -1,15 +1,15 @@
 package fr.lessagasmp3.core.user.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import fr.lessagasmp3.core.creator.entity.Creator;
 import fr.lessagasmp3.core.auth.entity.Authority;
+import fr.lessagasmp3.core.creator.entity.Creator;
 import fr.lessagasmp3.core.user.model.UserModel;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.LinkedHashSet;
 import java.util.Set;
 

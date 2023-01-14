@@ -1,17 +1,17 @@
 package fr.lessagasmp3.core.auth.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import fr.lessagasmp3.core.common.constant.AuthorityName;
 import fr.lessagasmp3.core.auth.model.AuthorityModel;
+import fr.lessagasmp3.core.common.constant.AuthorityName;
 import fr.lessagasmp3.core.user.entity.User;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.Table;
 import java.util.LinkedHashSet;
 import java.util.Set;
 

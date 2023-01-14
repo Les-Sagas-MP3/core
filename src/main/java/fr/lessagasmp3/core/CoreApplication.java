@@ -3,17 +3,15 @@ package fr.lessagasmp3.core;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
-import fr.lessagasmp3.core.common.constant.AuthorityName;
 import fr.lessagasmp3.core.auth.entity.Authority;
-import fr.lessagasmp3.core.user.entity.User;
-import fr.lessagasmp3.core.file.cloudinary.service.CloudinaryService;
-import fr.lessagasmp3.core.file.service.FileService;
 import fr.lessagasmp3.core.auth.repository.AuthorityRepository;
+import fr.lessagasmp3.core.common.constant.AuthorityName;
 import fr.lessagasmp3.core.file.repository.FileRepository;
+import fr.lessagasmp3.core.file.service.FileService;
+import fr.lessagasmp3.core.user.entity.User;
 import fr.lessagasmp3.core.user.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -37,9 +35,6 @@ public class CoreApplication {
     private static final String GOOGLE_APPLICATION_CREDENTIALS = System.getenv("GOOGLE_APPLICATION_CREDENTIALS");
     private static final String FIREBASE_URL = System.getenv("FIREBASE_URL");
 
-    @Value("${cloudinary.url}")
-    private String cloudinaryUrl;
-
     @Autowired
     private AuthorityRepository authorityRepository;
 
@@ -51,9 +46,6 @@ public class CoreApplication {
 
     @Autowired
     private FileService fileService;
-
-    @Autowired
-    private CloudinaryService cloudinaryService;
 
     public static void main(String[] args) {
         SpringApplication.run(CoreApplication.class, args);
@@ -118,9 +110,6 @@ public class CoreApplication {
             }
         }
 
-        if (cloudinaryUrl != null) {
-            cloudinaryService.init(cloudinaryUrl);
-        }
     }
 
     public void loadGoogleApplicationCredentialsFromDb() {
