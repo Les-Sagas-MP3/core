@@ -1,15 +1,15 @@
 package fr.lessagasmp3.core.auth.controller;
 
 import fr.lessagasmp3.core.common.constant.Strings;
-import fr.lessagasmp3.core.user.entity.User;
+import fr.lessagasmp3.core.common.security.JwtRequest;
+import fr.lessagasmp3.core.common.security.JwtResponse;
+import fr.lessagasmp3.core.common.security.JwtTokenUtil;
 import fr.lessagasmp3.core.exception.BadRequestException;
 import fr.lessagasmp3.core.exception.EntityAlreadyExistsException;
 import fr.lessagasmp3.core.exception.NotFoundException;
 import fr.lessagasmp3.core.exception.UnauthaurizedException;
+import fr.lessagasmp3.core.user.entity.User;
 import fr.lessagasmp3.core.user.model.UserModel;
-import fr.lessagasmp3.core.common.security.JwtRequest;
-import fr.lessagasmp3.core.common.security.JwtResponse;
-import fr.lessagasmp3.core.common.security.JwtTokenUtil;
 import fr.lessagasmp3.core.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -65,7 +65,7 @@ public class AuthenticationController {
     @RequestMapping(value = "/auth/whoami", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public UserModel whoami(Principal principal) {
         User user = userService.get(principal);
-        if(user == null) {
+        if (user == null) {
             throw new NotFoundException();
         } else {
             user.setPassword(Strings.EMPTY);

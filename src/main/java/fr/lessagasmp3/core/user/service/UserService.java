@@ -1,13 +1,13 @@
 package fr.lessagasmp3.core.user.service;
 
-import fr.lessagasmp3.core.common.constant.AuthorityName;
 import fr.lessagasmp3.core.auth.entity.Authority;
-import fr.lessagasmp3.core.user.entity.User;
-import fr.lessagasmp3.core.exception.EntityAlreadyExistsException;
 import fr.lessagasmp3.core.auth.repository.AuthorityRepository;
-import fr.lessagasmp3.core.user.repository.UserRepository;
+import fr.lessagasmp3.core.common.constant.AuthorityName;
 import fr.lessagasmp3.core.common.security.JwtRequest;
 import fr.lessagasmp3.core.common.security.JwtUser;
+import fr.lessagasmp3.core.exception.EntityAlreadyExistsException;
+import fr.lessagasmp3.core.user.entity.User;
+import fr.lessagasmp3.core.user.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

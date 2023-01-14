@@ -1,8 +1,8 @@
 package fr.lessagasmp3.core.pdf.parser;
 
 import fr.lessagasmp3.core.anecdote.entity.Anecdote;
-import fr.lessagasmp3.core.pdf.extractor.LinesExtractor;
 import fr.lessagasmp3.core.anecdote.service.AnecdoteService;
+import fr.lessagasmp3.core.pdf.extractor.LinesExtractor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

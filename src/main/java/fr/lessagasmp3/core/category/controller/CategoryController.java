@@ -1,11 +1,8 @@
 package fr.lessagasmp3.core.category.controller;
 
-import fr.lessagasmp3.core.category.entity.Category;
 import fr.lessagasmp3.core.category.model.CategoryModel;
 import fr.lessagasmp3.core.category.repository.CategoryRepository;
 import fr.lessagasmp3.core.category.service.CategoryService;
-import fr.lessagasmp3.core.exception.BadRequestException;
-import fr.lessagasmp3.core.exception.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;

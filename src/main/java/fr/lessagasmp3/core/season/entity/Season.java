@@ -2,16 +2,16 @@ package fr.lessagasmp3.core.season.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import fr.lessagasmp3.core.episode.entity.Episode;
-import fr.lessagasmp3.core.season.model.SeasonModel;
 import fr.lessagasmp3.core.saga.entity.Saga;
+import fr.lessagasmp3.core.season.model.SeasonModel;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import java.util.LinkedHashSet;
 import java.util.Set;
 

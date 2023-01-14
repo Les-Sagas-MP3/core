@@ -3,8 +3,6 @@ package fr.lessagasmp3.core.file.service;
 import fr.lessagasmp3.core.common.constant.MimeTypes;
 import fr.lessagasmp3.core.exception.BadRequestException;
 import fr.lessagasmp3.core.exception.NotFoundException;
-import fr.lessagasmp3.core.file.cloudinary.model.CloudinaryResource;
-import fr.lessagasmp3.core.file.cloudinary.service.CloudinaryService;
 import fr.lessagasmp3.core.file.entity.File;
 import fr.lessagasmp3.core.file.repository.FileRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +14,7 @@ import org.springframework.util.AntPathMatcher;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.HandlerMapping;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -31,9 +29,6 @@ public class FileService {
 
     @Autowired
     private FileRepository fileRepository;
-
-    @Autowired
-    private CloudinaryService cloudinaryService;
 
     public File findInDbById(Long id) {
         return fileRepository.findById(id).orElse(null);
@@ -90,7 +85,7 @@ public class FileService {
         return entity;
     }
 
-    public fr.lessagasmp3.core.file.entity.File saveInDb(File newEntity) {
+    public File saveInDb(File newEntity) {
         File entity = null;
         if(newEntity.getId() > 0) {
             entity = fileRepository.findById(newEntity.getId()).orElse(null);
@@ -118,16 +113,6 @@ public class FileService {
         if(entity == null) {
             log.error("Impossible to delete file : file {} does not exist in DB", fileId);
             throw new NotFoundException();
-        }
-
-        // Manage third parties
-        if(cloudinaryService.isEnabled()) {
-            CloudinaryResource resource = cloudinaryService.find(entity);
-            if(resource == null) {
-                log.error("Impossible to delete file : file {} does not exist in Cloudinary", entity.getDirectory() + "/" + entity.getName());
-            } else {
-                cloudinaryService.delete(resource);
-            }
         }
 
         // Delete file in filesystem

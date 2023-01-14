@@ -1,6 +1,5 @@
 package fr.lessagasmp3.core.file.controller;
 
-import fr.lessagasmp3.core.file.cloudinary.service.CloudinaryService;
 import fr.lessagasmp3.core.file.entity.File;
 import fr.lessagasmp3.core.file.model.FileModel;
 import fr.lessagasmp3.core.file.service.FileService;
@@ -10,16 +9,13 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 @Slf4j
 @RestController
 @RequestMapping("/api")
 public class FileController {
-
-    @Autowired
-    private CloudinaryService cloudinaryService;
 
     @Autowired
     private FileService fileService;
@@ -48,9 +44,6 @@ public class FileController {
         try {
             entity = fileService.saveOnFilesystem(multipartFile, directory, name, saveInDb);
             entity = fileService.saveInDb(entity);
-            if(cloudinaryService.isEnabled()) {
-                cloudinaryService.upload(entity);
-            }
         } catch (IOException e) {
             log.error("Cannot save file {}", multipartFile.getName(), e);
         }

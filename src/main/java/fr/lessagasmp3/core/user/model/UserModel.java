@@ -1,14 +1,14 @@
 package fr.lessagasmp3.core.user.model;
 
-import fr.lessagasmp3.core.user.entity.User;
 import fr.lessagasmp3.core.common.model.AuditModel;
+import fr.lessagasmp3.core.user.entity.User;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.LinkedHashSet;

@@ -1,13 +1,13 @@
 package fr.lessagasmp3.core.creator.model;
 
-import fr.lessagasmp3.core.creator.entity.Creator;
 import fr.lessagasmp3.core.common.model.AuditModel;
+import fr.lessagasmp3.core.creator.entity.Creator;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.MappedSuperclass;
-import javax.persistence.Transient;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import java.util.LinkedHashSet;
 import java.util.Objects;

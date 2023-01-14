@@ -1,7 +1,7 @@
 package fr.lessagasmp3.core.auth.repository;
 
-import fr.lessagasmp3.core.common.constant.AuthorityName;
 import fr.lessagasmp3.core.auth.entity.Authority;
+import fr.lessagasmp3.core.common.constant.AuthorityName;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Set;
