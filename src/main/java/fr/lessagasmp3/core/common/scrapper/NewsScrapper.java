@@ -29,6 +29,9 @@ public class NewsScrapper {
     private static final String FIREBASE_URL = System.getenv("FIREBASE_URL");
     private static final String TITLE_SEPARATOR = " :: ";
 
+    @Value("${server.name}")
+    private String environmentName;
+
     @Value("${fr.lessagasmp3.core.news.rss.title}")
     private String rssTitle;
 
@@ -86,7 +89,7 @@ public class NewsScrapper {
                             .setTitle(messageSource.getMessage("notification.news.title", null, Locale.getDefault()))
                             .setBody(messageSource.getMessage("notification.news.body", null, Locale.getDefault()))
                             .build())
-                    .setTopic("news")
+                    .setTopic(environmentName)
                     .build();
 
             String response = null;

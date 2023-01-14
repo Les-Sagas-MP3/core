@@ -6,6 +6,7 @@ import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.Notification;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,6 +23,9 @@ public class MainController {
 
     private static final String FIREBASE_URL = System.getenv("FIREBASE_URL");
 
+    @Value("${server.name}")
+    private String environmentName;
+
     @Autowired
     private MessageSource messageSource;
 
@@ -34,7 +38,7 @@ public class MainController {
                             .setTitle(messageSource.getMessage("notification.news.title", null, Locale.getDefault()))
                             .setBody(messageSource.getMessage("notification.news.body", null, Locale.getDefault()))
                             .build())
-                    .setTopic("news")
+                    .setTopic(environmentName)
                     .build();
 
             String response = null;
