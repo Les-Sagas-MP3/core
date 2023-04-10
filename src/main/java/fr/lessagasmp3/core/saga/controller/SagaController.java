@@ -87,7 +87,7 @@ public class SagaController {
     }
 
     @PreAuthorize("hasRole('USER')")
-    @RequestMapping(value = "/saga", method = RequestMethod.PUT, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    @RequestMapping(value = "/saga", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public SagaModel update(@RequestBody String modelStr) {
 
         log.debug("PUT /api/saga");

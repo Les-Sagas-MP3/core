@@ -21,7 +21,12 @@ public class FileController {
     private FileService fileService;
 
     @RequestMapping(value = "/files/audio/**", method = RequestMethod.GET, produces = {"audio/mpeg", "audio/mpeg3"})
-    public @ResponseBody byte[] getFile(HttpServletRequest request) throws IOException {
+    public @ResponseBody byte[] getAudioFile(HttpServletRequest request) throws IOException {
+        return fileService.readOnFilesystem(request);
+    }
+
+    @RequestMapping(value = "/files/image/**", method = RequestMethod.GET, produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
+    public @ResponseBody byte[] getImageFile(HttpServletRequest request) throws IOException {
         return fileService.readOnFilesystem(request);
     }
 
