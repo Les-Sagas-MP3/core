@@ -85,7 +85,7 @@ public class SagaService {
 
         // Verify that body is complete
         if(model == null || model.getId() <= 0) {
-            log.error("Impossible to create saga : body is incomplete");
+            log.error("Impossible to update saga : body is incomplete");
             throw new BadRequestException();
         }
 
@@ -104,6 +104,7 @@ public class SagaService {
         entity.setOrigin(model.getOrigin());
         entity.setGenese(model.getGenese());
         entity.setAwards(model.getAwards());
+        entity.setBannerUrl(model.getBannerUrl());
         entity.setCoverUrl(model.getCoverUrl());
         entity.setUrl(model.getUrl());
         entity.setUrlWiki(model.getUrlWiki());
