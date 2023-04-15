@@ -15,7 +15,7 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v2
         with:
-          distribution: 'adopt'
+          distribution: 'temurin'
           java-version: '20'
       - name: Get the version
         id: get_version
@@ -36,7 +36,7 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v2
         with:
-          distribution: 'adopt'
+          distribution: 'temurin'
           java-version: '20'
       - name: Build with Maven
         run: ./mvnw -B clean install spring-boot:build-image --file pom.xml
@@ -53,7 +53,7 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v2
         with:
-          distribution: 'adopt'
+          distribution: 'temurin'
           java-version: '20'
       - name: Build with Maven
         run: ./mvnw -B clean install --file pom.xml -P makeRelease
@@ -87,7 +87,7 @@ jobs:
           ref: '${{ needs.verify-version.outputs.version }}'
       - uses: actions/setup-java@v2
         with:
-          distribution: 'adopt'
+          distribution: 'temurin'
           java-version: '20'
       - name: Publish package
         run: mvn -B deploy
@@ -104,7 +104,7 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v2
         with:
-          distribution: 'adopt'
+          distribution: 'temurin'
           java-version: '20'
       - name: Build with Maven
         run: ./mvnw -B clean spring-boot:build-image --file pom.xml
