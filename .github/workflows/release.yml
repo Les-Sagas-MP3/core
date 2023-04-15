@@ -11,20 +11,20 @@ jobs:
     outputs:
       version: ${{ steps.get_version.outputs.VERSION }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Set up JDK
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: '20'
-      - name: Get the version
+      - name: Get version in pom.xml
         id: get_version
-        run: echo ::set-output name=VERSION::$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
+        run: echo "VERSION=$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)" >> $GITHUB_OUTPUT
       - name: Test snapshot
         run: if [[ "${{ steps.get_version.outputs.VERSION }}" == *"-SNAPSHOT" ]]; then exit 1; else exit 0; fi
       - name: Get release
         id: get_release
-        run: echo ::set-output name=RELEASE_HTTP_CODE::$(curl -s -o out.html -w '%{http_code}'  https://github.com/les-sagas-mp3/core/releases/tag/${{ steps.get_version.outputs.VERSION }};)
+        run: echo "RELEASE_HTTP_CODE=$(curl -s -o out.html -w '%{http_code}'  https://github.com/les-sagas-mp3/core/releases/tag/${{ steps.get_version.outputs.VERSION }};)" >> $GITHUB_OUTPUT
       - name: Test release existence
         run: if [[ "${{ steps.get_release.outputs.RELEASE_HTTP_CODE }}" -eq "200" ]]; then exit 1; else exit 0; fi
 
@@ -32,9 +32,9 @@ jobs:
     needs: verify-version
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Set up JDK
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: '20'
@@ -45,13 +45,13 @@ jobs:
     needs: [verify-version, build]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Config Git
         run: git config user.email "${{ secrets.GIT_CONFIG_EMAIL }}" && git config user.name "${{ secrets.GIT_CONFIG_NAME }}"
       - run: git tag ${{ needs.verify-version.outputs.version }}
       - run: git push origin ${{ needs.verify-version.outputs.version }}
       - name: Set up JDK
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: '20'
@@ -82,10 +82,10 @@ jobs:
     needs: [verify-version, release]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           ref: '${{ needs.verify-version.outputs.version }}'
-      - uses: actions/setup-java@v2
+      - uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: '20'
@@ -98,19 +98,19 @@ jobs:
     needs: [verify-version, release]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           ref: '${{ needs.verify-version.outputs.version }}'
       - name: Set up JDK
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: '20'
       - name: Build with Maven
         run: ./mvnw -B clean spring-boot:build-image --file pom.xml
-      - name: Get the version
+      - name: Get version in pom.xml
         id: get_version
-        run: echo ::set-output name=VERSION::$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
+        run: echo "VERSION=$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)" >> $GITHUB_OUTPUT
       - name: Tag the version image for Docker Hub
         run: docker tag core:${{ steps.get_version.outputs.VERSION }} lessagasmp3/api:${{ steps.get_version.outputs.VERSION }}
       - name: Tag the latest image for Docker Hub
