@@ -24,6 +24,10 @@ public class AnecdoteService {
     @Autowired
     private SagaRepository sagaRepository;
 
+    public Set<Anecdote> findAllEntitiesBySaga(Long sagaId) {
+        return anecdoteRepository.findAllBySagaId(sagaId);
+    }
+
     public Set<AnecdoteModel> getAllByIds(Set<Long> ids) {
         Set<AnecdoteModel> models = new LinkedHashSet<>();
         for(Long id : ids) {

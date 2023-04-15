@@ -19,23 +19,17 @@ import java.util.Set;
 @Setter(AccessLevel.PUBLIC)
 public class Creator extends CreatorModel {
 
-    @ManyToMany(mappedBy="authors")
-    @JsonIgnoreProperties(value = {"authors", "composers", "categories", "seasons", "distributionEntries", "anecdotes"})
+    @ManyToMany(mappedBy="authors", fetch = FetchType.LAZY)
     private Set<Saga> sagasWritten = new LinkedHashSet<>();
 
-    @ManyToMany(mappedBy="composers")
-    @JsonIgnoreProperties(value = {"authors", "composers", "categories", "seasons", "distributionEntries", "anecdotes"})
+    @ManyToMany(mappedBy="composers", fetch = FetchType.LAZY)
     private Set<Saga> sagasComposed = new LinkedHashSet<>();
 
-    @OneToMany(
-            mappedBy = "actor",
-            orphanRemoval = true)
-    @JsonIgnoreProperties(value = {"saga", "actors"})
+    @OneToMany(mappedBy = "actor", orphanRemoval = true)
     private Set<DistributionEntry> distributionEntries = new LinkedHashSet<>();
 
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
-    @JsonIgnoreProperties(value = {"username", "password", "email", "enabled", "lastPasswordResetDate", "authorities"})
     private User user = null;
 
     public static Creator fromModel(CreatorModel model) {

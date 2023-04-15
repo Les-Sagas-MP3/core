@@ -3,6 +3,7 @@ package fr.lessagasmp3.core.category.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import fr.lessagasmp3.core.category.model.CategoryModel;
 import fr.lessagasmp3.core.saga.entity.Saga;
+import jakarta.persistence.FetchType;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,8 +20,7 @@ import java.util.Set;
 @Setter(AccessLevel.PUBLIC)
 public class Category extends CategoryModel {
 
-    @ManyToMany(mappedBy="categories")
-    @JsonIgnoreProperties(value = {"authors", "composers", "categories", "seasons", "distributionEntries", "anecdotes"})
+    @ManyToMany(mappedBy="categories", fetch = FetchType.LAZY)
     private Set<Saga> sagas = new LinkedHashSet<>();
 
     public static Category fromModel(CategoryModel model) {

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import fr.lessagasmp3.core.auth.model.AuthorityModel;
 import fr.lessagasmp3.core.common.constant.AuthorityName;
 import fr.lessagasmp3.core.user.entity.User;
+import jakarta.persistence.FetchType;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,8 +22,7 @@ import java.util.Set;
 @Setter(AccessLevel.PUBLIC)
 public class Authority extends AuthorityModel implements GrantedAuthority {
 
-    @ManyToMany(mappedBy = "authorities")
-    @JsonIgnoreProperties(value = {"username", "password", "email", "enabled", "lastPasswordResetDate", "authorities"})
+    @ManyToMany(mappedBy = "authorities", fetch = FetchType.LAZY)
     private Set<User> users = new LinkedHashSet<>();
 
     public Authority() {}

@@ -26,9 +26,14 @@ public class SeasonService {
     @Autowired
     private SagaRepository sagaRepository;
 
+    public Set<Season> findAllEntitiesBySaga(Long sagaId) {
+        return seasonRepository.findAllBySagaId(sagaId);
+    }
+
     public SeasonModel getById(Long id) {
         return SeasonModel.fromEntity(seasonRepository.findById(id).orElse(null));
     }
+
     public List<SeasonModel> getAllByIds(Set<Long> ids) {
         List<Season> entities = seasonRepository.findAllById(ids);
 
