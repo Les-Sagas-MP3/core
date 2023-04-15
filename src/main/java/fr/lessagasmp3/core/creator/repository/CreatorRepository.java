@@ -11,4 +11,8 @@ public interface CreatorRepository extends JpaRepository<Creator, Long> {
     Creator findByNameIgnoreCase(String name);
 
     Set<Creator> findAllByUserId(Long userId);
+
+    Set<Creator> findAllBySagasWritten_Id(Long sagaId);
+
+    Set<Creator> findAllBySagasComposed_Id(Long sagaId);
 }

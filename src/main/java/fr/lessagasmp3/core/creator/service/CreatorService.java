@@ -20,6 +20,18 @@ public class CreatorService {
     @Autowired
     private CreatorRepository creatorRepository;
 
+    public Creator findEntityById(Long authorId) {
+        return creatorRepository.findById(authorId).orElse(null);
+    }
+
+    public Set<Creator> findAllEntitiesBySagasWritten(Long sagaId) {
+        return creatorRepository.findAllBySagasWritten_Id(sagaId);
+    }
+
+    public Set<Creator> findAllEntitiesBySagasComposed(Long sagaId) {
+        return creatorRepository.findAllBySagasComposed_Id(sagaId);
+    }
+
     public Set<CreatorModel> getAllByIds(@RequestParam("ids") Set<Long> ids) {
         Set<CreatorModel> models = new LinkedHashSet<>();
         for(Long id : ids) {

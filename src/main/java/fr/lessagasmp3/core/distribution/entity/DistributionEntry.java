@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import fr.lessagasmp3.core.creator.entity.Creator;
 import fr.lessagasmp3.core.distribution.model.DistributionEntryModel;
 import fr.lessagasmp3.core.saga.entity.Saga;
+import jakarta.persistence.FetchType;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,12 +19,10 @@ import jakarta.persistence.Table;
 @Setter(AccessLevel.PUBLIC)
 public class DistributionEntry extends DistributionEntryModel {
 
-    @ManyToOne
-    @JsonIgnoreProperties(value = {"authors", "composers", "categories", "seasons", "distributionEntries", "anecdotes"})
+    @ManyToOne(fetch = FetchType.LAZY)
     private Saga saga = new Saga();
 
-    @ManyToOne
-    @JsonIgnoreProperties(value = {"sagas", "user", "distributionEntries"})
+    @ManyToOne(fetch = FetchType.LAZY)
     private Creator actor = new Creator();
 
     public static DistributionEntry fromModel(DistributionEntryModel model) {

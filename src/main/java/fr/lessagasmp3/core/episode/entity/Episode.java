@@ -4,14 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import fr.lessagasmp3.core.episode.model.EpisodeModel;
 import fr.lessagasmp3.core.file.entity.File;
 import fr.lessagasmp3.core.season.entity.Season;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
 
 @Entity
 @Table
@@ -19,8 +15,7 @@ import jakarta.persistence.Table;
 @Setter(AccessLevel.PUBLIC)
 public class Episode extends EpisodeModel {
 
-    @ManyToOne
-    @JsonIgnoreProperties(value = {"sagas", "episodes"})
+    @ManyToOne(fetch = FetchType.LAZY)
     private Season season = new Season();
 
     @OneToOne

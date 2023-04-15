@@ -24,11 +24,9 @@ public class User extends UserModel {
             name = "user_authority",
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "authority_id", referencedColumnName = "id")})
-    @JsonIgnoreProperties(value = {"createdAt", "createdBy", "updatedAt", "updatedBy", "users"})
     private Set<Authority> authorities = new LinkedHashSet<>();
 
     @OneToOne(mappedBy = "user")
-    @JsonIgnoreProperties(value = {"sagasWritten", "sagasComposed", "user"})
     private Creator creator;
 
     public User() {

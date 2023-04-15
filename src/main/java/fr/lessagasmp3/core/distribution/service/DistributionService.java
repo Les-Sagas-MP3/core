@@ -13,6 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Set;
+
 @Slf4j
 @Service
 public class DistributionService {
@@ -25,6 +27,10 @@ public class DistributionService {
 
     @Autowired
     private SagaRepository sagaRepository;
+
+    public Set<DistributionEntry> findAllEntitiesBySaga(Long sagaId) {
+        return distributionEntryRepository.findAllBySagaId(sagaId);
+    }
 
     public DistributionEntryModel findByActorIdAndSagaIdAndRolesIgnoreCase(Long actorId, Long sagaId, String roles) {
         DistributionEntry entity = distributionEntryRepository.findByActorIdAndSagaIdAndRolesIgnoreCase(actorId, sagaId, roles);

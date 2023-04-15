@@ -1,20 +1,16 @@
 package fr.lessagasmp3.core.saga.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import fr.lessagasmp3.core.anecdote.entity.Anecdote;
 import fr.lessagasmp3.core.category.entity.Category;
 import fr.lessagasmp3.core.creator.entity.Creator;
 import fr.lessagasmp3.core.distribution.entity.DistributionEntry;
 import fr.lessagasmp3.core.saga.model.SagaModel;
 import fr.lessagasmp3.core.season.entity.Season;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -25,33 +21,33 @@ import java.util.Set;
 public class Saga extends SagaModel {
 
     @ManyToMany
-    @JsonIgnoreProperties(value = {"sagasWritten", "sagasComposed", "user"})
+    @JoinTable(
+            name = "saga_authors",
+            joinColumns = {@JoinColumn(name = "sagas_written_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "authors_id", referencedColumnName = "id")})
     private Set<Creator> authors = new LinkedHashSet<>();
 
     @ManyToMany
-    @JsonIgnoreProperties(value = {"sagasWritten", "sagasComposed", "user"})
+    @JoinTable(
+            name = "saga_composers",
+            joinColumns = {@JoinColumn(name = "sagas_composed_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "composers_id", referencedColumnName = "id")})
     private Set<Creator> composers = new LinkedHashSet<>();
 
     @ManyToMany
-    @JsonIgnoreProperties(value = {"sagas"})
+    @JoinTable(
+            name = "saga_categories",
+            joinColumns = {@JoinColumn(name = "sagas_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "categories_id", referencedColumnName = "id")})
     private Set<Category> categories = new LinkedHashSet<>();
 
-    @OneToMany(
-            mappedBy = "saga",
-            orphanRemoval = true)
-    @JsonIgnoreProperties(value = {"saga", "episodes"})
+    @OneToMany(mappedBy = "saga", orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<Season> seasons = new LinkedHashSet<>();
 
-    @OneToMany(
-            mappedBy = "saga",
-            orphanRemoval = true)
-    @JsonIgnoreProperties(value = {"saga", "actors"})
+    @OneToMany(mappedBy = "saga", orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<DistributionEntry> distributionEntries = new LinkedHashSet<>();
 
-    @OneToMany(
-            mappedBy = "saga",
-            orphanRemoval = true)
-    @JsonIgnoreProperties(value = {"saga"})
+    @OneToMany(mappedBy = "saga", orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<Anecdote> anecdotes = new LinkedHashSet<>();
 
     public static Saga fromModel(SagaModel model) {

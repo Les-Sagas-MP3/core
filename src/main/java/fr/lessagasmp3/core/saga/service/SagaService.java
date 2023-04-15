@@ -1,14 +1,17 @@
 package fr.lessagasmp3.core.saga.service;
 
+import fr.lessagasmp3.core.anecdote.service.AnecdoteService;
 import fr.lessagasmp3.core.category.entity.Category;
-import fr.lessagasmp3.core.category.repository.CategoryRepository;
+import fr.lessagasmp3.core.category.service.CategoryService;
 import fr.lessagasmp3.core.creator.entity.Creator;
-import fr.lessagasmp3.core.creator.repository.CreatorRepository;
+import fr.lessagasmp3.core.creator.service.CreatorService;
+import fr.lessagasmp3.core.distribution.service.DistributionService;
 import fr.lessagasmp3.core.exception.BadRequestException;
 import fr.lessagasmp3.core.exception.NotFoundException;
 import fr.lessagasmp3.core.saga.entity.Saga;
 import fr.lessagasmp3.core.saga.model.SagaModel;
 import fr.lessagasmp3.core.saga.repository.SagaRepository;
+import fr.lessagasmp3.core.season.service.SeasonService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,14 +24,32 @@ import java.util.UUID;
 @Service
 public class SagaService {
 
-    @Autowired
-    private CategoryRepository categoryRepository;
+    private final AnecdoteService anecdoteService;
+
+    private final CategoryService categoryService;
+
+    private final CreatorService creatorService;
+
+    private final DistributionService distributionService;
+
+    private final SeasonService seasonService;
+
+    private final SagaRepository sagaRepository;
 
     @Autowired
-    private CreatorRepository creatorRepository;
-
-    @Autowired
-    private SagaRepository sagaRepository;
+    public SagaService(AnecdoteService anecdoteService,
+                       CategoryService categoryService,
+                       CreatorService creatorService,
+                       DistributionService distributionService,
+                       SeasonService seasonService,
+                       SagaRepository sagaRepository) {
+        this.anecdoteService = anecdoteService;
+        this.creatorService = creatorService;
+        this.categoryService = categoryService;
+        this.distributionService = distributionService;
+        this.seasonService = seasonService;
+        this.sagaRepository = sagaRepository;
+    }
 
     public Set<SagaModel> getAll() {
         Set<Saga> entities = sagaRepository.findAllByOrderByTitleAsc();
@@ -61,10 +82,17 @@ public class SagaService {
 
     public SagaModel findByTitle(String title) {
         Saga entity = sagaRepository.findByTitleIgnoreCase(title);
+        SagaModel model = null;
         if(entity != null) {
-            return SagaModel.fromEntity(entity);
+            entity.setAuthors(creatorService.findAllEntitiesBySagasWritten(entity.getId()));
+            entity.setComposers(creatorService.findAllEntitiesBySagasComposed(entity.getId()));
+            entity.setCategories(categoryService.findAllEntitiesBySagas(entity.getId()));
+            entity.setSeasons(seasonService.findAllEntitiesBySaga(entity.getId()));
+            entity.setDistributionEntries(distributionService.findAllEntitiesBySaga(entity.getId()));
+            entity.setAnecdotes(anecdoteService.findAllEntitiesBySaga(entity.getId()));
+            model = SagaModel.fromEntity(entity);
         }
-        return null;
+        return model;
     }
 
     public SagaModel create(SagaModel model) {
@@ -126,7 +154,7 @@ public class SagaService {
 
         // Verify that entity exists
         Saga entity = sagaRepository.findById(id).orElse(null);
-        Creator creator = creatorRepository.findById(authorId).orElse(null);
+        Creator creator = creatorService.findEntityById(authorId);
         if(entity == null || creator == null) {
             log.error("Impossible to associate saga {} with author {} : saga or author not found", id, authorId);
             throw new NotFoundException();
@@ -150,7 +178,7 @@ public class SagaService {
 
         // Verify that entity exists
         Saga entity = sagaRepository.findById(id).orElse(null);
-        Creator creator = creatorRepository.findById(composerId).orElse(null);
+        Creator creator = creatorService.findEntityById(composerId);
         if(entity == null || creator == null) {
             log.error("Impossible to associate saga {} with composer {} : saga or composer not found", id, composerId);
             throw new NotFoundException();
@@ -174,7 +202,7 @@ public class SagaService {
 
         // Verify that entity exists
         Saga entity = sagaRepository.findById(id).orElse(null);
-        Category category = categoryRepository.findById(categoryId).orElse(null);
+        Category category = categoryService.findEntityById(categoryId);
         if(entity == null || category == null) {
             log.error("Impossible to associate saga {} with category {} : saga or category not found", id, categoryId);
             throw new NotFoundException();

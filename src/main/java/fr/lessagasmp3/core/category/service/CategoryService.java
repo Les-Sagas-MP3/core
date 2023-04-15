@@ -21,6 +21,14 @@ public class CategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
 
+    public Category findEntityById(Long categoryId) {
+        return categoryRepository.findById(categoryId).orElse(null);
+    }
+
+    public Set<Category> findAllEntitiesBySagas(Long id) {
+        return categoryRepository.findAllBySagas_Id(id);
+    }
+
     public List<CategoryModel> getAll() {
         List<Category> entities = categoryRepository.findAll();
         List<CategoryModel> models = new ArrayList<>();
