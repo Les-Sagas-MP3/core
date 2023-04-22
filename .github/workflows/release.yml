@@ -42,7 +42,7 @@ jobs:
         run: ./mvnw -B clean install spring-boot:build-image --file pom.xml
 
   release:
-    needs: [verify-version, build]
+    needs: [ verify-version, build ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -79,7 +79,7 @@ jobs:
           asset_content_type: application/java-archive
 
   publish-maven:
-    needs: [verify-version, release]
+    needs: [ verify-version, release ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -95,7 +95,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   publish-docker:
-    needs: [verify-version, release]
+    needs: [ verify-version, release ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -121,3 +121,24 @@ jobs:
         run: docker push lessagasmp3/api:latest
       - name: Publish version to Docker Hub
         run: docker push lessagasmp3/api:${{ steps.get_version.outputs.VERSION }}
+
+  deploy-production:
+    needs: [ verify-version, release ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout private tools
+        uses: actions/checkout@v3
+        with:
+          repository: les-sagas-mp3/infrastructure
+          token: ${{ secrets.PUSH_DEFAULT_VERSIONS_GITHUB_TOKEN }}
+          path: infrastructure
+      - name: Replace API version
+        run: sed -i -r "s/api_version = \".*\"/api_version = \"${{ steps.get_version.outputs.VERSION }}\"/g" infrastructure/terraform/environments/default_versions.tfvars
+      - name: Push new default version
+        run: |
+          cd infrastructure
+          git config user.email "${{ secrets.GIT_CONFIG_EMAIL }}" && git config user.name "${{ secrets.GIT_CONFIG_NAME }}"
+          git status
+          git add .
+          git commit --allow-empty -m "Release API '${{ steps.get_version.outputs.VERSION }}'"
+          git push
