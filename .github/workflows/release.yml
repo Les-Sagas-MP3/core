@@ -131,5 +131,5 @@ jobs:
           git config user.email "${{ secrets.GIT_CONFIG_EMAIL }}" && git config user.name "${{ secrets.GIT_CONFIG_NAME }}"
           git status
           git add .
-          git commit --allow-empty -m "Release API '${{ steps.get_version.outputs.VERSION }}'"
+          git commit --allow-empty -m "Release API '${{ needs.verify-version.outputs.version }}'"
           git push
