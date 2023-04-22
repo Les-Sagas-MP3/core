@@ -6,6 +6,7 @@ import fr.lessagasmp3.core.common.constant.AuthorityName;
 import fr.lessagasmp3.core.common.security.JwtRequest;
 import fr.lessagasmp3.core.common.security.JwtUser;
 import fr.lessagasmp3.core.exception.EntityAlreadyExistsException;
+import fr.lessagasmp3.core.exception.UnauthaurizedException;
 import fr.lessagasmp3.core.user.entity.User;
 import fr.lessagasmp3.core.user.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -71,6 +72,9 @@ public class UserService implements UserDetailsService {
 
     public User get(Principal principal) {
         UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) principal;
+        if(token == null) {
+            throw new UnauthaurizedException();
+        }
         UserDetails userPrincipal = (UserDetails) token.getPrincipal();
         return userRepository.findByEmail(userPrincipal.getUsername());
     }
