@@ -133,7 +133,7 @@ jobs:
           token: ${{ secrets.PUSH_DEFAULT_VERSIONS_GITHUB_TOKEN }}
           path: infrastructure
       - name: Replace API version
-        run: sed -i -r "s/api_version = \".*\"/api_version = \"${{ steps.get_version.outputs.VERSION }}\"/g" infrastructure/terraform/environments/default_versions.tfvars
+        run: sed -i -r "s/api_version = \".*\"/api_version = \"${{ needs.verify-version.outputs.version }}\"/g" infrastructure/terraform/environments/default_versions.tfvars
       - name: Push new default version
         run: |
           cd infrastructure
