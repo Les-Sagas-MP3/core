@@ -59,7 +59,7 @@ jobs:
         run: ./mvnw -B clean install --file pom.xml -P makeRelease
       - name: Create Release
         id: create_release
-        uses: actions/create-release@v1
+        uses: softprops/action-gh-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -67,16 +67,7 @@ jobs:
           release_name: ${{ needs.verify-version.outputs.version }}
           draft: false
           prerelease: false
-      - name: Upload JAR as artifact
-        id: upload-release-asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ${{ github.workspace }}/target/core-${{ needs.verify-version.outputs.version }}-exec.jar
-          asset_name: core-exec.jar
-          asset_content_type: application/java-archive
+          files: ${{ github.workspace }}/target/core-${{ needs.verify-version.outputs.version }}-exec.jar
 
   publish-maven:
     needs: [ verify-version, release ]
