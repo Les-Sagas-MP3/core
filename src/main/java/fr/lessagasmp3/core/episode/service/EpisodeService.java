@@ -42,6 +42,16 @@ public class EpisodeService {
         return models;
     }
 
+    public List<EpisodeModel> getAllBySeasonId(Long seasonRef) {
+        List<Episode> entities = episodeRepository.findAllBySeasonIdOrderByNumberAsc(seasonRef);
+
+        List<EpisodeModel> models = new ArrayList<>();
+        entities.forEach(entity -> models.add(EpisodeModel.fromEntity(entity)));
+        Collections.sort(models);
+
+        return models;
+    }
+
     public EpisodeModel findByNumberAndSeasonId(Integer number, Long seasonId) {
         Episode entity = episodeRepository.findByNumberAndSeasonId(number, seasonId);
         if(entity != null) {

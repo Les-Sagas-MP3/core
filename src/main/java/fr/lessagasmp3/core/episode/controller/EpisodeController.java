@@ -38,6 +38,11 @@ public class EpisodeController {
         return episodeService.getAllByIds(ids);
     }
 
+    @RequestMapping(value = "/episode", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE, params = {"seasonRef"})
+    public List<EpisodeModel> getAllBySeasonId(@RequestParam("seasonRef") Long seasonRef) {
+        return episodeService.getAllBySeasonId(seasonRef);
+    }
+
     @RequestMapping(value = "/episode", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE, params = {"number", "seasonId"})
     public EpisodeModel getByNumberAndSeasonId(@RequestParam("number") Integer number, @RequestParam("seasonId") Long seasonId) {
         return episodeService.findByNumberAndSeasonId(number, seasonId);
