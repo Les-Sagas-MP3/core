@@ -35,6 +35,10 @@ public class UserService implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;
 
+    public User findById(Long id) {
+        return userRepository.findById(id).orElse(null);
+    }
+
     public void create(JwtRequest jwtRequest) {
         User user = userRepository.findByEmail(jwtRequest.getEmail());
         if (user != null) {

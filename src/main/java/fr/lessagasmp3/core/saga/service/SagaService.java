@@ -58,8 +58,8 @@ public class SagaService {
         return models;
     }
 
-    public SagaModel getById(Long id) {
-        return SagaModel.fromEntity(sagaRepository.findById(id).orElse(null));
+    public Saga findById(Long id) {
+        return sagaRepository.findById(id).orElse(null);
     }
 
     public SagaModel findOrCreate(String title) {

@@ -42,7 +42,7 @@ public class SagaController {
 
     @RequestMapping(value = "/saga/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public SagaModel getById(@PathVariable Long id) {
-        return sagaService.getById(id);
+        return SagaModel.fromEntity(sagaService.findById(id));
     }
 
     @RequestMapping(value = "/saga", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE, params = {"title"})
