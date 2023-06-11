@@ -2,8 +2,7 @@ package fr.lessagasmp3.core.role.model;
 
 import fr.lessagasmp3.core.common.model.AuditModel;
 import fr.lessagasmp3.core.role.entity.Role;
-import jakarta.persistence.MappedSuperclass;
-import jakarta.persistence.Transient;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,7 +15,9 @@ import java.util.Objects;
 @Setter(AccessLevel.PUBLIC)
 public class RoleModel extends AuditModel<String> {
 
+    @Column(length = 50)
     @NotNull
+    @Enumerated(EnumType.STRING)
     protected RoleName name = RoleName.MEMBER;
 
     @Transient

@@ -2,18 +2,16 @@ package fr.lessagasmp3.core.user.model;
 
 import fr.lessagasmp3.core.common.model.AuditModel;
 import fr.lessagasmp3.core.user.entity.User;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import jakarta.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
-import java.util.LinkedHashSet;
 import java.util.Objects;
-import java.util.Set;
 
 @Getter(AccessLevel.PUBLIC)
 @Setter(AccessLevel.PUBLIC)
@@ -42,9 +40,6 @@ public class UserModel extends AuditModel<String> {
     @Transient
     protected Long creatorRef = 0L;
 
-    @Transient
-    private Set<Long> authoritiesRef = new LinkedHashSet<>();
-
     public static UserModel fromEntity(User entity) {
         Objects.requireNonNull(entity);
         UserModel model = new UserModel();
@@ -61,7 +56,6 @@ public class UserModel extends AuditModel<String> {
         if(entity.getCreator() != null) {
             model.setCreatorRef(entity.getCreator().getId());
         }
-        entity.getAuthorities().forEach(authority -> model.getAuthoritiesRef().add(authority.getId()));
         return model;
     }
 

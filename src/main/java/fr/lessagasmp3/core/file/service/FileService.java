@@ -161,4 +161,8 @@ public class FileService {
     public String getPath(File entity) {
         return storageFolder + java.io.File.separator + entity.getDirectory() + java.io.File.separator + entity.getFullname();
     }
+
+    public File findByDirectoryAndName(String directory, String name) {
+        return fileRepository.findByDirectoryAndName(directory, name);
+    }
 }

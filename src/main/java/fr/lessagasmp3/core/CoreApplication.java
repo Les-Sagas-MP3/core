@@ -3,15 +3,17 @@ package fr.lessagasmp3.core;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
-import fr.lessagasmp3.core.auth.entity.Authority;
-import fr.lessagasmp3.core.auth.repository.AuthorityRepository;
-import fr.lessagasmp3.core.common.constant.AuthorityName;
-import fr.lessagasmp3.core.file.repository.FileRepository;
+import fr.lessagasmp3.core.common.constant.Strings;
+import fr.lessagasmp3.core.common.security.JwtRequest;
 import fr.lessagasmp3.core.file.service.FileService;
+import fr.lessagasmp3.core.role.entity.Role;
+import fr.lessagasmp3.core.role.model.RoleName;
+import fr.lessagasmp3.core.role.service.RoleService;
 import fr.lessagasmp3.core.user.entity.User;
-import fr.lessagasmp3.core.user.repository.UserRepository;
+import fr.lessagasmp3.core.user.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -24,7 +26,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
 
 @Slf4j
 @EnableAsync
@@ -35,17 +36,22 @@ public class CoreApplication {
     private static final String GOOGLE_APPLICATION_CREDENTIALS = System.getenv("GOOGLE_APPLICATION_CREDENTIALS");
     private static final String FIREBASE_URL = System.getenv("FIREBASE_URL");
 
-    @Autowired
-    private AuthorityRepository authorityRepository;
+    @Value("${fr.lessagasmp3.core.admin_password}")
+    private String adminPassword;
+
+    private final FileService fileService;
+    private final RoleService roleService;
+    private final UserService userService;
 
     @Autowired
-    private FileRepository fileRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private FileService fileService;
+    public CoreApplication(
+            FileService fileService,
+            RoleService roleService,
+            UserService userService) {
+        this.fileService = fileService;
+        this.roleService = roleService;
+        this.userService = userService;
+    }
 
     public static void main(String[] args) {
         SpringApplication.run(CoreApplication.class, args);
@@ -55,32 +61,24 @@ public class CoreApplication {
     public void init() {
 
         // First launch of App
-        if (authorityRepository.count() == 0) {
-
-            // Create authorities
-            for (AuthorityName authorityName : AuthorityName.values()) {
-                authorityRepository.save(new Authority(authorityName));
-            }
-
-            // Get user and admin authorities
-            List<Authority> authorities = authorityRepository.findAll();
-            Authority userAuthority = authorities.stream().filter(authority -> authority.getName().equals(AuthorityName.ROLE_USER)).findFirst().orElse(null);
-            Authority adminAuthority = authorities.stream().filter(authority -> authority.getName().equals(AuthorityName.ROLE_ADMIN)).findFirst().orElse(null);
-            if (userAuthority == null || adminAuthority == null) {
-                throw new IllegalStateException();
-            }
+        if (userService.count() == 0) {
 
             // Create admin user
             String email = "admin@les-sagas-mp3.fr";
-            //String generatedPassword = Strings.randomString();
             String generatedPassword = "admin@les-sagas-mp3.fr";
-            User admin = new User(email, generatedPassword);
-            admin.setUsername(email);
-            admin.setEnabled(true);
-            admin.addAuthority(userAuthority);
-            admin.addAuthority(adminAuthority);
-            admin.setEnabled(true);
-            userRepository.save(admin);
+            if(adminPassword == null || adminPassword.isEmpty()) {
+                generatedPassword = Strings.randomString();
+            }
+            JwtRequest jwtAdminRequest = new JwtRequest();
+            jwtAdminRequest.setEmail(email);
+            jwtAdminRequest.setPassword(generatedPassword);
+            User admin = userService.create(jwtAdminRequest);
+
+            // Set member role
+            Role role = new Role();
+            role.setName(RoleName.ADMINISTRATOR);
+            role.setUser(admin);
+            roleService.create(role);
 
             log.info("ONLY PRINTED ONCE - Default credentials are : admin@les-sagas-mp3.fr / {}", generatedPassword);
         }
@@ -114,7 +112,7 @@ public class CoreApplication {
 
     public void loadGoogleApplicationCredentialsFromDb() {
         log.info("Loading Firebase key from database");
-        fr.lessagasmp3.core.file.entity.File file = fileRepository.findByDirectoryAndName("config", "GOOGLE_APPLICATION_CREDENTIALS");
+        fr.lessagasmp3.core.file.entity.File file = fileService.findByDirectoryAndName("config", "GOOGLE_APPLICATION_CREDENTIALS");
         if (file == null) {
             log.error("No Firebase key stored in database");
         } else {

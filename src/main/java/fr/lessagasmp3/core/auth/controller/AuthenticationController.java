@@ -45,7 +45,7 @@ public class AuthenticationController {
     private UserService userService;
 
     @RequestMapping(value = "/auth/signup", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public void singup(@RequestBody JwtRequest request) {
+    public void signup(@RequestBody JwtRequest request) {
         try {
             userService.create(request);
         } catch (EntityAlreadyExistsException e) {
@@ -64,7 +64,7 @@ public class AuthenticationController {
     @PreAuthorize("hasRole('USER')")
     @RequestMapping(value = "/auth/whoami", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public UserModel whoami(Principal principal) {
-        User user = userService.get(principal);
+        User user = userService.whoami(principal);
         if (user == null) {
             throw new NotFoundException();
         } else {

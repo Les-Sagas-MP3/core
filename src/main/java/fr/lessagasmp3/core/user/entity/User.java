@@ -1,30 +1,20 @@
 package fr.lessagasmp3.core.user.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import fr.lessagasmp3.core.auth.entity.Authority;
 import fr.lessagasmp3.core.creator.entity.Creator;
 import fr.lessagasmp3.core.user.model.UserModel;
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.crypto.bcrypt.BCrypt;
-
-import jakarta.persistence.*;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 @Entity(name = "users")
 @Table
 @Getter(AccessLevel.PUBLIC)
 @Setter(AccessLevel.PUBLIC)
 public class User extends UserModel {
-
-    @ManyToMany
-    @JoinTable(
-            name = "user_authority",
-            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
-            inverseJoinColumns = {@JoinColumn(name = "authority_id", referencedColumnName = "id")})
-    private Set<Authority> authorities = new LinkedHashSet<>();
 
     @OneToOne(mappedBy = "user")
     private Creator creator;
@@ -36,16 +26,6 @@ public class User extends UserModel {
     public User(String email, String password) {
         this.email = email;
         this.password = BCrypt.hashpw(password, BCrypt.gensalt());
-    }
-
-    public void addAuthority(Authority newAuthority) {
-        Long newAuthorityId = newAuthority.getId();
-        this.authorities.stream()
-                .filter(authority -> newAuthorityId.equals(authority.getId()))
-                .findAny()
-                .ifPresentOrElse(
-                        authority -> {},
-                        () -> this.authorities.add(newAuthority));
     }
 
     public static User fromModel(UserModel model) {
@@ -61,7 +41,6 @@ public class User extends UserModel {
         entity.setEnabled(model.getEnabled());
         entity.setLastPasswordResetDate(model.getLastPasswordResetDate());
         entity.setCreatorRef(model.getCreatorRef());
-        entity.setAuthoritiesRef(model.getAuthoritiesRef());
         return entity;
     }
 }

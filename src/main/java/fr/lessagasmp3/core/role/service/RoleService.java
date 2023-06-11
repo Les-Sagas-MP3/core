@@ -1,9 +1,12 @@
 package fr.lessagasmp3.core.role.service;
 
 import fr.lessagasmp3.core.exception.BadRequestException;
+import fr.lessagasmp3.core.exception.EntityAlreadyExistsException;
+import fr.lessagasmp3.core.exception.ForbiddenException;
 import fr.lessagasmp3.core.exception.NotFoundException;
 import fr.lessagasmp3.core.role.entity.Role;
 import fr.lessagasmp3.core.role.model.RoleModel;
+import fr.lessagasmp3.core.role.model.RoleName;
 import fr.lessagasmp3.core.role.repository.RoleRepository;
 import fr.lessagasmp3.core.saga.entity.Saga;
 import fr.lessagasmp3.core.saga.service.SagaService;
@@ -33,11 +36,19 @@ public class RoleService {
         this.roleRepository = roleRepository;
     }
 
-    public Role findInDbById(Long id) {
+    public Role getById(Long id) {
         return roleRepository.findById(id).orElse(null);
     }
 
-    public RoleModel create(Principal principal, RoleModel model) {
+    public Role getRole(RoleName roleName, Long userId) {
+        return roleRepository.findByNameAndUserId(roleName, userId).orElse(null);
+    }
+
+    public Role getRole(RoleName roleName, Long userId, Long sagaId) {
+        return roleRepository.findByNameAndUserIdAndSagaId(roleName, userId, sagaId).orElse(null);
+    }
+
+    public RoleModel controlsAndCreate(Principal principal, RoleModel model) {
 
         // Verify that body is complete
         if(model == null) {
@@ -48,17 +59,17 @@ public class RoleService {
         // Verify that role do not already exists
         Role role;
         if(model.getSagaRef() > 0) {
-            role = roleRepository.findByNameAndUserIdAndSagaId(model.getName(), model.getUserRef(), model.getSagaRef()).orElse(null);
+            role = getRole(model.getName(), model.getUserRef(), model.getSagaRef());
         } else {
-            role = roleRepository.findByNameAndUserId(model.getName(), model.getUserRef()).orElse(null);
+            role = getRole(model.getName(), model.getUserRef());
         }
         if(role != null) {
             log.error("Impossible to create role : it already exists");
-            throw new BadRequestException();
+            throw new EntityAlreadyExistsException();
         }
 
         // Verify that entities exists
-        User user = userService.findById(model.getUserRef());
+        User user = userService.getById(model.getUserRef());
         if(user == null) {
             log.error("Impossible to create role : user {} does not exist", model.getUserRef());
             throw new NotFoundException();
@@ -72,35 +83,58 @@ public class RoleService {
         }
 
         // Verify that principal has privileges
-        Long userPrincipalId = userService.get(principal).getId();
-        if(userService.isNotAdmin(userPrincipalId)) {
-            log.error("Impossible to create role : user {} has not enough privilege", userPrincipalId);
-            throw new NotFoundException();
+        Long userPrincipalId = userService.whoami(principal).getId();
+        if(model.getName() != RoleName.MEMBER) {
+            if(model.getSagaRef() <= 0 && userService.isNotAdmin(userPrincipalId)) {
+                log.error("Impossible to create role : user {} has not enough privilege", userPrincipalId);
+                throw new ForbiddenException();
+            }
+            if(model.getSagaRef() > 0 && userService.isNotAuthor(userPrincipalId, model.getSagaRef())) {
+                log.error("Impossible to create role : user {} is not author of saga {}", userPrincipalId, model.getSagaRef());
+                throw new ForbiddenException();
+            }
         }
 
-        // Create entity
-        role = Role.fromModel(model);
+        return create(model);
+    }
+
+    public RoleModel create(RoleModel model) {
+        Role role = Role.fromModel(model);
         return RoleModel.fromEntity(roleRepository.save(role));
     }
 
-    public Boolean delete(Long fileId) {
+    public Boolean controlsAndDelete(Principal principal, Long roleId) {
 
         // Check if ID is correct
-        if(fileId <= 0) {
+        if(roleId <= 0) {
             log.error("Impossible to delete role : ID is missing");
             throw new BadRequestException();
         }
 
         // Check if file is registered in DB
-        Role entity = roleRepository.findById(fileId).orElse(null);
+        Role entity = roleRepository.findById(roleId).orElse(null);
         if(entity == null) {
-            log.error("Impossible to delete role : role {} does not exist in DB", fileId);
+            log.error("Impossible to delete role : role {} does not exist in DB", roleId);
             throw new NotFoundException();
         }
 
-        // Delete file in DB
-        roleRepository.delete(entity);
+        // Verify that principal has privileges
+        Long userPrincipalId = userService.whoami(principal).getId();
+        Long sagaId = entity.getSaga() == null ? 0L : entity.getSaga().getId();
+        if(sagaId <= 0 && userService.isNotAdmin(userPrincipalId)) {
+            log.error("Impossible to delete role : user {} has not enough privilege", userPrincipalId);
+            throw new ForbiddenException();
+        }
+        if(sagaId > 0 && userService.isNotAdmin(userPrincipalId) && userService.isNotAuthor(userPrincipalId, sagaId)) {
+            log.error("Impossible to delete role : user {} is not author of saga {}", userPrincipalId, sagaId);
+            throw new ForbiddenException();
+        }
 
+        return delete(roleId);
+    }
+
+    public Boolean delete(Long roleId) {
+        roleRepository.deleteById(roleId);
         return Boolean.TRUE;
     }
 
