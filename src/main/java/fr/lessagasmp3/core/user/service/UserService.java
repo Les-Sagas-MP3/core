@@ -13,6 +13,8 @@ import fr.lessagasmp3.core.user.model.UserModel;
 import fr.lessagasmp3.core.user.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -53,6 +55,14 @@ public class UserService implements UserDetailsService {
             throw new UsernameNotFoundException("User not found");
         }
         return new JwtUser(email, user.getPassword(), getAuthorities(user.getId()));
+    }
+
+    public Page<User> getAll(Pageable pageable) {
+        return userRepository.findAll(pageable);
+    }
+
+    public Set<User> getAllByUsername(String username) {
+        return userRepository.findAllByUsernameContainsIgnoreCaseOrderByUsernameAsc(username);
     }
 
     public long count() {
