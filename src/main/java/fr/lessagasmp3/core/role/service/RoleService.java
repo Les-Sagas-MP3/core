@@ -17,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Slf4j
 @Service
@@ -46,6 +48,19 @@ public class RoleService {
 
     public Role getRole(RoleName roleName, Long userId, Long sagaId) {
         return roleRepository.findByNameAndUserIdAndSagaId(roleName, userId, sagaId).orElse(null);
+    }
+
+    public Set<RoleModel> whoami(Principal principal) {
+        User user = userService.whoami(principal);
+        if(user == null) {
+            log.error("Impossible to get roles for principal : user does not exist");
+            throw new NotFoundException();
+        }
+
+        Set<Role> roles = roleRepository.findAllByUserId(user.getId());
+        Set<RoleModel> roleModels = new LinkedHashSet<>();
+        roles.forEach(role -> roleModels.add(RoleModel.fromEntity(role)));
+        return roleModels;
     }
 
     public RoleModel controlsAndCreate(Principal principal, RoleModel model) {

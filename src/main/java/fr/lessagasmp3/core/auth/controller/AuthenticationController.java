@@ -8,6 +8,8 @@ import fr.lessagasmp3.core.exception.BadRequestException;
 import fr.lessagasmp3.core.exception.EntityAlreadyExistsException;
 import fr.lessagasmp3.core.exception.NotFoundException;
 import fr.lessagasmp3.core.exception.UnauthaurizedException;
+import fr.lessagasmp3.core.role.model.RoleModel;
+import fr.lessagasmp3.core.role.service.RoleService;
 import fr.lessagasmp3.core.user.entity.User;
 import fr.lessagasmp3.core.user.model.UserModel;
 import fr.lessagasmp3.core.user.service.UserService;
@@ -27,27 +29,40 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
 import java.util.Objects;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api")
 public class AuthenticationController {
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
+
+    private final JwtTokenUtil jwtTokenUtil;
+
+    private final RoleService roleService;
+
+    private final UserDetailsService jwtInMemoryUserDetailsService;
+
+    private final UserService userService;
 
     @Autowired
-    private JwtTokenUtil jwtTokenUtil;
-
-    @Autowired
-    private UserDetailsService jwtInMemoryUserDetailsService;
-
-    @Autowired
-    private UserService userService;
+    public AuthenticationController(
+            AuthenticationManager authenticationManager,
+            JwtTokenUtil jwtTokenUtil,
+            RoleService roleService,
+            UserDetailsService jwtInMemoryUserDetailsService,
+            UserService userService) {
+        this.authenticationManager = authenticationManager;
+        this.jwtTokenUtil = jwtTokenUtil;
+        this.roleService = roleService;
+        this.jwtInMemoryUserDetailsService = jwtInMemoryUserDetailsService;
+        this.userService = userService;
+    }
 
     @RequestMapping(value = "/auth/signup", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public void signup(@RequestBody JwtRequest request) {
+    public void signup(@RequestBody UserModel userModel) {
         try {
-            userService.create(request);
+            userService.controlsAndCreate(userModel);
         } catch (EntityAlreadyExistsException e) {
             throw new BadRequestException();
         }
@@ -62,7 +77,7 @@ public class AuthenticationController {
     }
 
     @PreAuthorize("hasRole('USER')")
-    @RequestMapping(value = "/auth/whoami", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/auth/whoami/user", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public UserModel whoami(Principal principal) {
         User user = userService.whoami(principal);
         if (user == null) {
@@ -71,6 +86,12 @@ public class AuthenticationController {
             user.setPassword(Strings.EMPTY);
             return UserModel.fromEntity(user);
         }
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @RequestMapping(value = "/auth/whoami/roles", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Set<RoleModel> getMyRoles(Principal principal) {
+        return roleService.whoami(principal);
     }
 
     private void authenticate(String email, String password) {

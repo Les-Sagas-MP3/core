@@ -72,7 +72,7 @@ public class CoreApplication {
             JwtRequest jwtAdminRequest = new JwtRequest();
             jwtAdminRequest.setEmail(email);
             jwtAdminRequest.setPassword(generatedPassword);
-            User admin = userService.create(jwtAdminRequest);
+            User admin = userService.create(jwtAdminRequest, "admin");
 
             // Set member role
             Role role = new Role();

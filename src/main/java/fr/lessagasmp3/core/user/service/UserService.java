@@ -120,14 +120,14 @@ public class UserService implements UserDetailsService {
         JwtRequest jwtUserRequest = new JwtRequest();
         jwtUserRequest.setEmail(model.getEmail());
         jwtUserRequest.setPassword(model.getPassword());
-        return this.create(jwtUserRequest);
+        return this.create(jwtUserRequest, model.getUsername());
     }
 
-    public User create(JwtRequest jwtRequest) {
+    public User create(JwtRequest jwtRequest, String username) {
 
         // Create user
         User user = new User();
-        user.setUsername(jwtRequest.getEmail());
+        user.setUsername(username);
         user.setEmail(jwtRequest.getEmail());
         user.setPassword(BCrypt.hashpw(jwtRequest.getPassword(), BCrypt.gensalt()));
         user.setEnabled(true);
@@ -137,6 +137,7 @@ public class UserService implements UserDetailsService {
         Role role = new Role();
         role.setName(RoleName.MEMBER);
         role.setUser(user);
+        role.setSaga(null);
         roleRepository.save(role);
 
         return user;
