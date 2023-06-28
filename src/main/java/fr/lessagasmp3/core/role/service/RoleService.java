@@ -50,17 +50,20 @@ public class RoleService {
         return roleRepository.findByNameAndUserIdAndSagaId(roleName, userId, sagaId).orElse(null);
     }
 
+    public Set<RoleModel> getAllByUserId(Long userId) {
+        Set<Role> roles = roleRepository.findAllByUserId(userId);
+        Set<RoleModel> roleModels = new LinkedHashSet<>();
+        roles.forEach(role -> roleModels.add(RoleModel.fromEntity(role)));
+        return roleModels;
+    }
+
     public Set<RoleModel> whoami(Principal principal) {
         User user = userService.whoami(principal);
         if(user == null) {
             log.error("Impossible to get roles for principal : user does not exist");
             throw new NotFoundException();
         }
-
-        Set<Role> roles = roleRepository.findAllByUserId(user.getId());
-        Set<RoleModel> roleModels = new LinkedHashSet<>();
-        roles.forEach(role -> roleModels.add(RoleModel.fromEntity(role)));
-        return roleModels;
+        return this.getAllByUserId(user.getId());
     }
 
     public RoleModel controlsAndCreate(Principal principal, RoleModel model) {
