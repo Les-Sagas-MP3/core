@@ -1,5 +1,6 @@
 package fr.lessagasmp3.core.user.model;
 
+import fr.lessagasmp3.core.common.constant.Strings;
 import fr.lessagasmp3.core.common.model.AuditModel;
 import fr.lessagasmp3.core.user.entity.User;
 import jakarta.persistence.*;
@@ -40,6 +41,12 @@ public class UserModel extends AuditModel<String> {
     @Transient
     protected Long creatorRef = 0L;
 
+    @NotNull
+    protected String avatarUrl = Strings.EMPTY;
+
+    @NotNull
+    protected String workspace = Strings.EMPTY;
+
     public static UserModel fromEntity(User entity) {
         Objects.requireNonNull(entity);
         UserModel model = new UserModel();
@@ -53,6 +60,8 @@ public class UserModel extends AuditModel<String> {
         model.setEmail(entity.getEmail());
         model.setEnabled(entity.getEnabled());
         model.setLastPasswordResetDate(entity.getLastPasswordResetDate());
+        model.setAvatarUrl(entity.getAvatarUrl());
+        model.setWorkspace(entity.getWorkspace());
         if(entity.getCreator() != null) {
             model.setCreatorRef(entity.getCreator().getId());
         }

@@ -47,3 +47,13 @@ DROP TABLE user_authority;
 
 --changeset lessagasmp3:drop-table-authority
 DROP TABLE authority;
+
+--changeset lessagasmp3:add-users-fields
+ALTER TABLE users
+    ADD avatar_url character varying(255),
+    ADD workspace character varying(255);
+--rollback alter table users drop column avatar_url;
+--rollback alter table users drop column workspace;
+
+--changeset lessagasmp3:generate-users-uuid
+UPDATE users SET workspace = gen_random_uuid() WHERE workspace IS NULL OR workspace = '';

@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.security.Principal;
 import java.util.LinkedHashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Slf4j
@@ -145,6 +146,10 @@ public class RoleService {
         }
         if(sagaId > 0 && userService.isNotAdmin(userPrincipalId) && userService.isNotAuthor(userPrincipalId, sagaId)) {
             log.error("Impossible to delete role : user {} is not author of saga {}", userPrincipalId, sagaId);
+            throw new ForbiddenException();
+        }
+        if(Objects.equals(userPrincipalId, entity.getUser().getId())) {
+            log.error("Impossible to delete role : user {} cannot modify its own privileges", userPrincipalId);
             throw new ForbiddenException();
         }
 

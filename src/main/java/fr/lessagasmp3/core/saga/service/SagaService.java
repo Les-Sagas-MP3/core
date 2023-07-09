@@ -70,12 +70,29 @@ public class SagaService {
             saga.setTitle(title);
             saga = create(saga);
             if(saga != null) {
-                log.debug("Creator {} created", saga);
+                log.debug("Saga {} created", saga);
             } else {
-                log.error("Creator \"{}\" not created", title);
+                log.error("Saga \"{}\" not created", title);
             }
         } else {
-            log.debug("Creator already exists : {}", saga);
+            log.debug("Saga already exists : {}", saga);
+        }
+        return saga;
+    }
+
+    public SagaModel findOrCreate(SagaModel model) {
+        SagaModel saga = findByTitle(model.getTitle());
+        if (saga == null) {
+            saga = model;
+            saga.setWorkspace(UUID.randomUUID().toString());
+            saga = create(saga);
+            if(saga != null) {
+                log.debug("Saga {} created", saga);
+            } else {
+                log.error("Saga \"{}\" not created", model.getTitle());
+            }
+        } else {
+            log.error("Saga already exists : {}", saga);
         }
         return saga;
     }
@@ -105,8 +122,7 @@ public class SagaService {
         }
 
         // Create entity
-        Saga entity = Saga.fromModel(model);
-        return SagaModel.fromEntity(sagaRepository.save(entity));
+        return findOrCreate(model);
     }
 
     public SagaModel update(SagaModel model) {

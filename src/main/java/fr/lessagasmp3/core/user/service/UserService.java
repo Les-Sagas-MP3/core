@@ -28,6 +28,7 @@ import java.security.Principal;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -131,6 +132,7 @@ public class UserService implements UserDetailsService {
         user.setEmail(jwtRequest.getEmail());
         user.setPassword(BCrypt.hashpw(jwtRequest.getPassword(), BCrypt.gensalt()));
         user.setEnabled(true);
+        user.setWorkspace(UUID.randomUUID().toString());
         user = userRepository.save(user);
 
         // Assign default role
@@ -176,6 +178,7 @@ public class UserService implements UserDetailsService {
         user.setUsername(userModel.getUsername());
         user.setEmail(userModel.getEmail());
         user.setEnabled(userModel.getEnabled());
+        user.setAvatarUrl(userModel.getAvatarUrl());
         userRepository.save(user);
     }
 
